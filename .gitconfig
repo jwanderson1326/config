@@ -14,4 +14,6 @@
 	type = cat-file -t
 	dump = cat-file -p
 [merge "ours"]
-	driver = true
+    driver = true
+[credential "https://github.com"]
+    username = jwanderson1326

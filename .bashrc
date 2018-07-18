@@ -31,7 +31,7 @@ fi
 
 # ls aliases
 alias sl='ls'
-alias ll='ls -alF'
+alias ll='ls -alFh'
 alias la='ls -A'
 alias l='ls -CF'
 
@@ -70,7 +70,10 @@ alias regrep="grep --perl-regexp -Ir \
 # upgrade
 alias upgrade="sudo apt-get update && sudo apt-get upgrade"
 
-
+# virutalenv aliases
+alias ve="virtualenv -p python3 venv"
+alias svenv="source venv/bin/activate"
+alias deact="deactivate"
 
 
 #######################################################################
@@ -162,12 +165,21 @@ if [ -f ~/.bash/sensitive ] ; then
     source ~/.bash/sensitive
 fi
 
-
-
-
-
-
-
-
-
-
+#################################################
+# Amend PATH
+##################################################
+TF_ROOT="$HOME/.tfenv/bin"
+NODENV_ROOT="$HOME/.nodenv"
+if [ -d "$NODENV_ROOT" ]
+then
+  export NODENV_ROOT
+  # Make sure it's not already in path
+  if [[ ":$PATH:" != *":$NODENV_ROOT/bin:"* ]]
+  then
+    # If $PATH exists, then add $NODENV_ROOT to $PATH with : at the end;
+    # otherwise NODENV_ROOT is the $PATH
+    PATH="${PATH:+"$PATH:"}$NODENV_ROOT/bin"
+    eval "$(nodenv init -)"
+  fi
+fi
+export PATH=$PATH:$TF_ROOT
