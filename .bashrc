@@ -41,7 +41,7 @@ alias pbpaste='xsel --clipboard --output'
 
 # Python
 alias va="source venv/bin/activate"
-alias ve="virtualenv -p python3.5 venv"
+alias ve="python3 -m venv venv"
 alias python="python3"
 
 # Octave
@@ -71,8 +71,6 @@ alias regrep="grep --perl-regexp -Ir \
 alias upgrade="sudo apt-get update && sudo apt-get upgrade"
 
 # virutalenv aliases
-alias ve="virtualenv -p python3 venv"
-alias svenv="source venv/bin/activate"
 alias deact="deactivate"
 
 
@@ -156,10 +154,7 @@ PS1="${PS1_DIR} ${PS1_GIT}\
 ${PS1_USR} ${PS1_END}"
 
 alias kvpn='sudo openvpn \
-    --config ~/openvpn/justin.conf \
-    --up /etc/openvpn/update-resolv-conf \
-    --down /etc/openvpn/update-resolv-conf \
-    --script-security 2'
+    --config ~/openvpn/openvpn.conf'
 
 if [ -f ~/.bash/sensitive ] ; then
     source ~/.bash/sensitive
