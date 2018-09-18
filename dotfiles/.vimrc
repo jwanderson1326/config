@@ -142,7 +142,8 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 
 " Language-specific syntax
-Plug 'hdima/python-syntax',
+Plug 'hdima/python-syntax'
+Plug 'hashivim/vim-terraform'
 
 " Indentation
 Plug 'hynek/vim-python-pep8-indent'
@@ -154,9 +155,10 @@ call plug#end()
 
 augroup indentation_sr
   autocmd!
-  autocmd Filetype * setlocal expandtab shiftwidth=4 softtabstop=4 tabstop=4
+  autocmd Filetype * setlocal shiftwidth=4 softtabstop=4 tabstop=4
   autocmd Filetype python setlocal shiftwidth=4 softtabstop=4 tabstop=4
   autocmd Filetype yaml setlocal indentkeys-=<:>
+  autocmd Filetype make setlocal noexpandtab shiftwidth=4 softtabstop=0 tabstop=4
 augroup END
 
 " }}}
@@ -204,6 +206,14 @@ endtry
 let python_highlight_all = 1
 
 "  }}}
+
+" terraform Syntax {{{
+let g:terraform_align = 1
+
+let g:terraform_fold_sections = 1
+
+let g:terraform_remap_spacebar = 1
+" }}}
 " General: Trailing whitespace ------------- {{{
 
 " This section automatically trims whitespace on all files
@@ -263,8 +273,6 @@ nnoremap <silent> gM M
 inoremap jk <esc>
 inoremap <esc> <nop>
 
-vnoremap jk <esc>
-vnoremap <esc> <nop>
 
 " }}}
 " General: Command abbreviations ------------------------ {{{

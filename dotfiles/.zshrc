@@ -128,7 +128,7 @@ alias kvpn='sudo openvpn \
 
 alias sl='ls'
 alias ll='ls -alFh'
-alias la='ls -A'
+alias la='ls -Alfh'
 
 alias pbcopy='xsel --clipboard --input'
 alias pbcopy='xsel --clipboard --output'
@@ -141,6 +141,12 @@ alias vgit='echo $VAULT_AUTH_GITHUB_TOKEN | pbcopy'
 alias smux='mux start devops'
 alias dmux='mux stop devops'
 alias python='python3'
+alias vim='nvim'
+
+alias goans='cd ~/kepler-repos/kepler-ansible'
+alias goterr='cd ~/kepler-repos/kepler-terraform'
+alias gomod='cd ~/kepler-repos/kepler-terraform-modules'
+alias gopack='cd ~/kepler-repos/kepler-packer'
 
 
 #Source sensitive files
