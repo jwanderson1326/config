@@ -123,7 +123,7 @@ set nocompatible
 set exrc
 
 " Numbers
-set number
+set number relativenumber
 set numberwidth=4
 
 " }}}
@@ -144,9 +144,29 @@ Plug 'tpope/vim-surround'
 " Language-specific syntax
 Plug 'hdima/python-syntax'
 Plug 'hashivim/vim-terraform'
+Plug 'khalliday7/Jenkinsfile-vim-syntax'
+Plug 'juliosueiras/vim-terraform-completion'
+Plug 'ekalinin/Dockerfile.vim'
 
 " Indentation
 Plug 'hynek/vim-python-pep8-indent'
+Plug 'vim-scripts/groovyindent-unix'
+
+" Autocomplete
+Plug 'davidhalter/jedi-vim'
+Plug 'marijnh/tern_for_vim'
+
+" Previewers
+function! BuildComposer(info)
+  if a:info.status != 'unchanged' || a:info.force
+    if has('nvim')
+      !cargo build --release
+    else
+      !cargo build --release --no-default-features --features json-rpc
+    endif
+  endif
+endfunction
+Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') }
 
 call plug#end()
 
@@ -205,14 +225,38 @@ endtry
 " Python highlighting
 let python_highlight_all = 1
 
-"  }}}
+" Python autocomplete
+let g:jedi#popup_on_dot = 0
+let g:jedi#show_call_signatures = 0
+let g:jedi#smart_auto_mappings = 0
+let g:jedi#force_py_version = 3
 
+autocmd FileType python setlocal completeopt-=preview
+
+" Javascript
+let g:tern#command = ["npx", "tern"]
+let g:tern_show_argument_hints = 'on_move'
+let g:tern_show_signature_in_pum = 1
+augroup javascript_complete
+  autocmd!
+  autocmd FileType javascript nnoremap <buffer> <C-]> :TernDef<CR>
+  autocmd FileType javascript nnoremap <buffer> <leader>gd :TernDoc<CR>
+augroup END
+
+" Markdown Viewer
+
+let g:markdown_composer_open_browser = 0
+
+"  }}}
 " terraform Syntax {{{
 let g:terraform_align = 1
 
 let g:terraform_fold_sections = 1
 
+let g:terraform_fmt_on_save = 1
+
 let g:terraform_remap_spacebar = 1
+
 " }}}
 " General: Trailing whitespace ------------- {{{
 
@@ -271,7 +315,10 @@ nnoremap <silent> gK H
 nnoremap <silent> gM M
 " Escape insert mode
 inoremap jk <esc>
+inoremap df <esc>
 inoremap <esc> <nop>
+
+nnoremap df <esc>
 
 
 " }}}

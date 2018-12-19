@@ -117,6 +117,19 @@ export DISABLE_AUTO_TILE=true
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
 # For a full list of active aliases, run `alias`.
+#
+
+######################################################################
+# FUNCTIONS
+######################################################################
+
+function klone() {
+  if [[ ! -d ~/kepler-repos/$1 ]]; then
+    git clone git@github.com:KeplerGroup/$1.git ~/kepler-repos/$1
+  else
+    echo "Repo is already kloned!"
+  fi
+}
 
 ######################################################################
 #ALIASES
@@ -142,6 +155,7 @@ alias smux='mux start devops'
 alias dmux='mux stop devops'
 alias python='python3'
 alias vim='nvim'
+alias rg="rg --hidden"
 
 alias goans='cd ~/kepler-repos/kepler-ansible'
 alias goterr='cd ~/kepler-repos/kepler-terraform'
@@ -168,8 +182,37 @@ fi
 
 #Set PATH
 TFENV_ROOT="$HOME/.tfenv/bin"
+POETRY_ROOT="$HOME/.poetry/bin"
 
-PATH=$PATH:$TFENV_ROOT
+PATH=$PATH:$TFENV_ROOT:$POETRY_ROOT
+
+NODENV_ROOT="$HOME/.nodenv"
+if [ -d "$NODENV_ROOT" ]
+then
+  export NODENV_ROOT
+  # Make sure it's not already in path
+  if [[ ":$PATH:" != *":$NODENV_ROOT/bin:"* ]]
+  then
+    # If $PATH exists, then add $NODENV_ROOT to $PATH with : at the end;
+    # otherwise NODENV_ROOT is the $PATH
+    PATH="${PATH:+"$PATH:"}$NODENV_ROOT/bin"
+    eval "$(nodenv init -)"
+  fi
+fi
+
+SERVERLESS_ROOT="$NODENV_ROOT/versions/10.11.0/lib/node_modules/serverless/bin"
+PATH=$PATH:$SERVERLESS_ROOT
+
+NODE_ROOT="$HOME/bin"
+PATH=$PATH:$NODE_ROOT
+
 export PATH
 
 typeset -aU path
+
+# tabtab source for serverless package
+# uninstall by removing these lines or running `tabtab uninstall serverless`
+[[ -f /home/justin/.nodenv/versions/10.11.0/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh ]] && . /home/justin/.nodenv/versions/10.11.0/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh
+# tabtab source for sls package
+# uninstall by removing these lines or running `tabtab uninstall sls`
+[[ -f /home/justin/.nodenv/versions/10.11.0/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh ]] && . /home/justin/.nodenv/versions/10.11.0/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh
