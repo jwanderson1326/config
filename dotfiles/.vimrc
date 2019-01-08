@@ -143,10 +143,14 @@ Plug 'tpope/vim-surround'
 
 " Language-specific syntax
 Plug 'hdima/python-syntax'
+Plug 'pangloss/vim-javascript'
+Plug 'elzr/vim-json'
 Plug 'hashivim/vim-terraform'
 Plug 'khalliday7/Jenkinsfile-vim-syntax'
 Plug 'juliosueiras/vim-terraform-completion'
 Plug 'ekalinin/Dockerfile.vim'
+Plug 'othree/html5.vim'
+Plug 'mxw/vim-jsx'
 
 " Indentation
 Plug 'hynek/vim-python-pep8-indent'
@@ -171,15 +175,57 @@ Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') }
 call plug#end()
 
 " }}}
-" General: Indentation (tabs, spaces, width, etc)------------- {{{
+" General: Filetype specification ------------ {{{
 
+augroup filetype_recognition
+  autocmd!
+  autocmd BufNewFile,BufRead,BufEnter *.hql,*.q set filetype=hive
+  autocmd BufNewFile,BufRead,BufEnter *.config set filetype=yaml
+  autocmd BufNewFile,BufRead,BufEnter *.bowerrc,*.babelrc,*.eslintrc,*.slack-term
+        \ set filetype=json
+  autocmd BufNewFile,BufRead,BufEnter *.asm set filetype=nasm
+  autocmd BufNewFile,BufRead,BufEnter *.handlebars set filetype=html
+  autocmd BufNewFile,BufRead,BufEnter *.m,*.oct set filetype=octave
+  autocmd BufNewFile,BufRead,BufEnter *.jsx set filetype=javascript.jsx
+  autocmd BufNewFile,BufRead,BufEnter *.gs set filetype=javascript
+  autocmd BufNewFile,BufRead,BufEnter *.cfg,*.ini,.coveragerc,.pylintrc
+        \ set filetype=dosini
+  autocmd BufNewFile,BufRead,BufEnter *.tsv set filetype=tsv
+  autocmd BufNewFile,BufRead,BufEnter Dockerfile.* set filetype=Dockerfile
+  autocmd BufNewFile,BufRead,BufEnter Makefile.* set filetype=make
+  autocmd BufNewFile,BufRead,BufEnter poetry.lock set filetype=toml
+augroup END
+
+augroup filetype_vim
+  autocmd!
+  autocmd BufWritePost *vimrc so $MYVIMRC |
+        \if has('gui_running') |
+        \so $MYGVIMRC |
+        \endif
+augroup END
+
+" }}}
+" General: Indentation (tabs, spaces, width, etc)------------- {{{
 augroup indentation_sr
   autocmd!
-  autocmd Filetype * setlocal shiftwidth=4 softtabstop=4 tabstop=4
-  autocmd Filetype python setlocal shiftwidth=4 softtabstop=4 tabstop=4
+  autocmd Filetype * setlocal expandtab shiftwidth=2 softtabstop=2 tabstop=8
+  autocmd Filetype python,c,elm,haskell,markdown,rust,rst,kv,nginx,asm,nasm
+        \ setlocal shiftwidth=4 softtabstop=4 tabstop=8
+  autocmd Filetype dot setlocal autoindent cindent
+  autocmd Filetype make,tsv,votl,go
+        \ setlocal tabstop=4 softtabstop=0 shiftwidth=4 noexpandtab
+  " Prevent auto-indenting from occuring
   autocmd Filetype yaml setlocal indentkeys-=<:>
-  autocmd Filetype make setlocal noexpandtab shiftwidth=4 softtabstop=0 tabstop=4
+
+  autocmd Filetype ron setlocal cindent
+        \ cinkeys=0{,0},0(,0),0[,0],:,0#,!^F,o,O,e
+        \ cinoptions+='(s,m2'
+        \ cinoptions+='(s,U1'
+        \ cinoptions+='j1'
+        \ cinoptions+='J1'
 augroup END
+
+" }}
 
 " }}}
 " General: Folding Settings --------------- {{{
@@ -209,6 +255,9 @@ augroup python_syntax
   autocmd FileType python syn keyword pythonBuiltinObj self
   autocmd FileType python syn keyword pythonBuiltinObj cls
 augroup end
+
+" VimJavascript:
+let g:javascript_plugin_flow = 1
 
 " Syntax: select global syntax scheme
 " Make sure this is at end of section

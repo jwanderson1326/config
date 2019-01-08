@@ -200,11 +200,8 @@ then
   fi
 fi
 
-SERVERLESS_ROOT="$NODENV_ROOT/versions/10.11.0/lib/node_modules/serverless/bin"
-PATH=$PATH:$SERVERLESS_ROOT
-
-NODE_ROOT="$HOME/bin"
-PATH=$PATH:$NODE_ROOT
+NODE_MODULE_ROOT="$HOME/node_modules/bin"
+PATH=$PATH:$NODE_MODULE_ROOT
 
 export PATH
 
