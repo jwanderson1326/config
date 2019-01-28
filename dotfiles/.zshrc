@@ -131,6 +131,20 @@ function klone() {
   fi
 }
 
+
+function dato() {
+  PAYLOAD=$(jq -n \
+    --arg user "$1" \
+    --arg email "$2" \
+    '{adhoc: true, username: $user, recipient: $email}')
+  echo $PAYLOAD
+  aws lambda invoke \
+    --function-name kip-credential-rotater \
+    --log-type Tail \
+    --payload $PAYLOAD \
+    /tmp/lambda.txt
+}
+
 ######################################################################
 #ALIASES
 ######################################################################
@@ -202,6 +216,8 @@ fi
 
 NODE_MODULE_ROOT="$HOME/node_modules/bin"
 PATH=$PATH:$NODE_MODULE_ROOT
+
+fpath+=~/.zfunc
 
 export PATH
 

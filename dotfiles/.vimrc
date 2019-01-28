@@ -160,7 +160,7 @@ Plug 'vim-scripts/groovyindent-unix'
 Plug 'davidhalter/jedi-vim'
 Plug 'marijnh/tern_for_vim'
 
-" Previewers
+" Previewers ==> ComposerOpen to start previewer
 function! BuildComposer(info)
   if a:info.status != 'unchanged' || a:info.force
     if has('nvim')
