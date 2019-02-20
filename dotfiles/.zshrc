@@ -150,8 +150,9 @@ function dato() {
 ######################################################################
 
 
-alias kvpn='sudo openvpn \
-    --config ~/openvpn/openvpn.conf'
+alias kvpn="""pritunl-client start $(pritunl-client list | tail -n1 | awk '{print $1}')"""
+
+alias svpn="pritunl-client stop $(pritunl-client list | tail -n1 | awk '{print $1}')"
 
 alias sl='ls'
 alias ll='ls -alFh'
@@ -175,6 +176,7 @@ alias goans='cd ~/kepler-repos/kepler-ansible'
 alias goterr='cd ~/kepler-repos/kepler-terraform'
 alias gomod='cd ~/kepler-repos/kepler-terraform-modules'
 alias gopack='cd ~/kepler-repos/kepler-packer'
+alias officevpn="netExtender -u janderson@keplergrp.com -d LocalDomain svpn.keplergrp.com:4433"
 
 
 #Source sensitive files
@@ -229,3 +231,5 @@ typeset -aU path
 # tabtab source for sls package
 # uninstall by removing these lines or running `tabtab uninstall sls`
 [[ -f /home/justin/.nodenv/versions/10.11.0/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh ]] && . /home/justin/.nodenv/versions/10.11.0/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh
+
+
