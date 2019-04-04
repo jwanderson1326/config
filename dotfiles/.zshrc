@@ -131,6 +131,11 @@ function klone() {
   fi
 }
 
+function babs() {
+  babel src/$1 --out-file=public/scripts/app.js --presets=env,react --watch
+}
+
+
 
 function dato() {
   PAYLOAD=$(jq -n \
@@ -151,8 +156,9 @@ function dato() {
 
 
 alias kvpn="""pritunl-client start $(pritunl-client list | tail -n1 | awk '{print $1}')"""
-
 alias svpn="pritunl-client stop $(pritunl-client list | tail -n1 | awk '{print $1}')"
+
+alias ovpn="sudo openvpn --config ~/openvpn/openvpn.conf"
 
 alias sl='ls'
 alias ll='ls -alFh'
@@ -178,6 +184,7 @@ alias gomod='cd ~/kepler-repos/kepler-terraform-modules'
 alias gopack='cd ~/kepler-repos/kepler-packer'
 alias officevpn="netExtender -u janderson@keplergrp.com -d LocalDomain svpn.keplergrp.com:4433"
 
+alias indbabel='babel src/app.js --out-file=public/scripts/app.js --presets=env,react --watch'
 
 #Source sensitive files
 if [ -f ~/.bash/sensitive ] ; then

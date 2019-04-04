@@ -228,6 +228,14 @@ augroup END
 " }}
 
 " }}}
+" General: Wrapping text -------------------------------------- {{{
+augroup writing
+  autocmd!
+  autocmd FileType markdown,rst,gitcommit
+        \ setlocal wrap linebreak nolist spell
+  autocmd BufNewFile,BufRead *.html,*.txt,*.tex :setlocal wrap linebreak nolist
+augroup END
+" }}}
 " General: Folding Settings --------------- {{{
 
 augroup fold_settings
