@@ -1,3 +1,4 @@
+echo 'Hello World'
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
@@ -150,6 +151,14 @@ function dato() {
     /tmp/lambda.txt
 }
 
+function drmi() {
+  for img in "$@"
+  do
+    docker image rm \
+      $(docker images --format "{{.Repository}}:{{.Tag}}" | grep $img)
+  done
+}
+
 ######################################################################
 #ALIASES
 ######################################################################
@@ -185,6 +194,8 @@ alias gopack='cd ~/kepler-repos/kepler-packer'
 alias officevpn="netExtender -u janderson@keplergrp.com -d LocalDomain svpn.keplergrp.com:4433"
 
 alias indbabel='babel src/app.js --out-file=public/scripts/app.js --presets=env,react --watch'
+
+alias awho="aws sts get-caller-identity"
 
 #Source sensitive files
 if [ -f ~/.bash/sensitive ] ; then
@@ -240,3 +251,9 @@ typeset -aU path
 [[ -f /home/justin/.nodenv/versions/10.11.0/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh ]] && . /home/justin/.nodenv/versions/10.11.0/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh
 
 
+
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+
+# tabtab source for slss package
+# uninstall by removing these lines or running `tabtab uninstall slss`
+[[ -f /home/justin/node_modules/tabtab/.completions/slss.zsh ]] && . /home/justin/node_modules/tabtab/.completions/slss.zsh
