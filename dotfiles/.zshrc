@@ -1,4 +1,3 @@
-echo 'Hello World'
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
@@ -186,6 +185,7 @@ alias dmux='mux stop devops'
 alias python='python3'
 alias vim='nvim'
 alias rg="rg --hidden"
+alias f="nvim"
 
 alias goans='cd ~/kepler-repos/kepler-ansible'
 alias goterr='cd ~/kepler-repos/kepler-terraform'
