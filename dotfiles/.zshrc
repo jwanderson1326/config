@@ -1,71 +1,41 @@
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+############################################################
+# ZPLUG
+# ##########################################################
 
-# Path to your oh-my-zsh installation.
-export ZSH="/home/justin/.oh-my-zsh"
+if [ -f ~/.zplug/init.zsh ]; then
+  source ~/.zplug/init.zsh
 
+  zplug "paulirish/git-open", as:plugin
+  zplug "greymd/docker-zsh-completion", as:plugin
+  zplug "zsh-users/zsh-completions", as:plugin
+  zplug "zsh-users/zsh-syntax-highlighting", as:plugin
+  zplug "nobeans/zsh-sdkman", as:plugin
+  zplug "junegunn/fzf-bin", \
+    from:gh-r, \
+    as:command, \
+    rename-to:fzf
+  zplug "mdumitru/git-aliases", as:plugin
 
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
+  zplug "romkatv/powerlevel10k", as:theme, depth:1
 
-# Uncomment the following line to use hyphen-insensitive completion. Case
-# sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
+  # Install plugins if there are plugins that have not been installed
+  if ! zplug check --verbose; then
+      printf "Install? [y/N]: "
+      if read -q; then
+          echo; zplug install
+      fi
+  fi
 
-# Uncomment the following line to disable bi-weekly auto-update checks.
-# DISABLE_AUTO_UPDATE="true"
-
-# Uncomment the following line to change how often to auto-update (in days).
-# export UPDATE_ZSH_DAYS=13
-
-# Uncomment the following line to disable colors in ls.
-# DISABLE_LS_COLORS="true"
-
-# Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
-
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# You can set one of the optional three formats:
-# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# or set a custom format using the strftime function format specifications,
-# see 'man strftime' for details.
- HIST_STAMPS="mm/dd/yyyy"
-
-# Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
-
-###############################################################
-#ZGEN SETTINGS
-###############################################################
-source "$HOME/.zgen/zgen.zsh"
-
-if ! zgen saved; then
-    zgen oh-my-zsh
-    zgen oh-my-zsh plugins/git
-    zgen oh-my-zsh plugins/aws
-    zgen oh-my-zsh plugins/pyenv
-    zgen oh-my-zsh plugins/terraform
-    zgen load romkatv/powerlevel10k powerlevel10k
-    zgen save
+  # Then, source plugins and add commands to $PATH
+  zplug load
+else
+  echo "zplug not installed"
 fi
-
 
 ##############################################################
 #THEME CONFIG
 ##############################################################
-ZSH_THEME="powerlevel9k/powerlevel9k"
+#ZSH_THEME="powerlevel9k/powerlevel9k"
 
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(virtualenv time context ssh dir vcs status)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=()
@@ -81,6 +51,133 @@ POWERLEVEL9K_VCS_CLEAN_BACKGROUND='048'
 POWERLEVEL9K_VCS_MODIFIED_BACKGROUND='227'
 POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND='210'
 
+################################################################################
+# SET OPTIONS
+################################################################################
+setopt AUTO_LIST
+setopt LIST_AMBIGUOUS
+setopt LIST_BEEP
+
+# completions
+setopt COMPLETE_ALIASES
+
+# automatically CD without typing cd
+setopt AUTOCD
+
+# Dealing with history
+setopt HIST_IGNORE_SPACE
+setopt APPENDHISTORY
+setopt SHAREHISTORY
+setopt INCAPPENDHISTORY
+HIST_STAMPS="mm/dd/yyyy"
+
+# History: How many lines of history to keep in memory
+export HISTSIZE=5000
+
+# History: ignore leading space, where to save history to disk
+export HISTCONTROL=ignorespace
+export HISTFILE=~/.zsh_history
+
+# History: Number of history entries to save to disk
+export SAVEHIST=5000
+
+
+
+#######################################################################
+# Unset options
+#######################################################################
+
+# do not automatically complete
+unsetopt MENU_COMPLETE
+
+# do not automatically remove the slash
+unsetopt AUTO_REMOVE_SLASH
+
+#######################################################################
+# fzf SETTINGS
+#######################################################################
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# Use fd (https://github.com/sharkdp/fd) instead of the default find
+# command for listing path candidates.
+# - The first argument to the function ($1) is the base path to start traversal
+# - See the source code (completion.{bash,zsh}) for the details.
+_fzf_compgen_path() {
+  fd --hidden --follow --exclude ".git" . "$1"
+}
+
+# Use fd to generate the list for directory completion
+_fzf_compgen_dir() {
+  fd --type d --hidden --follow --exclude ".git" . "$1"
+}
+
+
+################################################################################
+# LS_COLORS
+################################################################################
+LS_COLORS="di=1;34:"
+#   fi  File
+LS_COLORS+="fi=0:"
+#   #   ln  Symbolic Link
+LS_COLORS+="ln=1;36:"
+#   #   pi  Fifo file
+LS_COLORS+="pi=5:"
+#   #   so  Socket file
+LS_COLORS+="so=5:"
+#   #   bd  Block (buffered) special file
+LS_COLORS+="bd=5:"
+#   #   cd  Character (unbuffered) special file
+LS_COLORS+="cd=5:"
+#   #   or  Symbolic Link pointing to a non-existent file (orphan)
+LS_COLORS+="or=31:"
+#   #   mi  Non-existent file pointed to by a symbolic link (visible with ls -l)
+LS_COLORS+="mi=0:"
+#   #   ex  File which is executable (ie. has 'x' set in permissions).
+LS_COLORS+="ex=1;92:"
+#   # additional file types as-defined by their extension
+LS_COLORS+="*.rpm=90"
+#
+#   # Finally, export LS_COLORS
+export LS_COLORS
+
+################################################################################
+# ZShell Auto Completion
+################################################################################
+
+autoload -U +X bashcompinit && bashcompinit
+zstyle ':completion:*:*:git:*' script /usr/local/etc/bash_completion.d/git-completion.bash
+
+# CURRENT STATE: does not select any sort of searching
+# searching was too annoying and I didn't really use it
+# If you want it back, use "search-backward" as an option
+zstyle ':completion:*' menu select
+zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
+
+# Fuzzy completion
+zstyle ':completion:*' matcher-list '' \
+  'm:{a-z\-A-Z}={A-Z\_a-z}' \
+  'r:[^[:alpha:]]||[[:alpha:]]=** r:|=* m:{a-z\-A-Z}={A-Z\_a-z}' \
+  'r:|?=** m:{a-z\-A-Z}={A-Z\_a-z}'
+fpath=(/usr/local/share/zsh-completions $fpath)
+zmodload -i zsh/complist
+
+# Manual libraries
+
+# vault, by Hashicorp
+_vault_complete() {
+  local word completions
+  word="$1"
+  completions="$(vault --cmplt "${word}")"
+  reply=( "${(ps:\n:)completions}" )
+}
+compctl -f -K _vault_complete vault
+
+# stack
+# eval "$(stack --bash-completion-script stack)"
+
+# Add autocompletion path
+fpath+=~/.zfunc
 
 
 ###############################################################
@@ -91,33 +188,6 @@ source ~/.tmuxinator/completion/tmuxinator.zsh
 export DISABLE_AUTO_TILE=true
 
 
-
-
-# User configuration
-
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# ssh
-# export SSH_KEY_PATH="~/.ssh/rsa_id"
-
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
 
 ######################################################################
 # FUNCTIONS
@@ -168,9 +238,9 @@ alias svpn="nmcli c down aws"
 
 alias ovpn="sudo openvpn --config ~/openvpn/openvpn.conf"
 
-alias sl='ls'
-alias ll='ls -alFh'
-alias la='ls -Alfh'
+alias sl='ls --color=auto'
+alias ll='ls -alFh --color=auto'
+alias la='ls -Alfh --color=auto'
 
 alias pbcopy='xsel --clipboard --input'
 alias pbcopy='xsel --clipboard --output'
@@ -207,15 +277,6 @@ fi
 
 #Set EDITOR
 export EDITOR='vim'
-
-#Configure  pyenv path
-PYENV_ROOT="$HOME/.pyenv"
-if [ -d "$PYENV_ROOT" ]
-then
-    export PYENV_ROOT
-    PATH="PYENV_ROOT/bin:$PATH"
-    eval "$(pyenv init -)"
-fi
 
 #Set PATH
 TFENV_ROOT="$HOME/.tfenv/bin"

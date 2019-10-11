@@ -17,3 +17,5 @@
     driver = true
 [credential "https://github.com"]
     username = jwanderson1326
+[open "default"]
+	remote = upstream
