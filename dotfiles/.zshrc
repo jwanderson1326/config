@@ -57,7 +57,7 @@ if ! zgen saved; then
     zgen oh-my-zsh plugins/aws
     zgen oh-my-zsh plugins/pyenv
     zgen oh-my-zsh plugins/terraform
-    zgen load bhilburn/powerlevel9k powerlevel9k
+    zgen load romkatv/powerlevel10k powerlevel10k
     zgen save
 fi
 
@@ -163,8 +163,8 @@ function drmi() {
 ######################################################################
 
 
-alias kvpn="""pritunl-client start $(pritunl-client list | tail -n1 | awk '{print $1}')"""
-alias svpn="pritunl-client stop $(pritunl-client list | tail -n1 | awk '{print $1}')"
+alias kvpn="nmcli c up aws"
+alias svpn="nmcli c down aws"
 
 alias ovpn="sudo openvpn --config ~/openvpn/openvpn.conf"
 
@@ -180,6 +180,7 @@ alias ve='python3 -m venv venv'
 alias va='source venv/bin/activate'
 alias kip='cd ~/kepler-repos'
 alias vgit='echo $VAULT_AUTH_GITHUB_TOKEN | pbcopy'
+alias eget='echo "961517735772.dkr.ecr.us-east-1.amazonaws.com" | pbcopy'
 alias smux='mux start devops'
 alias dmux='mux stop devops'
 alias python='python3'
@@ -191,7 +192,9 @@ alias goans='cd ~/kepler-repos/kepler-ansible'
 alias goterr='cd ~/kepler-repos/kepler-terraform'
 alias gomod='cd ~/kepler-repos/kepler-terraform-modules'
 alias gopack='cd ~/kepler-repos/kepler-packer'
-alias officevpn="netExtender -u janderson@keplergrp.com -d LocalDomain svpn.keplergrp.com:4433"
+alias officevpn="sudo netExtender -u janderson@keplergrp.com -d LocalDomain svpn.keplergrp.com:4433"
+alias cookies3="cookiecutter git@github.com:keplergroup/cookiecutter-terraform-s3-bucket.git"
+alias cookieci="cookiecutter git@github.com:keplergroup/cookiecutter-ci-files.git"
 
 alias indbabel='babel src/app.js --out-file=public/scripts/app.js --presets=env,react --watch'
 
@@ -217,8 +220,9 @@ fi
 #Set PATH
 TFENV_ROOT="$HOME/.tfenv/bin"
 POETRY_ROOT="$HOME/.poetry/bin"
+RUST_ROOT="$HOME/.cargo/bin"
 
-PATH=$PATH:$TFENV_ROOT:$POETRY_ROOT
+PATH=$PATH:$TFENV_ROOT:$POETRY_ROOT:$RUST_ROOT
 
 NODENV_ROOT="$HOME/.nodenv"
 if [ -d "$NODENV_ROOT" ]
@@ -243,11 +247,7 @@ export PATH
 
 typeset -aU path
 
-# tabtab source for serverless package
-# uninstall by removing these lines or running `tabtab uninstall serverless`
 [[ -f /home/justin/.nodenv/versions/10.11.0/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh ]] && . /home/justin/.nodenv/versions/10.11.0/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh
-# tabtab source for sls package
-# uninstall by removing these lines or running `tabtab uninstall sls`
 [[ -f /home/justin/.nodenv/versions/10.11.0/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh ]] && . /home/justin/.nodenv/versions/10.11.0/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh
 
 
@@ -257,3 +257,6 @@ export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 # tabtab source for slss package
 # uninstall by removing these lines or running `tabtab uninstall slss`
 [[ -f /home/justin/node_modules/tabtab/.completions/slss.zsh ]] && . /home/justin/node_modules/tabtab/.completions/slss.zsh
+
+. $HOME/.asdf/asdf.sh
+. $HOME/.asdf/completions/asdf.bash

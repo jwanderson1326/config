@@ -76,7 +76,7 @@ if (exists('+colorcolumn'))
 endif
 
 " Don't highlight all search results
-set nohlsearch
+set hlsearch
 
 " Remove query for terminal version
 " This prevents un-editable garbage characters from being printed
@@ -151,6 +151,8 @@ Plug 'juliosueiras/vim-terraform-completion'
 Plug 'ekalinin/Dockerfile.vim'
 Plug 'othree/html5.vim'
 Plug 'mxw/vim-jsx'
+Plug 'evanleck/vim-svelte' "svelte highlights
+Plug 'posva/vim-vue'
 
 " Indentation
 Plug 'hynek/vim-python-pep8-indent'
@@ -232,7 +234,7 @@ augroup END
 augroup writing
   autocmd!
   autocmd FileType markdown,rst,gitcommit
-        \ setlocal wrap linebreak nolist spell
+        \ setlocal wrap linebreak nolist spell textwidth=80
   autocmd BufNewFile,BufRead *.html,*.txt,*.tex :setlocal wrap linebreak nolist
 augroup END
 " }}}
@@ -304,11 +306,12 @@ augroup END
 
 let g:markdown_composer_open_browser = 0
 
+
 "  }}}
 " terraform Syntax {{{
 let g:terraform_align = 1
 
-let g:terraform_fold_sections = 1
+let g:terraform_fold_sections = 0
 
 let g:terraform_fmt_on_save = 1
 
@@ -372,11 +375,16 @@ nnoremap <silent> gK H
 nnoremap <silent> gM M
 " Escape insert mode
 inoremap jk <esc>
-inoremap df <esc>
 inoremap <esc> <nop>
 
 nnoremap df <esc>
 
+" Abbreviations:
+iabbrev waht what
+iabbrev tehn then
+iabbrev adn and
+iabbrev tfr resource
+iabbrev mnw module.network.
 
 " }}}
 " General: Command abbreviations ------------------------ {{{
