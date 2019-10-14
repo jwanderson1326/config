@@ -35,7 +35,7 @@ fi
 ##############################################################
 #THEME CONFIG
 ##############################################################
-ZSH_THEME="powerlevel9k/powerlevel9k"
+#ZSH_THEME="powerlevel9k/powerlevel9k"
 
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(virtualenv time context ssh dir vcs status)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=()
@@ -231,8 +231,6 @@ function drmi() {
 ######################################################################
 #ALIASES
 ######################################################################
-
-
 alias kvpn="nmcli c up aws"
 alias svpn="nmcli c down aws"
 
@@ -244,7 +242,6 @@ alias ll='ls -alFh --color=auto'
 alias la='ls -Alfh --color=auto'
 
 alias pbcopy='xsel --clipboard --input'
-alias pbcopy='xsel --clipboard --output'
 
 alias zo='source ~/.zshrc'
 alias ve='python3 -m venv venv'
@@ -271,37 +268,27 @@ alias indbabel='babel src/app.js --out-file=public/scripts/app.js --presets=env,
 
 alias awho="aws sts get-caller-identity"
 
+################################################################
 #Source sensitive files
+################################################################
+
 if [ -f ~/.bash/sensitive ] ; then
     source ~/.bash/sensitive
 fi
 
+################################################################
 #Set EDITOR
+################################################################
 export EDITOR='vim'
 
+###############################################################
 #Set PATH
-TFENV_ROOT="$HOME/.tfenv/bin"
+###############################################################
 POETRY_ROOT="$HOME/.poetry/bin"
 RUST_ROOT="$HOME/.cargo/bin"
-
-PATH=$PATH:$TFENV_ROOT:$POETRY_ROOT:$RUST_ROOT
-
-NODENV_ROOT="$HOME/.nodenv"
-if [ -d "$NODENV_ROOT" ]
-then
-  export NODENV_ROOT
-  # Make sure it's not already in path
-  if [[ ":$PATH:" != *":$NODENV_ROOT/bin:"* ]]
-  then
-    # If $PATH exists, then add $NODENV_ROOT to $PATH with : at the end;
-    # otherwise NODENV_ROOT is the $PATH
-    PATH="${PATH:+"$PATH:"}$NODENV_ROOT/bin"
-    eval "$(nodenv init -)"
-  fi
-fi
-
 NODE_MODULE_ROOT="$HOME/node_modules/bin"
-PATH=$PATH:$NODE_MODULE_ROOT
+
+PATH=$PATH::$POETRY_ROOT:$RUST_ROOT:$NODE_MODULE_ROOTE
 
 fpath+=~/.zfunc
 
@@ -309,12 +296,9 @@ export PATH
 
 typeset -aU path
 
+
 [[ -f /home/justin/.nodenv/versions/10.11.0/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh ]] && . /home/justin/.nodenv/versions/10.11.0/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh
 [[ -f /home/justin/.nodenv/versions/10.11.0/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh ]] && . /home/justin/.nodenv/versions/10.11.0/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh
-
-
-
-export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
 # tabtab source for slss package
 # uninstall by removing these lines or running `tabtab uninstall slss`
