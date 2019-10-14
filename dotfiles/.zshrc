@@ -35,7 +35,7 @@ fi
 ##############################################################
 #THEME CONFIG
 ##############################################################
-#ZSH_THEME="powerlevel9k/powerlevel9k"
+ZSH_THEME="powerlevel9k/powerlevel9k"
 
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(virtualenv time context ssh dir vcs status)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=()
@@ -239,6 +239,7 @@ alias svpn="nmcli c down aws"
 alias ovpn="sudo openvpn --config ~/openvpn/openvpn.conf"
 
 alias sl='ls --color=auto'
+alias ls='ls --color=auto'
 alias ll='ls -alFh --color=auto'
 alias la='ls -Alfh --color=auto'
 
