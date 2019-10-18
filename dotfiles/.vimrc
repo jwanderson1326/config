@@ -385,6 +385,8 @@ iabbrev tehn then
 iabbrev adn and
 iabbrev tfr resource
 iabbrev mnw module.network.
+iabbrev mfn ../Makefile.12
+iabbrev mfv ../Makefile.12.Version
 
 " }}}
 " General: Command abbreviations ------------------------ {{{

@@ -228,6 +228,15 @@ function drmi() {
   done
 }
 
+function tf_syntax_update() {
+  # This will fix maps to use TF 12's stricter syntax
+  attribute=("tags" "vars" "default" "dimensions")
+  for type in "${attribute[@]}"; do
+    sed -i "s/${type}\ {/${type}\ =\ {/g" *.tf
+  done
+}
+
+
 ######################################################################
 #ALIASES
 ######################################################################
@@ -267,6 +276,7 @@ alias cookieci="cookiecutter git@github.com:keplergroup/cookiecutter-ci-files.gi
 alias indbabel='babel src/app.js --out-file=public/scripts/app.js --presets=env,react --watch'
 
 alias awho="aws sts get-caller-identity"
+
 
 ################################################################
 #Source sensitive files
