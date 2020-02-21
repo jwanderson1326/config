@@ -17,6 +17,7 @@ if [ -f ~/.zplug/init.zsh ]; then
   zplug "mdumitru/git-aliases", as:plugin
 
   zplug "romkatv/powerlevel10k", as:theme, depth:1
+  #zplug "jwanderson1326/spaceship-prompt", use:spaceship.zsh, from:github, as:theme
 
   # Install plugins if there are plugins that have not been installed
   if ! zplug check --verbose; then
@@ -35,8 +36,6 @@ fi
 ##############################################################
 #THEME CONFIG
 ##############################################################
-#ZSH_THEME="powerlevel9k/powerlevel9k"
-
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(virtualenv time context ssh dir vcs status)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=()
 POWERLEVEL9K_DISABLE_RPROMPT=true
@@ -50,6 +49,42 @@ POWERLEVEL9K_DIR_HOME_BACKGROUND='123'
 POWERLEVEL9K_VCS_CLEAN_BACKGROUND='048'
 POWERLEVEL9K_VCS_MODIFIED_BACKGROUND='227'
 POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND='210'
+
+# SPACESHIP_TIME_SHOW=true
+# SPACESHIP_TIME_SUFFIX=' | '
+# SPACESHIP_USER_SHOW=always
+# SPACESHIP_USER_COLOR_ROOT=red
+# SPACESHIP_USER_PREFIX=""
+# SPACESHIP_USER_COLOR=white
+# SPACESHIP_HOST_SHOW=true
+# SPACESHIP_HOST_COLOR_SSH=green
+# SPACESHIP_DIR_SHOW=true
+# SPACESHIP_DIR_COLOR=81
+# SPACESHIP_DIR_PREFIX="| "
+# SPACESHIP_DIR_TRUNC_REPO=true
+# SPACESHIP_DIR_TRUNC=3
+# SPACESHIP_GIT_PREFIX=""
+# SPACESHIP_GIT_BRANCH_COLOR=green
+# SPACESHIP_GIT_STATUS_PREFIX=" "
+# SPACESHIP_GIT_STATUS_SUFFIX=""
+# SPACESHIP_GIT_STATUS_COLOR=green
+# SPACESHIP_VENV_GENERIC_NAMES=()
+# SPACESHIP_TERRAFORM_SHOW=true
+
+# SPACESHIP_PROMPT_ORDER=(
+#   battery
+#   venv
+#   time
+#   user
+#   host
+#   dir
+#   git
+#   terraform
+#   line_sep
+#   line_sep
+#   vpn
+#   char
+# )
 
 ################################################################################
 # SET OPTIONS
@@ -81,7 +116,7 @@ export HISTFILE=~/.zsh_history
 # History: Number of history entries to save to disk
 export SAVEHIST=5000
 
-
+export TF_PLUGIN_CACHE_DIR=/home/justin/.terraform.d/plugin-cache
 
 #######################################################################
 # Unset options
@@ -237,6 +272,74 @@ function tf_syntax_update() {
 }
 
 
+function tfpull {
+  # This will pull a file down to /tmp/terraform
+  terraform state pull > /tmp/terraform/$1.tfstate
+}
+
+
+function tfpush {
+  # This will pull a file down to /tmp/terraform
+  terraform state push /tmp/terraform/$1.tfstate
+}
+
+function switchenv() {
+  # Switch only the environment in the CWD
+  # Requires environment as an argument
+  # Example: switchenv master
+  DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+  ENV=$(echo ${DIR} | sed "s/^.*\/kepler-terraform\///" | cut -d / -f 1)
+  DIR_PREFIX=$(echo $DIR | awk -F "${ENV}" '{print $1}')
+  DIR_SUFFIX=$(echo $DIR | awk -F "${ENV}" '{print $2}')
+  if [[ $ENV == 'master' ]]; then
+    NEW_ENV='integration'
+  elif [[ $ENV == 'integration' ]]; then
+    NEW_ENV='master'
+  else
+    NEW_ENV=$1
+  fi
+  cd "$DIR_PREFIX/$NEW_ENV/$DIR_SUFFIX"
+}
+
+function gclean() {
+  refs="$(git remote prune origin --dry-run)"
+  if [ -z "$refs" ]
+  then
+    echo "No prunable references found"
+  else
+    echo $refs
+    while true; do
+     read yn\?"Do you wish to prune these local references to remote branches?"
+     case $yn in
+       [Yy]* ) break;;
+       [Nn]* ) return;;
+       * ) echo "Please answer yes or no.";;
+     esac
+    done
+    git remote prune origin
+    echo "Pruned!"
+  fi
+
+  local branches="$(git branch --merged master | grep -v '^[ *]*master$')"
+  if [ -z "$branches" ]
+  then
+    echo "No merged branches found"
+  else
+    echo $branches
+    while true; do
+     read yn\?"Do you wish to delete these merged local branches?"
+     case $yn in
+       [Yy]* ) break;;
+       [Nn]* ) return;;
+       * ) echo "Please answer yes or no.";;
+     esac
+    done
+    echo $branches | xargs git branch -d
+    echo "Deleted!"
+  fi
+}
+
+
 ######################################################################
 #ALIASES
 ######################################################################
@@ -277,6 +380,17 @@ alias indbabel='babel src/app.js --out-file=public/scripts/app.js --presets=env,
 
 alias awho="aws sts get-caller-identity"
 
+alias -g ...='../../'
+alias -g ....='../../'
+alias -g .....='../../../../'
+alias -g ......='../../../../../'
+alias -g .......='../../../../../../'
+alias -g ........='../../../../../../../'
+alias -g .........='../../../../../../../../'
+
+alias tfrm='terraform state rm '
+alias tfmv='terraform state mv '
+alias tflist='terraform state list'
 
 ################################################################
 #Source sensitive files
@@ -297,8 +411,9 @@ export EDITOR='vim'
 POETRY_ROOT="$HOME/.poetry/bin"
 RUST_ROOT="$HOME/.cargo/bin"
 NODE_MODULE_ROOT="$HOME/node_modules/bin"
+GCLOUD_ROOT="$HOME/.google-cloud-sdk/bin"
 
-PATH=$PATH::$POETRY_ROOT:$RUST_ROOT:$NODE_MODULE_ROOTE
+PATH=$PATH::$POETRY_ROOT:$RUST_ROOT:$NODE_MODULE_ROOTE:$GCLOUD_ROOT
 
 fpath+=~/.zfunc
 
@@ -316,3 +431,7 @@ typeset -aU path
 
 . $HOME/.asdf/asdf.sh
 . $HOME/.asdf/completions/asdf.bash
+
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/home/justin/.google-cloud-sdk/completion.zsh.inc' ]; then . '/home/justin/.google-cloud-sdk/completion.zsh.inc'; fi
