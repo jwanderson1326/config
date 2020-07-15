@@ -3,7 +3,7 @@
 	name = Justin Anderson
 [core]
 	editor = vim
-	autocrlf = input
+	autocrlf = false
 	safecrlf = true
 [alias]
 	co = checkout
@@ -19,3 +19,5 @@
     username = jwanderson1326
 [open "default"]
 	remote = upstream
+[pull]
+	rebase = false

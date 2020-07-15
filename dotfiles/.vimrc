@@ -126,6 +126,7 @@ Plug 'NLKNguyen/papercolor-theme'
 " Utils
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
+Plug 'scrooloose/nerdtree'
 
 " Language-specific syntax
 Plug 'hdima/python-syntax'
@@ -145,24 +146,25 @@ Plug 'hynek/vim-python-pep8-indent'
 Plug 'vim-scripts/groovyindent-unix'
 
 " Autocomplete
-Plug 'davidhalter/jedi-vim'
 Plug 'marijnh/tern_for_vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'jiangmiao/auto-pairs'
 for coc_plugin in [
       \ 'git@github.com:coc-extensions/coc-svelte.git',
       \ 'git@github.com:fannheyward/coc-markdownlint.git',
       \ 'git@github.com:josa42/coc-docker.git',
       \ 'git@github.com:neoclide/coc-css.git',
+      \ 'git@github.com:neoclide/coc-pairs.git',
       \ 'git@github.com:neoclide/coc-html.git',
       \ 'git@github.com:neoclide/coc-json.git',
-      \ 'git@github.com:neoclide/coc-pairs.git',
       \ 'git@github.com:neoclide/coc-python.git',
       \ 'git@github.com:neoclide/coc-rls.git',
       \ 'git@github.com:neoclide/coc-snippets.git',
       \ 'git@github.com:neoclide/coc-tsserver.git',
       \ 'git@github.com:neoclide/coc-yaml.git',
+      \ 'git@github.com:iamcco/coc-diagnostic.git',
+      \ 'git@github.com:davidroeca/coc-svelte-language-tools.git'
       \ ]
+  Plug coc_plugin, {'do': 'yarn install --frozen-lockfile && yarn build'}
 endfor
 
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install' }
@@ -182,7 +184,7 @@ augroup filetype_recognition
   autocmd BufNewFile,BufRead,BufEnter *.handlebars set filetype=html
   autocmd BufNewFile,BufRead,BufEnter *.m,*.oct set filetype=octave
   autocmd BufNewFile,BufRead,BufEnter *.jsx set filetype=javascript.jsx
-  autocmd BufNewFile,BufRead,BufEnter *.gs,*.ts set filetype=javascript
+  autocmd BufNewFile,BufRead,BufEnter *.gs,*.ts,*.tsx set filetype=javascript
   autocmd BufNewFile,BufRead,BufEnter *.cfg,*.ini,.coveragerc,.pylintrc
         \ set filetype=dosini
   autocmd BufNewFile,BufRead,BufEnter *.tsv set filetype=tsv
@@ -277,28 +279,66 @@ endtry
 " Python highlighting
 let python_highlight_all = 1
 
-" Python autocomplete
-let g:jedi#popup_on_dot = 0
-let g:jedi#show_call_signatures = 0
-let g:jedi#smart_auto_mappings = 0
-let g:jedi#force_py_version = 3
-
-autocmd FileType python setlocal completeopt-=preview
-
-" Javascript
-let g:tern#command = ["npx", "tern"]
-let g:tern_show_argument_hints = 'on_move'
-let g:tern_show_signature_in_pum = 1
-augroup javascript_complete
-  autocmd!
-  autocmd FileType javascript nnoremap <buffer> <C-]> :TernDef<CR>
-  autocmd FileType javascript nnoremap <buffer> <leader>gd :TernDoc<CR>
-augroup END
 
 " Markdown Viewer
 
 let g:markdown_composer_open_browser = 0
+" ----------------------NERDTree Configs
+" Plug settings for Nerdtree ----------------- {{{
+map F2 for Nerdtree
+map <F2> :NERDTreeToggle<CR>
+let g:NERDTreeMapOpenInTab = '<C-t>'
+let g:NERDTreeMapOpenInTabSilent = ''
+let g:NERDTreeMapOpenSplit = '<C-s>'
+let g:NERDTreeMapOpenVSplit = '<C-v>'
+let g:NERDTreeShowLineNumbers = 1
+let g:NERDTreeCaseSensitiveSort = 0
+let g:NERDTreeWinPos = 'left'
+let g:NERDTreeWinSize = 31
+let g:NERDTreeAutoDeleteBuffer = 1
+let g:NERDTreeSortOrder = ['*', '\/$']
+let g:NERDTreeIgnore=[
+      \'venv$[[dir]]',
+      \'__pycache__$[[dir]]',
+      \'.egg-info$[[dir]]',
+      \'node_modules$[[dir]]',
+      \'elm-stuff$[[dir]]',
+      \'\.aux$[[file]]',
+      \'\.toc$[[file]]',
+      \'\.pdf$[[file]]',
+      \'\.out$[[file]]',
+      \'\.o$[[file]]',
+      \]
 
+function! NERDTreeToggleCustom()
+    if exists('t:NERDTreeBufName') && bufwinnr(t:NERDTreeBufName) != -1
+      " if NERDTree is open in window in current tab...
+      exec 'NERDTreeClose'
+    else
+      exec 'NERDTree %'
+    endif
+endfunction
+
+function! s:CloseIfOnlyControlWinLeft()
+  if winnr("$") != 1
+    return
+  endif
+  if (exists("t:NERDTreeBufName") && bufwinnr(t:NERDTreeBufName) != -1)
+        \ || &buftype == 'quickfix'
+    q
+  endif
+endfunction
+
+augroup CloseIfOnlyControlWinLeft
+  au!
+  au BufEnter * call s:CloseIfOnlyControlWinLeft()
+augroup END
+" }}}
+" vim-go settings ------------------ {{{
+let g:go_template_autocreate = 0
+" }}}
+
+"----------------------COC Configs
 " TextEdit might fail if hidden is not set.
 set hidden
 
@@ -511,6 +551,8 @@ nnoremap <leader>y "+y
 vnoremap <leader>p "+p
 nnoremap <leader>p "+p
 
+vnoremap <C-t> :'<,'>!tr -d '"{$}'<CR>
+
 " Abbreviations:
 iabbrev waht what
 iabbrev tehn then
@@ -519,6 +561,7 @@ iabbrev tfr resource
 iabbrev mnw module.network.
 iabbrev mfn ../Makefile.12
 iabbrev mfv ../Makefile.12.Version
+
 
 " }}}
 " General: Command abbreviations ------------------------ {{{

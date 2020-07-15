@@ -339,6 +339,72 @@ function gclean() {
   fi
 }
 
+# cd to the current git root
+function td() {
+  local dir
+  dir=`git rev-parse --show-toplevel`
+  if [ $? -eq 0 ]; then
+    cd "$dir"
+    return 0
+  else
+    return 1
+  fi
+}
+
+function prview {
+  if [ -z "$1" ]; then
+    "Need a PR Number supplied!"
+  elif [[ $2 == "web" ]]; then
+    gh pr view $1 -w
+  else
+    gh pr view $1
+  fi
+}
+
+function prco {
+  if [ -z "$1" ]; then
+    "Need a PR Number supplied!"
+  else
+    gh pr checkout $1
+  fi
+}
+
+function prcreate {
+  if [ -z "$1" ]; then
+    gh pr create
+  else
+    gh pr create -B $1
+  fi
+}
+
+function update_program() {
+  case $1 in
+    kitty)
+      curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
+      ;;
+    zoom)
+      curl -Lsf https://zoom.us/client/latest/zoom_amd64.deb -o /tmp/zoom_amd64.deb
+      sudo dpkg -i /tmp/zoom_amd64.deb
+      ;;
+    vault)
+      if [ -z $2 ]; then
+        echo "Missing Vault Version!"
+      else
+        curl -Lsf https://releases.hashicorp.com/vault/${2}/vault_${2}_linux_amd64.zip -o /tmp/vault.zip
+        unzip -o -d $HOME/.local/bin/ /tmp/vault.zip
+        echo "Updated Vault to $2"
+      fi
+      ;;
+  esac
+}
+
+function get_ips() {
+  if [ -z "$1" ]; then
+    echo "Must Define an Instance Name! eg mgmt-ecs-asg"
+  else
+    aws ec2 describe-instances --filters "Name=tag:Name,Values=$1" "Name=instance-state-name,Values=running" --query 'Reservations[*].Instances[*].{Instance:InstanceId,PrivateIP:PrivateIpAddress}' --output table
+  fi
+}
 
 ######################################################################
 #ALIASES
@@ -373,12 +439,17 @@ alias goterr='cd ~/kepler-repos/kepler-terraform'
 alias gomod='cd ~/kepler-repos/kepler-terraform-modules'
 alias gopack='cd ~/kepler-repos/kepler-packer'
 alias officevpn="sudo netExtender -u janderson@keplergrp.com -d LocalDomain svpn.keplergrp.com:4433"
+alias homevpn="sudo openvpn --config ~/openvpn/janderson.ovpn"
 alias cookies3="cookiecutter git@github.com:keplergroup/cookiecutter-terraform-s3-bucket.git"
 alias cookieci="cookiecutter git@github.com:keplergroup/cookiecutter-ci-files.git"
 
 alias indbabel='babel src/app.js --out-file=public/scripts/app.js --presets=env,react --watch'
 
 alias awho="aws sts get-caller-identity"
+
+alias ghview="gh repo view -w"
+alias prlist="gh pr list"
+alias prstatus="gh pr status"
 
 alias -g ...='../../'
 alias -g ....='../../'
@@ -404,6 +475,13 @@ fi
 #Set EDITOR
 ################################################################
 export EDITOR='vim'
+
+###############################################################
+# Set Google Cloud Creds Location
+###############################################################
+GOOGLE_CLOUD_KEYFILE_JSON="~/.gcp/terraform_creds.json"
+GOOGLE_CREDENTIALS="~/.gcp/terraform_creds.json"
+GOOGLE_REGION=us-east1
 
 ###############################################################
 #Set PATH
@@ -435,3 +513,7 @@ typeset -aU path
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/home/justin/.google-cloud-sdk/completion.zsh.inc' ]; then . '/home/justin/.google-cloud-sdk/completion.zsh.inc'; fi
+
+### Temp
+
+EFS_ID="fs-54f53f1d.efs.us-east-1.amazonaws.com"
