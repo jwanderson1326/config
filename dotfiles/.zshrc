@@ -1,3 +1,5 @@
+export TERM=xterm-256color
+
 ############################################################
 # ZPLUG
 # ##########################################################
@@ -215,14 +217,6 @@ compctl -f -K _vault_complete vault
 fpath+=~/.zfunc
 
 
-###############################################################
-#SOURCING
-##############################################################
-
-source ~/.tmuxinator/completion/tmuxinator.zsh
-export DISABLE_AUTO_TILE=true
-
-
 
 ######################################################################
 # FUNCTIONS
@@ -427,6 +421,7 @@ alias va='source venv/bin/activate'
 alias kip='cd ~/kepler-repos'
 alias vgit='echo $VAULT_AUTH_GITHUB_TOKEN | pbcopy'
 alias eget='echo "961517735772.dkr.ecr.us-east-1.amazonaws.com" | pbcopy'
+alias tmux='tmux -2'
 alias smux='mux start devops'
 alias dmux='mux stop devops'
 alias python='python3'
