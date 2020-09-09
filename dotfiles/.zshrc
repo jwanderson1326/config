@@ -1,5 +1,3 @@
-export TERM=xterm-256color
-
 ############################################################
 # ZPLUG
 # ##########################################################
@@ -400,6 +398,39 @@ function get_ips() {
   fi
 }
 
+# REDSHIFT CONNECTIONS
+function rs_analytics {
+  vauth
+  echo '---'
+  local host="rs-analytics-master.keplergrp.com"
+  local analytics_pw=$(vault read -field=password secret/administration/redshift/analytics-admin)
+  PGPASSWORD=$analytics_pw FRIENDLY_HOSTNAME=$host psql -h $host -U kip -p 5439 -d kip
+}
+
+function rs_integration {
+  vauth
+  echo '---'
+  local host="rs-analytics-integration.keplergrp.com"
+  local integration_pw=$(vault read -field=password secret/administration/redshift/integration-analytics-admin)
+  PGPASSWORD=$integration_pw FRIENDLY_HOSTNAME=$host psql -h $host -U kepleradmin -p 5439 -d kip
+}
+
+function rs_chubb {
+  vauth
+  echo '---'
+  local host="rs-chubb-master.keplergrp.com"
+  local chubb_pw=$(vault read -field=password secret/administration/redshift/chubb-admin)
+  PGPASSWORD=$chubb_pw FRIENDLY_HOSTNAME=$host psql -h $host -U kepleradmin -p 5439 -d kepleradmin
+}
+
+function rs_sanofi {
+  vauth
+  echo '---'
+  local host="rs-snfi-master.keplergrp.com"
+  local snfi_pw=$(vault read -field=password secret/administration/redshift/sanofi-admin)
+  PGPASSWORD=$snfi_pw FRIENDLY_HOSTNAME=$host psql -h $host -U kip_user -p 5439 -d kip
+}
+
 ######################################################################
 #ALIASES
 ######################################################################
@@ -421,9 +452,9 @@ alias va='source venv/bin/activate'
 alias kip='cd ~/kepler-repos'
 alias vgit='echo $VAULT_AUTH_GITHUB_TOKEN | pbcopy'
 alias eget='echo "961517735772.dkr.ecr.us-east-1.amazonaws.com" | pbcopy'
-alias tmux='tmux -2'
-alias smux='mux start devops'
-alias dmux='mux stop devops'
+alias tmux='tmux -2 -f ~/.tmux.conf'
+alias smux='tmuxinator start devops'
+alias dmux='tmuxinator stop devops'
 alias python='python3'
 alias vim='nvim'
 alias rg="rg --hidden"
