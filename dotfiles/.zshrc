@@ -431,6 +431,20 @@ function rs_sanofi {
   PGPASSWORD=$snfi_pw FRIENDLY_HOSTNAME=$host psql -h $host -U kip_user -p 5439 -d kip
 }
 
+#SSM Session
+
+# function ssm {
+#   if [ -z "$1" ]; then
+#     echo "Must Define a cluster! eg mgmt-ecs-asg"
+#   else
+#     local ARN_QUOTE=$(aws ecs list-container-instances --cluster $1 --status ACTIVE | jq '.containerInstanceArns [0]')
+#     local ARN=$(echo "$ARN" | tr -d '"')
+#     local ID_QUOTE=$(aws ecs describe-container-instances --cluster $1 --container-instances $ARN | jq '.containerInstances [0].ec2InstanceId')
+#     local ID=$(echo "$ID" | tr -d '"')
+#     aws ssm start-session --target $ID
+#   fi
+# }
+
 ######################################################################
 #ALIASES
 ######################################################################
@@ -540,6 +554,4 @@ typeset -aU path
 # The next line enables shell command completion for gcloud.
 if [ -f '/home/justin/.google-cloud-sdk/completion.zsh.inc' ]; then . '/home/justin/.google-cloud-sdk/completion.zsh.inc'; fi
 
-### Temp
-
-EFS_ID="fs-54f53f1d.efs.us-east-1.amazonaws.com"
+eval "$(direnv hook zsh)"
