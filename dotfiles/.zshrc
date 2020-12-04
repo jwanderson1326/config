@@ -50,41 +50,6 @@ POWERLEVEL9K_VCS_CLEAN_BACKGROUND='048'
 POWERLEVEL9K_VCS_MODIFIED_BACKGROUND='227'
 POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND='210'
 
-# SPACESHIP_TIME_SHOW=true
-# SPACESHIP_TIME_SUFFIX=' | '
-# SPACESHIP_USER_SHOW=always
-# SPACESHIP_USER_COLOR_ROOT=red
-# SPACESHIP_USER_PREFIX=""
-# SPACESHIP_USER_COLOR=white
-# SPACESHIP_HOST_SHOW=true
-# SPACESHIP_HOST_COLOR_SSH=green
-# SPACESHIP_DIR_SHOW=true
-# SPACESHIP_DIR_COLOR=81
-# SPACESHIP_DIR_PREFIX="| "
-# SPACESHIP_DIR_TRUNC_REPO=true
-# SPACESHIP_DIR_TRUNC=3
-# SPACESHIP_GIT_PREFIX=""
-# SPACESHIP_GIT_BRANCH_COLOR=green
-# SPACESHIP_GIT_STATUS_PREFIX=" "
-# SPACESHIP_GIT_STATUS_SUFFIX=""
-# SPACESHIP_GIT_STATUS_COLOR=green
-# SPACESHIP_VENV_GENERIC_NAMES=()
-# SPACESHIP_TERRAFORM_SHOW=true
-
-# SPACESHIP_PROMPT_ORDER=(
-#   battery
-#   venv
-#   time
-#   user
-#   host
-#   dir
-#   git
-#   terraform
-#   line_sep
-#   line_sep
-#   vpn
-#   char
-# )
 
 ################################################################################
 # SET OPTIONS
@@ -146,6 +111,10 @@ _fzf_compgen_path() {
 _fzf_compgen_dir() {
   fd --type d --hidden --follow --exclude ".git" . "$1"
 }
+
+export FZF_DEFAULT_OPTS="--bind=ctrl-o:toggle-preview --ansi --preview 'bat {}' --preview-window hidden"
+FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*"' \
+export FZF_DEFAULT_COMMAND
 
 
 ################################################################################
@@ -481,7 +450,7 @@ fi
 ################################################################
 #Set EDITOR
 ################################################################
-export EDITOR='vim'
+export EDITOR='nvim'
 
 ###############################################################
 # Set Google Cloud Creds Location
