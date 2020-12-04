@@ -293,44 +293,6 @@ function switchenv() {
   cd "$DIR_PREFIX/$NEW_ENV/$DIR_SUFFIX"
 }
 
-function gclean() {
-  refs="$(git remote prune origin --dry-run)"
-  if [ -z "$refs" ]
-  then
-    echo "No prunable references found"
-  else
-    echo $refs
-    while true; do
-     read yn\?"Do you wish to prune these local references to remote branches?"
-     case $yn in
-       [Yy]* ) break;;
-       [Nn]* ) return;;
-       * ) echo "Please answer yes or no.";;
-     esac
-    done
-    git remote prune origin
-    echo "Pruned!"
-  fi
-
-  local branches="$(git branch --merged master | grep -v '^[ *]*master$')"
-  if [ -z "$branches" ]
-  then
-    echo "No merged branches found"
-  else
-    echo $branches
-    while true; do
-     read yn\?"Do you wish to delete these merged local branches?"
-     case $yn in
-       [Yy]* ) break;;
-       [Nn]* ) return;;
-       * ) echo "Please answer yes or no.";;
-     esac
-    done
-    echo $branches | xargs git branch -d
-    echo "Deleted!"
-  fi
-}
-
 # cd to the current git root
 function td() {
   local dir
@@ -433,17 +395,22 @@ function rs_sanofi {
 
 #SSM Session
 
-# function ssm {
-#   if [ -z "$1" ]; then
-#     echo "Must Define a cluster! eg mgmt-ecs-asg"
-#   else
-#     local ARN_QUOTE=$(aws ecs list-container-instances --cluster $1 --status ACTIVE | jq '.containerInstanceArns [0]')
-#     local ARN=$(echo "$ARN" | tr -d '"')
-#     local ID_QUOTE=$(aws ecs describe-container-instances --cluster $1 --container-instances $ARN | jq '.containerInstances [0].ec2InstanceId')
-#     local ID=$(echo "$ID" | tr -d '"')
-#     aws ssm start-session --target $ID
-#   fi
-# }
+function ssm {
+  if [ -z "$1" ]; then
+    echo "Must Define a cluster! eg mgmt-ecs"
+    return 1
+  fi
+
+  if [ -z "$2" ]; then
+    local INSTANCE_INDEX=0
+  else
+    local INSTANCE_INDEX=$2
+  fi
+
+  local ARN=$(aws ecs list-container-instances --cluster $1 --status ACTIVE | jq ".containerInstanceArns [$INSTANCE_INDEX]" | tr -d '"')
+  local ID=$(aws ecs describe-container-instances --cluster $1 --container-instances $ARN | jq '.containerInstances [0].ec2InstanceId' | tr -d '"')
+  aws ssm start-session --target $ID
+}
 
 ######################################################################
 #ALIASES
