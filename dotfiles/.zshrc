@@ -274,13 +274,15 @@ function td() {
   fi
 }
 
+alias prlist="gh pr list"
+
 function prview {
   if [ -z "$1" ]; then
     "Need a PR Number supplied!"
   elif [[ $2 == "web" ]]; then
     gh pr view $1 -w
   else
-    gh pr view $1
+    gh pr view $1 --comments
   fi
 }
 
