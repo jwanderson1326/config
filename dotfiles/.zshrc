@@ -1,4 +1,12 @@
-############################################################
+################################################################
+#Source sensitive files
+################################################################
+
+if [ -f ~/.bash/sensitive ] ; then
+    source ~/.bash/sensitive
+fi
+
+###########################################################
 # ZPLUG
 # ##########################################################
 
@@ -383,18 +391,27 @@ function ssm {
   aws ssm start-session --target $ID
 }
 
+function thirteen {
+  rm -rf .terraform/
+  echo "0.13.5" > .terraform-version
+}
+
+function fourteen {
+  rm -rf .terraform/
+  echo "0.14.4" > .terraform-version
+}
+
 ######################################################################
 #ALIASES
 ######################################################################
 alias kvpn="nmcli c up aws"
 alias svpn="nmcli c down aws"
 
-alias ovpn="sudo openvpn --config ~/openvpn/openvpn.conf"
-
 alias sl='ls --color=auto'
 alias ls='ls --color=auto'
 alias ll='ls -alFh --color=auto'
 alias la='ls -Alfh --color=auto'
+alias cat='bat'
 
 alias pbcopy='xsel --clipboard --input'
 
@@ -442,14 +459,6 @@ alias tfmv='terraform state mv '
 alias tflist='terraform state list'
 
 ################################################################
-#Source sensitive files
-################################################################
-
-if [ -f ~/.bash/sensitive ] ; then
-    source ~/.bash/sensitive
-fi
-
-################################################################
 #Set EDITOR
 ################################################################
 export EDITOR='nvim'
@@ -493,3 +502,5 @@ typeset -aU path
 if [ -f '/home/justin/.google-cloud-sdk/completion.zsh.inc' ]; then . '/home/justin/.google-cloud-sdk/completion.zsh.inc'; fi
 
 eval "$(direnv hook zsh)"
+
+export PATH="$HOME/.asdf/installs/poetry/1.1.4/bin:$PATH"
