@@ -407,10 +407,10 @@ function fourteen {
 alias kvpn="nmcli c up aws"
 alias svpn="nmcli c down aws"
 
-alias sl='ls --color=auto'
-alias ls='ls --color=auto'
-alias ll='ls -alFh --color=auto'
-alias la='ls -Alfh --color=auto'
+alias ls="lsd"
+alias sl='lsd'
+alias ll='ls -lh'
+alias la='ls -Alh'
 alias cat='bat'
 
 alias pbcopy='xsel --clipboard --input'

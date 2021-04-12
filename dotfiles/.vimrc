@@ -138,8 +138,6 @@ Plug 'juliosueiras/vim-terraform-completion'
 Plug 'ekalinin/Dockerfile.vim'
 Plug 'othree/html5.vim'
 Plug 'mxw/vim-jsx'
-Plug 'evanleck/vim-svelte' "svelte highlights
-Plug 'posva/vim-vue'
 
 " Indentation
 Plug 'hynek/vim-python-pep8-indent'
@@ -161,8 +159,8 @@ for coc_plugin in [
       \ 'git@github.com:neoclide/coc-snippets.git',
       \ 'git@github.com:neoclide/coc-tsserver.git',
       \ 'git@github.com:neoclide/coc-yaml.git',
-      \ 'git@github.com:iamcco/coc-diagnostic.git',
-      \ 'git@github.com:davidroeca/coc-svelte-language-tools.git'
+      \ 'git@github.com:pappasam/coc-jedi.git',
+      \ 'git@github.com:iamcco/coc-diagnostic.git'
       \ ]
   Plug coc_plugin, {'do': 'yarn install --frozen-lockfile && yarn build'}
 endfor
