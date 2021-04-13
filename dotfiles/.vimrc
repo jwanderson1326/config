@@ -1,4 +1,4 @@
-" Notes:
+"" Notes:
 "   * When in normal mode, scroll over a folded section and type 'za'
 "       this toggles the folded section
 "
@@ -23,31 +23,15 @@ let maplocalleader = "\\"
 
 " }}}
 " General: global config ------------ {{{
-
-"A comma separated list of options for Insert mode completion
-"   menuone  Use the popup menu also when there is only one match.
-"            Useful when there is additional information about the
-"            match, e.g., what file it comes from.
-
-"   longest  Only insert the longest common text of the matches.  If
-"            the menu is displayed you can use CTRL-L to add more
-"            characters.  Whether case is ignored depends on the kind
-"            of completion.  For buffer text the 'ignorecase' option is
-"            used.
-
-"   preview  Show extra information about the currently selected
-"            completion in the preview window.  Only works in
-"            combination with 'menu' or 'menuone'.
 set completeopt=menuone,longest,preview
+set wildmode=longest,list,full
+set wildmenu
 
-" Enable buffer deletion instead of having to write each buffer
+" " Enable buffer deletion instead of having to write each buffer
 set hidden
 
-" Mouse: remove GUI mouse support
-" This support is actually annoying, because I may occasionally
-" use the mouse to select text or something, and don't actually
-" want the cursor to move
-set mouse=""
+" Mouse: mouse support
+set mouse=a
 
 " SwapFiles: prevent their creation
 set nobackup
@@ -57,18 +41,21 @@ set noswapfile
 set nowrap
 
 " Set column to light grey at 80 characters
-if (exists('+colorcolumn'))
-  set colorcolumn=80
-  highlight ColorColumn ctermbg=9
-endif
+"if (exists('+colorcolumn'))
+"  set colorcolumn=80
+"  highlight ColorColumn ctermbg=9
+"endif
 
-" Don't highlight all search results
-set hlsearch
+" Highlight Search:
+set incsearch
+set inccommand=nosplit
+augroup sroeca_incsearch_highlight
+  autocmd!
+  autocmd CmdlineEnter /,\? set hlsearch
+  autocmd CmdlineLeave /,\? set nohlsearch
+augroup END
 
-" Remove query for terminal version
-" This prevents un-editable garbage characters from being printed
-" after the 80 character highlight line
-set t_RV=
+filetype plugin indent on
 
 augroup cursorline_setting
   autocmd!
@@ -77,25 +64,16 @@ augroup cursorline_setting
 augroup END
 
 set spelllang=en_us
+set dictionary=$HOME/.american-english-with-propcase.txt
+set complete+=k
 
 set showtabline=2
-
+set nojoinspaces
 set autoread
 
-" When you type the first tab hit will complete as much as possible,
-" the second tab hit will provide a list, the third and subsequent tabs
-" will cycle through completion options so you can complete the file
-" without further keys
-set wildmode=longest,list,full
-set wildmenu
+" Grep: program is 'rg'
+set grepprg=rg\ --vimgrep
 
-" Grep: program is 'git grep'
-set grepprg=git\ grep\ -n\ $*
-
-" AirlineSettings: specifics due to airline
-set laststatus=2
-set ttimeoutlen=50
-set noshowmode
 
 " Pasting: enable pasting without having to do 'set paste'
 " NOTE: this is actually typed <C-/>, but vim thinks this is <C-_>
@@ -111,30 +89,46 @@ set exrc
 set number relativenumber
 set numberwidth=4
 
+" Lightline: specifics for Lightline
+set laststatus=2
+set ttimeoutlen=50
+set noshowmode
+
 
 " }}}
 " General: Plugin Install --------------------- {{{
 
 call plug#begin('~/.vim/plugged')
 
+" Help for vim-plug
+Plug 'junegunn/vim-plug'
+
 " Commands run in vim's virtual screen and don't pollute main shell
 Plug 'fcpg/vim-altscreen'
 
-" Basic coloring
+"" Basic coloring
 Plug 'NLKNguyen/papercolor-theme'
 
-" Utils
+"Lightline
+Plug 'itchyny/lightline.vim'
+
+"" Utils
+Plug 'kh3phr3n/tabline'
+Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
-Plug 'scrooloose/nerdtree'
+Plug 'dkarter/bullets.vim'
+Plug 'ntpeters/vim-better-whitespace'
+Plug 'Shougo/defx.nvim'
+Plug 'kristijanhusak/defx-git'
+Plug 'kristijanhusak/defx-icons'
 
-" Language-specific syntax
+"" Language-specific syntax
 Plug 'hdima/python-syntax'
 Plug 'pangloss/vim-javascript'
 Plug 'elzr/vim-json'
 Plug 'hashivim/vim-terraform'
 Plug 'khalliday7/Jenkinsfile-vim-syntax'
-Plug 'juliosueiras/vim-terraform-completion'
 Plug 'ekalinin/Dockerfile.vim'
 Plug 'othree/html5.vim'
 Plug 'mxw/vim-jsx'
@@ -143,11 +137,9 @@ Plug 'mxw/vim-jsx'
 Plug 'hynek/vim-python-pep8-indent'
 Plug 'vim-scripts/groovyindent-unix'
 
-" Autocomplete
-Plug 'marijnh/tern_for_vim'
+"" Autocomplete
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 for coc_plugin in [
-      \ 'git@github.com:coc-extensions/coc-svelte.git',
       \ 'git@github.com:fannheyward/coc-markdownlint.git',
       \ 'git@github.com:josa42/coc-docker.git',
       \ 'git@github.com:neoclide/coc-css.git',
@@ -160,12 +152,14 @@ for coc_plugin in [
       \ 'git@github.com:neoclide/coc-tsserver.git',
       \ 'git@github.com:neoclide/coc-yaml.git',
       \ 'git@github.com:pappasam/coc-jedi.git',
-      \ 'git@github.com:iamcco/coc-diagnostic.git'
+      \ 'git@github.com:iamcco/coc-diagnostic.git',
+      \ 'git@github.com:iamcco/coc-spell-checker.git',
+      \ 'git@github.com:iamcco/coc-vimlsp.git',
       \ ]
   Plug coc_plugin, {'do': 'yarn install --frozen-lockfile && yarn build'}
 endfor
 
-Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install' }
+"Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install' }
 
 call plug#end()
 
@@ -186,8 +180,8 @@ augroup filetype_recognition
   autocmd BufNewFile,BufRead,BufEnter *.cfg,*.ini,.coveragerc,.pylintrc
         \ set filetype=dosini
   autocmd BufNewFile,BufRead,BufEnter *.tsv set filetype=tsv
-  autocmd BufNewFile,BufRead,BufEnter Dockerfile.* set filetype=Dockerfile
-  autocmd BufNewFile,BufRead,BufEnter Makefile.* set filetype=make
+  autocmd BufNewFile,BufRead,BufEnter Dockerfile* set filetype=Dockerfile
+  autocmd BufNewFile,BufRead,BufEnter Makefile* set filetype=make
   autocmd BufNewFile,BufRead,BufEnter poetry.lock set filetype=toml
 augroup END
 
@@ -195,7 +189,7 @@ augroup filetype_vim
   autocmd!
   autocmd BufWritePost *vimrc so $MYVIMRC |
         \if has('gui_running') |
-        \so $MYGVIMRC |
+        \so $MYVIMRC |
         \endif
 augroup END
 
@@ -219,8 +213,6 @@ augroup indentation_sr
         \ cinoptions+='j1'
         \ cinoptions+='J1'
 augroup END
-
-" }}
 
 " }}}
 " General: Wrapping text -------------------------------------- {{{
@@ -265,8 +257,6 @@ let g:javascript_plugin_flow = 1
 " Syntax: select global syntax scheme
 " Make sure this is at end of section
 try
-  set t_Co=256 " says terminal has 256 colors
-  set background=dark
   colorscheme PaperColor
 catch
 endtry
@@ -277,66 +267,195 @@ endtry
 " Python highlighting
 let python_highlight_all = 1
 
+"Lightline
+let g:lightline = {
+      \ 'colorscheme': 'PaperColor',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'filename', 'gitbranch', 'modified' ] ],
+      \   'right': [ [ 'lineinfo' ],
+      \              [ 'percent' ],
+      \              [ 'fileformat', 'fileencoding', 'filetype', 'charvaluehex' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'FugitiveHead'
+      \ },
+      \ }
 
-" Markdown Viewer
+"Bullets
+let g:bullets_enabled_file_types = [
+    \ 'markdown',
+    \ 'text',
+    \ 'gitcommit',
+    \ 'scratch'
+    \]
 
+
+"" Markdown Viewer
 let g:markdown_composer_open_browser = 0
-" ----------------------NERDTree Configs
-" Plug settings for Nerdtree ----------------- {{{
-map F2 for Nerdtree
-map <F2> :NERDTreeToggle<CR>
-let g:NERDTreeMapOpenInTab = '<C-t>'
-let g:NERDTreeMapOpenInTabSilent = ''
-let g:NERDTreeMapOpenSplit = '<C-s>'
-let g:NERDTreeMapOpenVSplit = '<C-v>'
-let g:NERDTreeShowLineNumbers = 1
-let g:NERDTreeCaseSensitiveSort = 0
-let g:NERDTreeWinPos = 'left'
-let g:NERDTreeWinSize = 31
-let g:NERDTreeAutoDeleteBuffer = 1
-let g:NERDTreeSortOrder = ['*', '\/$']
-let g:NERDTreeIgnore=[
-      \'venv$[[dir]]',
-      \'__pycache__$[[dir]]',
-      \'.egg-info$[[dir]]',
-      \'node_modules$[[dir]]',
-      \'elm-stuff$[[dir]]',
-      \'\.aux$[[file]]',
-      \'\.toc$[[file]]',
-      \'\.pdf$[[file]]',
-      \'\.out$[[file]]',
-      \'\.o$[[file]]',
-      \]
 
-function! NERDTreeToggleCustom()
-    if exists('t:NERDTreeBufName') && bufwinnr(t:NERDTreeBufName) != -1
-      " if NERDTree is open in window in current tab...
-      exec 'NERDTreeClose'
-    else
-      exec 'NERDTree %'
-    endif
-endfunction
+" Package: defx
 
-function! s:CloseIfOnlyControlWinLeft()
-  if winnr("$") != 1
+" TogglePluginWindows:
+nnoremap <silent> <space>j <cmd>Defx
+      \ -buffer-name=defx
+      \ -columns=mark:git:indent:icons:filename:type
+      \ -direction=topleft
+      \ -search=`expand('%:p')`
+      \ -session-file=`g:custom_defx_state`
+      \ -ignored-files=`g:defx_ignored_files`
+      \ -split=vertical
+      \ -toggle
+      \ -floating-preview
+      \ -vertical-preview
+      \ -preview-height=50
+      \ -winwidth=31
+      \ -root-marker=''
+      \ <CR>
+nnoremap <silent> <space>J <cmd>Defx `expand('%:p:h')`
+      \ -buffer-name=defx
+      \ -columns=mark:git:indent:icons:filename:type
+      \ -direction=topleft
+      \ -search=`expand('%:p')`
+      \ -ignored-files=`g:defx_ignored_files`
+      \ -split=vertical
+      \ -floating-preview
+      \ -vertical-preview
+      \ -preview-height=50
+      \ -winwidth=31
+      \ -root-marker=''
+      \ <CR>
+
+" Override <C-w>H to delete defx buffers
+nnoremap <C-w>H <cmd>windo if &filetype == 'defx' <bar> close <bar> endif<CR><C-w>H
+
+let g:custom_defx_state = tempname()
+
+let g:defx_ignored_files = join([
+      \ '*.aux',
+      \ '*.egg-info/',
+      \ '*.o',
+      \ '*.out',
+      \ '*.pdf',
+      \ '*.pyc',
+      \ '*.toc',
+      \ '.*',
+      \ '__pycache__/',
+      \ 'build/',
+      \ 'dist/',
+      \ 'docs/_build/',
+      \ 'fonts/',
+      \ 'node_modules/',
+      \ 'pip-wheel-metadata/',
+      \ 'plantuml-images/',
+      \ 'site/',
+      \ 'target/',
+      \ 'venv.bak/',
+      \ 'venv/',
+      \ ], ',')
+
+let g:custom_defx_mappings = [
+      \ ['!             ', "defx#do_action('execute_command')"],
+      \ ['*             ', "defx#do_action('toggle_select_all')"],
+      \ [';             ', "defx#do_action('repeat')"],
+      \ ['<2-LeftMouse> ', "defx#is_directory() ? defx#do_action('open_tree', 'toggle') : defx#do_action('drop')"],
+      \ ['<C-g>         ', "defx#do_action('print')"],
+      \ ['<C-h>         ', "defx#do_action('resize', 31)"],
+      \ ['<C-i>         ', "defx#do_action('open_directory')"],
+      \ ['<C-o>         ', "defx#do_action('cd', ['..'])"],
+      \ ['<C-r>         ', "defx#do_action('redraw')"],
+      \ ['<C-t>         ', "defx#do_action('open', 'tabe')"],
+      \ ['<C-v>         ', "defx#do_action('open', 'vsplit')"],
+      \ ['<C-x>         ', "defx#do_action('drop', 'split')"],
+      \ ['<CR>          ', "defx#do_action('drop')"],
+      \ ['<RightMouse>  ', "defx#do_action('cd', ['..'])"],
+      \ ['O             ', "defx#do_action('open_tree', 'recursive:3')"],
+      \ ['p             ', "defx#do_action('preview')"],
+      \ ['a             ', "defx#do_action('toggle_select')"],
+      \ ['cc            ', "defx#do_action('copy')"],
+      \ ['cd            ', "defx#do_action('change_vim_cwd')"],
+      \ ['i             ', "defx#do_action('toggle_ignored_files')"],
+      \ ['ma            ', "defx#do_action('new_file')"],
+      \ ['md            ', "defx#do_action('remove')"],
+      \ ['mm            ', "defx#do_action('rename')"],
+      \ ['o             ', "defx#is_directory() ? defx#do_action('open_tree', 'toggle') : defx#do_action('drop')"],
+      \ ['P             ', "defx#do_action('paste')"],
+      \ ['q             ', "defx#do_action('quit')"],
+      \ ['ss            ', "defx#do_action('multi', [['toggle_sort', 'TIME'], 'redraw'])"],
+      \ ['t             ', "defx#do_action('open_tree', 'toggle')"],
+      \ ['u             ', "defx#do_action('cd', ['..'])"],
+      \ ['x             ', "defx#do_action('execute_system')"],
+      \ ['yy            ', "defx#do_action('yank_path')"],
+      \ ['~             ', "defx#do_action('cd')"],
+      \ ]
+
+function! s:autocmd_custom_defx()
+  if !exists('g:loaded_defx')
     return
   endif
-  if (exists("t:NERDTreeBufName") && bufwinnr(t:NERDTreeBufName) != -1)
-        \ || &buftype == 'quickfix'
-    q
+  call defx#custom#column('filename', {
+        \ 'min_width': 100,
+        \ 'max_width': 100,
+        \ })
+endfunction
+
+function! s:open_defx_if_directory()
+  if !exists('g:loaded_defx')
+    echom 'Defx not installed, skipping...'
+    return
+  endif
+  if isdirectory(expand(expand('%:p')))
+    Defx `expand('%:p')`
+        \ -buffer-name=defx
+        \ -columns=mark:git:indent:icons:filename:type:size:time
   endif
 endfunction
 
-augroup CloseIfOnlyControlWinLeft
-  au!
-  au BufEnter * call s:CloseIfOnlyControlWinLeft()
-augroup END
-" }}}
-" vim-go settings ------------------ {{{
-let g:go_template_autocreate = 0
-" }}}
+function! s:defx_redraw()
+  if !exists('g:loaded_defx')
+    return
+  endif
+  call defx#redraw()
+endfunction
 
-"----------------------COC Configs
+function! s:defx_buffer_remappings() abort
+  " Define mappings
+  for [key, value] in g:custom_defx_mappings
+    execute 'nnoremap <silent><buffer><expr> ' . key . ' ' . value
+  endfor
+  nnoremap <silent><buffer> ?
+        \ :for [key, value] in g:custom_defx_mappings <BAR>
+        \ echo '' . key . ': ' . value <BAR>
+        \ endfor<CR>
+endfunction
+
+augroup custom_defx
+  autocmd!
+  autocmd VimEnter * call s:autocmd_custom_defx()
+  autocmd BufEnter * call s:open_defx_if_directory()
+  autocmd BufLeave,BufWinLeave \[defx\]* silent call defx#call_action('add_session')
+  autocmd FileType defx setlocal nonumber norelativenumber
+augroup end
+
+augroup custom_remap_defx
+  autocmd!
+  autocmd FileType defx call s:defx_buffer_remappings()
+  autocmd FileType defx nmap     <buffer> <silent> gp <Plug>(defx-git-prev)
+  autocmd FileType defx nmap     <buffer> <silent> gn <Plug>(defx-git-next)
+  autocmd FileType defx nmap     <buffer> <silent> gs <Plug>(defx-git-stage)
+  autocmd FileType defx nmap     <buffer> <silent> gu <Plug>(defx-git-reset)
+  autocmd FileType defx nmap     <buffer> <silent> gd <Plug>(defx-git-discard)
+  autocmd FileType defx nnoremap <buffer> <silent> <C-l> <cmd>ResizeWindowWidth<CR>
+augroup end
+
+
+" Better Whitespace
+let g:better_whitespace_enabled=1
+let g:strip_whitespace_on_save=1
+let g:strip_whitespace_confirm=0
+
+" }}}
+" COC Configs ---------------------- {{{
 " TextEdit might fail if hidden is not set.
 set hidden
 
@@ -466,9 +585,9 @@ nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
 " Search workspace symbols.
 nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
 " Do default action for next item.
-nnoremap <silent> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+" nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+" " Do default action for previous item.
+" nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
@@ -483,73 +602,61 @@ let g:terraform_fmt_on_save = 1
 let g:terraform_remap_spacebar = 1
 
 " }}}
-" General: Trailing whitespace ------------- {{{
+" General: Key remappings {{{
 
-" This section automatically trims whitespace on all files
-" trailing whitespace is a HUGE pet peeve of mine
-" so I force it on beginners by default (for free :p)
-function! TrimWhitespace()
-  if &ft == 'markdown'
-    return
-  endif
-  let l:save = winsaveview()
-  %s/\s\+$//e
-  call winrestview(l:save)
+function! GlobalKeyMappings()
+  " Put your key remappings here
+  " Prefer nnoremap to nmap, inoremap to imap, and vnoremap to vmap
+  " This is defined as a function to allow me to reset all my key remappings
+  " without needing to repeate myself.
+
+  " MoveVisual: up and down visually only if count is specified before
+  " Otherwise, you want to move up lines numerically e.g. ignore wrapped lines
+  nnoremap <expr> k
+        \ v:count == 0 ? 'gk' : 'k'
+  vnoremap <expr> k
+        \ v:count == 0 ? 'gk' : 'k'
+  nnoremap <expr> j
+        \ v:count == 0 ? 'gj' : 'j'
+  vnoremap <expr> j
+        \ v:count == 0 ? 'gj' : 'j'
+
+  " Escape: also clears highlighting
+  nnoremap <silent> <esc> :noh<return><esc>
+
+  " J: basically, unmap in normal mode unless range explicitly specified
+  nnoremap <silent> <expr> J v:count == 0 ? '<esc>' : 'J'
+
+  " moving forward and backward with vim tabs
+  nnoremap T gT
+  nnoremap t gt
+
+  " BuffersAndWindows:
+  " Move from one window to another
+  nnoremap <silent> <C-k> :wincmd k<CR>
+  nnoremap <silent> <C-j> :wincmd j<CR>
+  nnoremap <silent> <C-l> :wincmd l<CR>
+  nnoremap <silent> <C-h> :wincmd h<CR>
+  " Move cursor to top, bottom, and middle of screen
+  nnoremap <silent> gJ L
+  nnoremap <silent> gK H
+  nnoremap <silent> gM M
+  " Escape insert mode
+  inoremap jk <esc>
+  inoremap <esc> <nop>
+
+  vnoremap <leader>y "+y
+  nnoremap <leader>y "+y
+  vnoremap <leader>p "+p
+  nnoremap <leader>p "+p
+
+  vnoremap <C-t> :'<,'>!tr -d '"{$}'<CR>
 endfunction
 
-augroup whitespace_color
-  autocmd!
-  autocmd ColorScheme * highlight EOLWS ctermbg=darkgreen guibg=darkgreen
-  autocmd InsertEnter * syn clear EOLWS | syn match EOLWS excludenl /\s\+\%#\@!$/
-  autocmd InsertLeave * syn clear EOLWS | syn match EOLWS excludenl /\s\+$/
-augroup END
-highlight EOLWS ctermbg=darkgreen guibg=darkgreen
-
-augroup fix_whitespace_save
-  autocmd!
-  autocmd BufWritePre * call TrimWhitespace()
-augroup END
+call GlobalKeyMappings()
 
 " }}}
-" General: Key remappings ----------------------- {{{
-
-" MoveVisual: up and down visually only if count is specified before
-" Otherwise, you want to move up lines numerically
-" e.g. ignoring wrapped lines
-nnoremap <expr> k v:count == 0 ? 'gk' : 'k'
-nnoremap <expr> j v:count == 0 ? 'gj' : 'j'
-
-" moving forward and backward with vim tabs
-nnoremap T gT
-nnoremap t gt
-
-" BuffersAndWindows:
-" Move from one window to another
-nnoremap <silent> <C-k> :wincmd k<CR>
-nnoremap <silent> <C-j> :wincmd j<CR>
-nnoremap <silent> <C-l> :wincmd l<CR>
-nnoremap <silent> <C-h> :wincmd h<CR>
-" Scroll screen up, down, left, and right
-nnoremap <silent> K <c-e>
-nnoremap <silent> J <c-y>
-nnoremap <silent> H zh
-nnoremap <silent> L zl
-" Move cursor to top, bottom, and middle of screen
-nnoremap <silent> gJ L
-nnoremap <silent> gK H
-nnoremap <silent> gM M
-" Escape insert mode
-inoremap jk <esc>
-inoremap <esc> <nop>
-
-nnoremap df <esc>
-
-vnoremap <leader>y "+y
-nnoremap <leader>y "+y
-vnoremap <leader>p "+p
-nnoremap <leader>p "+p
-
-vnoremap <C-t> :'<,'>!tr -d '"{$}'<CR>
+" General: Command abbreviations ------------------------ {{{
 
 " Abbreviations:
 iabbrev waht what
@@ -557,13 +664,7 @@ iabbrev tehn then
 iabbrev adn and
 iabbrev tfr resource
 iabbrev mnw module.network.
-iabbrev mfn ../Makefile.12
-iabbrev mfv ../Makefile.12.Version
 
-
-
-" }}}
-" General: Command abbreviations ------------------------ {{{
 
 " fix misspelling of ls
 cabbrev LS ls
