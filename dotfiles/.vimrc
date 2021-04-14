@@ -1,4 +1,4 @@
-"" Notes:
+g" Notes:
 "   * When in normal mode, scroll over a folded section and type 'za'
 "       this toggles the folded section
 "
@@ -48,7 +48,6 @@ set nowrap
 
 " Highlight Search:
 set incsearch
-set inccommand=nosplit
 augroup sroeca_incsearch_highlight
   autocmd!
   autocmd CmdlineEnter /,\? set hlsearch
