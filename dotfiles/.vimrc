@@ -108,6 +108,7 @@ Plug 'fcpg/vim-altscreen'
 
 "" Basic coloring
 Plug 'NLKNguyen/papercolor-theme'
+Plug 'ryanoasis/vim-devicons'
 
 "Lightline
 Plug 'itchyny/lightline.vim'
@@ -299,7 +300,7 @@ let g:markdown_composer_open_browser = 0
 " TogglePluginWindows:
 nnoremap <silent> <space>j <cmd>Defx
       \ -buffer-name=defx
-      \ -columns=mark:git:indent:icons:filename:type
+      \ -columns=mark:indent:icons:filename:git:type
       \ -direction=topleft
       \ -search=`expand('%:p')`
       \ -session-file=`g:custom_defx_state`
@@ -314,10 +315,11 @@ nnoremap <silent> <space>j <cmd>Defx
       \ <CR>
 nnoremap <silent> <space>J <cmd>Defx `expand('%:p:h')`
       \ -buffer-name=defx
-      \ -columns=mark:git:indent:icons:filename:type
+      \ -columns=mark:indent:icons:filename:git:type
       \ -direction=topleft
       \ -search=`expand('%:p')`
       \ -ignored-files=`g:defx_ignored_files`
+      \ -show-ignored-files
       \ -split=vertical
       \ -floating-preview
       \ -vertical-preview
@@ -360,7 +362,7 @@ let g:custom_defx_mappings = [
       \ [';             ', "defx#do_action('repeat')"],
       \ ['<2-LeftMouse> ', "defx#is_directory() ? defx#do_action('open_tree', 'toggle') : defx#do_action('drop')"],
       \ ['<C-g>         ', "defx#do_action('print')"],
-      \ ['<C-h>         ', "defx#do_action('resize', 31)"],
+      \ ['<C-R>         ', "defx#do_action('resize', 31)"],
       \ ['<C-i>         ', "defx#do_action('open_directory')"],
       \ ['<C-o>         ', "defx#do_action('cd', ['..'])"],
       \ ['<C-r>         ', "defx#do_action('redraw')"],
@@ -445,7 +447,6 @@ augroup custom_remap_defx
   autocmd FileType defx nmap     <buffer> <silent> gs <Plug>(defx-git-stage)
   autocmd FileType defx nmap     <buffer> <silent> gu <Plug>(defx-git-reset)
   autocmd FileType defx nmap     <buffer> <silent> gd <Plug>(defx-git-discard)
-  autocmd FileType defx nnoremap <buffer> <silent> <C-l> <cmd>ResizeWindowWidth<CR>
 augroup end
 
 

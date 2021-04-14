@@ -111,20 +111,19 @@ tabspaces: 8
 # Font configuration (changes require restart)
 font:
   normal:
-    family: Hack
+    family: JetBrainsMonoNL Nerd Font Mono
     style: Regular
 
   bold:
-    family: Hack
-
+    family: JetBrainsMonoNL Nerd Font Mono
     style: Bold
 
   italic:
-    family: Hack
+    family: JetBrainsMonoNL Nerd Font Mono
     style: Italic
 
   bold_italic:
-    family: Hack
+    family: JetBrainsMonoNL Nerd Font Mono
     style: Bold Italic
 
   # Point size
@@ -140,7 +139,7 @@ font:
   # the default being at the bottom. Increasing `x` moves the glyph to the right,
   # increasing `y` moves the glyph upwards.
   glyph_offset:
-    x: -1
+    x: 0
     y: 0
 
   # Thin stroke font rendering (macOS only)
