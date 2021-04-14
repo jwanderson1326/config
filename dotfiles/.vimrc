@@ -1,4 +1,4 @@
-g" Notes:
+" Notes:
 "   * When in normal mode, scroll over a folded section and type 'za'
 "       this toggles the folded section
 "
