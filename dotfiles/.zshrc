@@ -412,6 +412,7 @@ alias sl='lsd'
 alias ll='ls -lh'
 alias la='ls -Alh'
 alias cat='bat'
+alias mkdir='mkdir -p'
 
 alias pbcopy='xsel --clipboard --input'
 
