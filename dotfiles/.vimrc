@@ -159,7 +159,7 @@ for coc_plugin in [
   Plug coc_plugin, {'do': 'yarn install --frozen-lockfile && yarn build'}
 endfor
 
-"Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install' }
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install' }
 
 call plug#end()
 
