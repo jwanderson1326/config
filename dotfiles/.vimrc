@@ -132,6 +132,7 @@ Plug 'khalliday7/Jenkinsfile-vim-syntax'
 Plug 'ekalinin/Dockerfile.vim'
 Plug 'othree/html5.vim'
 Plug 'mxw/vim-jsx'
+Plug 'pantharshit00/vim-prisma'
 
 " Indentation
 Plug 'hynek/vim-python-pep8-indent'
@@ -155,6 +156,7 @@ for coc_plugin in [
       \ 'git@github.com:iamcco/coc-diagnostic.git',
       \ 'git@github.com:iamcco/coc-spell-checker.git',
       \ 'git@github.com:iamcco/coc-vimlsp.git',
+      \ 'git@github.com:pantharshit00/coc-prisma.git',
       \ ]
   Plug coc_plugin, {'do': 'yarn install --frozen-lockfile && yarn build'}
 endfor

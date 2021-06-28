@@ -18,14 +18,10 @@ if [ -f ~/.zplug/init.zsh ]; then
   zplug "zsh-users/zsh-completions", as:plugin
   zplug "zsh-users/zsh-syntax-highlighting", as:plugin
   zplug "nobeans/zsh-sdkman", as:plugin
-  zplug "junegunn/fzf-bin", \
-    from:gh-r, \
-    as:command, \
-    rename-to:fzf
+  zplug "junegunn/fzf", as:command, hook-build:"./install --bin", use:"bin/{fzf-tmux,fzf}"
   zplug "mdumitru/git-aliases", as:plugin
 
   zplug "romkatv/powerlevel10k", as:theme, depth:1
-  #zplug "jwanderson1326/spaceship-prompt", use:spaceship.zsh, from:github, as:theme
 
   # Install plugins if there are plugins that have not been installed
   if ! zplug check --verbose; then
@@ -199,7 +195,7 @@ fpath+=~/.zfunc
 
 function klone() {
   if [[ ! -d ~/kepler-repos/$1 ]]; then
-    git clone git@github.com:KeplerGroup/$1.git ~/kepler-repos/$1
+    git clone git@github.com:KeplerGroup/$1.git ~/src/kepler-repos/$1
   else
     echo "Repo is already kloned!"
   fi
@@ -404,8 +400,8 @@ function fourteen {
 ######################################################################
 #ALIASES
 ######################################################################
-alias kvpn="nmcli c up aws"
-alias svpn="nmcli c down aws"
+alias kvpn="sudo nmcli c up aws"
+alias svpn="sudo nmcli c down aws"
 
 alias ls="lsd"
 alias sl='lsd'
@@ -419,8 +415,9 @@ alias pbcopy='xsel --clipboard --input'
 alias zo='source ~/.zshrc'
 alias ve='python3 -m venv venv'
 alias va='source venv/bin/activate'
-alias kip='cd ~/kepler-repos'
+alias kip='cd ~/src/kepler-repos'
 alias vgit='echo $VAULT_AUTH_GITHUB_TOKEN | pbcopy'
+alias ggit='echo $TF_VAR_github_token | pbcopy'
 alias eget='echo "961517735772.dkr.ecr.us-east-1.amazonaws.com" | pbcopy'
 alias tmux='tmux -2 -f ~/.tmux.conf'
 alias smux='tmuxinator start devops'
@@ -478,8 +475,10 @@ POETRY_ROOT="$HOME/.poetry/bin"
 RUST_ROOT="$HOME/.cargo/bin"
 NODE_MODULE_ROOT="$HOME/node_modules/bin"
 GCLOUD_ROOT="$HOME/.google-cloud-sdk/bin"
+LOCAL_BIN_ROOT="$HOME/.local/bin"
+HOME_BIN_ROOT="$HOME/bin"
 
-PATH=$PATH::$POETRY_ROOT:$RUST_ROOT:$NODE_MODULE_ROOTE:$GCLOUD_ROOT
+PATH=$PATH::$POETRY_ROOT:$RUST_ROOT:$NODE_MODULE_ROOTE:$GCLOUD_ROOT:$LOCAL_BIN_ROOT:$HOME_BIN_ROOT
 
 fpath+=~/.zfunc
 
@@ -505,3 +504,6 @@ if [ -f '/home/justin/.google-cloud-sdk/completion.zsh.inc' ]; then . '/home/jus
 eval "$(direnv hook zsh)"
 
 export PATH="$HOME/.asdf/installs/poetry/1.1.4/bin:$PATH"
+
+source ~/.zplug/repos/junegunn/fzf/shell/key-bindings.zsh
+source ~/.zplug/repos/junegunn/fzf/shell/completion.zsh

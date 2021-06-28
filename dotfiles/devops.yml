@@ -48,14 +48,11 @@ windows:
     - clear
     - ls
   - KIP:
-    - cd ~/kepler-repos
+    - cd ~/src/kepler-repos
     - clear
   - TERRAFORM:
-    - cd ~/kepler-repos/kepler-terraform
+    - cd ~/src/kepler-repos/kepler-terraform
     - clear
   - MODULES:
-    - cd ~/kepler-repos/kepler-terraform-modules
-    - clear
-  - PACKER:
-    - cd ~/kepler-repos/kepler-packer
+    - cd ~/src/kepler-repos/kepler-terraform-modules
     - clear
