@@ -1,8 +1,9 @@
 {
   "languageserver": {
-    "terraform": {
-      "command": "terraform-lsp",
-      "filetypes": ["terraform"],
+    "terraform-ls": {
+      "command": "terraform-ls",
+      "args": ["serve"],
+      "filetypes": ["terraform", "tf"],
       "rootPatterns": ["Makefile", ".git"]
     },
     "nginx-language-server": {
@@ -14,7 +15,6 @@
   "suggest.autoTrigger": "always",
   "suggest.noselect": true,
   "pairs.enableCharacters": ["(", "[", "{", "<", "\"", "'", "`"],
-  "prisma.prismaFmtBinPath": "",
   "yaml.schemas": {
     "https://raw.githubusercontent.com/instrumenta/kubernetes-json-schema/master/v1.17.0-standalone-strict/all.json": [
       "/kubernetes/*.yml",

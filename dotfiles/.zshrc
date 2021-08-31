@@ -428,13 +428,14 @@ alias rg="rg --hidden"
 alias f="nvim"
 
 alias goans='cd ~/kepler-repos/kepler-ansible'
-alias goterr='cd ~/kepler-repos/kepler-terraform'
-alias gomod='cd ~/kepler-repos/kepler-terraform-modules'
-alias gopack='cd ~/kepler-repos/kepler-packer'
+alias goterr='cd ~/src/kepler-repos/kepler-terraform'
+alias gomod='cd ~/src/kepler-repos/kepler-terraform-modules'
+alias gopack='cd ~/src/kepler-repos/kepler-packer'
 alias officevpn="sudo netExtender -u janderson@keplergrp.com -d LocalDomain svpn.keplergrp.com:4433"
 alias homevpn="sudo openvpn --config ~/openvpn/janderson.ovpn"
 alias cookies3="cookiecutter git@github.com:keplergroup/cookiecutter-terraform-s3-bucket.git"
 alias cookieci="cookiecutter git@github.com:keplergroup/cookiecutter-gha-ci-pipeline.git"
+alias cookiepack="cookiecutter git@github.com:keplergroup/cookiecutter-gha-ci-packages.git"
 
 alias indbabel='babel src/app.js --out-file=public/scripts/app.js --presets=env,react --watch'
 
