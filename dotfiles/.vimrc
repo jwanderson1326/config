@@ -294,7 +294,7 @@ let g:bullets_enabled_file_types = [
 
 
 "" Markdown Viewer
-let g:markdown_composer_open_browser = 0
+let g:markdown_composer_open_browser = 1
 
 " Package: defx
 

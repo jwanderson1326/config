@@ -499,12 +499,15 @@ typeset -aU path
 . $HOME/.asdf/completions/asdf.bash
 
 
-# The next line enables shell command completion for gcloud.
-if [ -f '/home/justin/.google-cloud-sdk/completion.zsh.inc' ]; then . '/home/justin/.google-cloud-sdk/completion.zsh.inc'; fi
-
 eval "$(direnv hook zsh)"
 
 export PATH="$HOME/.asdf/installs/poetry/1.1.4/bin:$PATH"
 
 source ~/.zplug/repos/junegunn/fzf/shell/key-bindings.zsh
 source ~/.zplug/repos/junegunn/fzf/shell/completion.zsh
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/home/justin/google-cloud-sdk/path.zsh.inc' ]; then . '/home/justin/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/home/justin/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/justin/google-cloud-sdk/completion.zsh.inc'; fi
