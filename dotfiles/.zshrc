@@ -426,6 +426,7 @@ alias python='python3'
 alias vim='nvim'
 alias rg="rg --hidden"
 alias f="nvim"
+alias k="kubectl"
 
 alias goans='cd ~/kepler-repos/kepler-ansible'
 alias goterr='cd ~/src/kepler-repos/kepler-terraform'
@@ -511,3 +512,4 @@ if [ -f '/home/justin/google-cloud-sdk/path.zsh.inc' ]; then . '/home/justin/goo
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/home/justin/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/justin/google-cloud-sdk/completion.zsh.inc'; fi
+[[ /usr/bin/kubectl ]] && source <(kubectl completion zsh) # add autocomplete permanently to your zsh shell
