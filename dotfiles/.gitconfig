@@ -32,3 +32,5 @@
     file-style = bold yellow ul
     file-decoration-style = none
 
+[init]
+	templatedir = ~/.git-templates

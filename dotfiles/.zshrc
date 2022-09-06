@@ -40,7 +40,7 @@ fi
 ##############################################################
 #THEME CONFIG
 ##############################################################
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(virtualenv time context ssh dir vcs status)
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(kubecontext virtualenv time context ssh dir vcs status)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=()
 POWERLEVEL9K_DISABLE_RPROMPT=true
 POWERLEVEL9K_SHORTEN_DIR_LENGTH=3
@@ -53,6 +53,7 @@ POWERLEVEL9K_DIR_HOME_BACKGROUND='123'
 POWERLEVEL9K_VCS_CLEAN_BACKGROUND='048'
 POWERLEVEL9K_VCS_MODIFIED_BACKGROUND='227'
 POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND='210'
+POWERLEVEL9K_KUBECONTEXT_BACKGROUND='31'
 
 
 ################################################################################
@@ -368,6 +369,22 @@ function rs_sanofi {
   PGPASSWORD=$snfi_pw FRIENDLY_HOSTNAME=$host psql -h $host -U kip_user -p 5439 -d kip
 }
 
+function kipint_emea {
+  vauth
+  echo '---'
+  local host="integration-analytics.co66vkzinx8f.eu-west-2.redshift.amazonaws.com"
+  local password=$(vault read -field=password secret/administration/kepler_emea_apac/database/redshift/integration-analytics)
+  PGPASSWORD=$password FRIENDLY_HOSTNAME="integration-emea" psql -h $host -U kepleradmin -p 5439 -d general
+}
+
+function kip_emea {
+  vauth
+  echo '---'
+  local host="master-analytics.co66vkzinx8f.eu-west-2.redshift.amazonaws.com"
+  local password=$(vault read -field=password secret/administration/kepler_emea_apac/database/redshift/master-analytics)
+  PGPASSWORD=$password FRIENDLY_HOSTNAME="master-emea" psql -h $host -U kepleradmin -p 5439 -d general
+}
+
 #SSM Session
 
 function ssm {
@@ -387,14 +404,13 @@ function ssm {
   aws ssm start-session --target $ID
 }
 
-function thirteen {
-  rm -rf .terraform/
-  echo "0.13.5" > .terraform-version
-}
+# Kubernetes Functions
 
-function fourteen {
-  rm -rf .terraform/
-  echo "0.14.4" > .terraform-version
+function k {
+  DIR=kepler-kubernetes-config
+  ENV=$(pwd | sed "s/^.*\/${DIR}\///" | cut -d / -f 1)
+
+  kubectl $*
 }
 
 ######################################################################
@@ -426,7 +442,6 @@ alias python='python3'
 alias vim='nvim'
 alias rg="rg --hidden"
 alias f="nvim"
-alias k="kubectl"
 
 alias goans='cd ~/kepler-repos/kepler-ansible'
 alias goterr='cd ~/src/kepler-repos/kepler-terraform'
@@ -477,10 +492,12 @@ POETRY_ROOT="$HOME/.poetry/bin"
 RUST_ROOT="$HOME/.cargo/bin"
 NODE_MODULE_ROOT="$HOME/node_modules/bin"
 GCLOUD_ROOT="$HOME/.google-cloud-sdk/bin"
+GO_ROOT="$HOME/.local/go/bin"
 LOCAL_BIN_ROOT="$HOME/.local/bin"
 HOME_BIN_ROOT="$HOME/bin"
+KREW_ROOT="$HOME/.krew/bin"
 
-PATH=$PATH::$POETRY_ROOT:$RUST_ROOT:$NODE_MODULE_ROOTE:$GCLOUD_ROOT:$LOCAL_BIN_ROOT:$HOME_BIN_ROOT
+PATH=$PATH::$POETRY_ROOT:$RUST_ROOT:$NODE_MODULE_ROOTE:$GCLOUD_ROOT:$LOCAL_BIN_ROOT:$HOME_BIN_ROOT:$GO_ROOT:$KREW_ROOT
 
 fpath+=~/.zfunc
 

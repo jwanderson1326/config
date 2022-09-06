@@ -50,6 +50,9 @@ windows:
   - KIP:
     - cd ~/src/kepler-repos
     - clear
+  - Kubernetes:
+    - cd ~/src/kepler-repos/kepler-kubernetes-config
+    - clear
   - TERRAFORM:
     - cd ~/src/kepler-repos/kepler-terraform
     - clear
