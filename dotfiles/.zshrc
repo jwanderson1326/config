@@ -413,6 +413,10 @@ function k {
   kubectl $*
 }
 
+function kuse {
+  CLUSTER=$1
+  kubectl config use-context $CLUSTER-eks
+}
 ######################################################################
 #ALIASES
 ######################################################################
@@ -442,6 +446,7 @@ alias python='python3'
 alias vim='nvim'
 alias rg="rg --hidden"
 alias f="nvim"
+alias ghalint="actionlint -config-file ~/config/dotfiles/actionlint.yaml"
 
 alias goans='cd ~/kepler-repos/kepler-ansible'
 alias goterr='cd ~/src/kepler-repos/kepler-terraform'
@@ -452,6 +457,7 @@ alias homevpn="sudo openvpn --config ~/openvpn/janderson.ovpn"
 alias cookies3="cookiecutter git@github.com:keplergroup/cookiecutter-terraform-s3-bucket.git"
 alias cookieci="cookiecutter git@github.com:keplergroup/cookiecutter-gha-ci-pipeline.git"
 alias cookiepack="cookiecutter git@github.com:keplergroup/cookiecutter-gha-ci-packages.git"
+alias cookiek8s="cookiecutter git@github.com:keplergroup/cookiecutter-k8s-deployment.git"
 
 alias indbabel='babel src/app.js --out-file=public/scripts/app.js --presets=env,react --watch'
 

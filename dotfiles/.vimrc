@@ -128,7 +128,6 @@ Plug 'hdima/python-syntax'
 Plug 'pangloss/vim-javascript'
 Plug 'elzr/vim-json'
 Plug 'hashivim/vim-terraform'
-Plug 'khalliday7/Jenkinsfile-vim-syntax'
 Plug 'ekalinin/Dockerfile.vim'
 Plug 'othree/html5.vim'
 Plug 'mxw/vim-jsx'
@@ -141,7 +140,6 @@ Plug 'vim-scripts/groovyindent-unix'
 "" Autocomplete
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 for coc_plugin in [
-      \ 'git@github.com:fannheyward/coc-markdownlint.git',
       \ 'git@github.com:josa42/coc-docker.git',
       \ 'git@github.com:neoclide/coc-css.git',
       \ 'git@github.com:neoclide/coc-pairs.git',
@@ -201,7 +199,7 @@ augroup indentation_sr
   autocmd!
   autocmd Filetype * setlocal expandtab shiftwidth=2 softtabstop=2 tabstop=8
   autocmd Filetype python,c,elm,haskell,rust,rst,kv,nginx,asm,nasm
-        \ setlocal shiftwidth=4 softtabstop=4 tabstop=8
+        \ setlocal shiftwidth=4 softtabstop=4 tabstop=4
   autocmd Filetype dot setlocal autoindent cindent
   autocmd Filetype make,tsv,votl,go
         \ setlocal tabstop=4 softtabstop=0 shiftwidth=4 noexpandtab
@@ -221,7 +219,7 @@ augroup END
 augroup writing
   autocmd!
   autocmd FileType markdown,gitcommit
-        \ setlocal expandtab shiftwidth=2 softtabstop=2 tabstop=8 wrap linebreak nolist colorcolumn=0 nofoldenable
+        \ setlocal expandtab shiftwidth=2 softtabstop=2 tabstop=8 linebreak nolist wrap colorcolumn=0 nofoldenable
   autocmd BufNewFile,BufRead *.html,*.txt,*.tex :setlocal wrap linebreak nolist
 augroup END
 " }}}
@@ -294,7 +292,7 @@ let g:bullets_enabled_file_types = [
 
 
 "" Markdown Viewer
-let g:markdown_composer_open_browser = 1
+let g:mkdp_auto_start = 0
 
 " Package: defx
 
@@ -482,16 +480,16 @@ set signcolumn=yes
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+" inoremap <silent><expr> <TAB>
+"       \ pumvisible() ? "\<C-n>" :
+"       \ <SID>check_back_space() ? "\<TAB>" :
+"       \ coc#refresh()
+" inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
+" function! s:check_back_space() abort
+"   let col = col('.') - 1
+"   return !col || getline('.')[col - 1]  =~# '\s'
+" endfunction
 
 " Use <c-space> to trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
