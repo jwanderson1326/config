@@ -512,6 +512,10 @@ export PATH
 typeset -aU path
 
 
+export R_EXTRA_CONFIGURE_OPTIONS='--enable-R-shlib --with-cairo'
+export PYTHON_CONFIGURE_OPTS='--enable-shared'
+
+
 [[ -f /home/justin/.nodenv/versions/10.11.0/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh ]] && . /home/justin/.nodenv/versions/10.11.0/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh
 [[ -f /home/justin/.nodenv/versions/10.11.0/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh ]] && . /home/justin/.nodenv/versions/10.11.0/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh
 
