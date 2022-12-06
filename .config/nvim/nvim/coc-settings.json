@@ -1,7 +1,7 @@
 {
   "languageserver": {
     "terraform": {
-      "command": "terraform-lsp",
+      "command": "terraform-ls",
       "filetypes": ["terraform"],
       "rootPatterns": ["Makefile", ".git"]
     },
