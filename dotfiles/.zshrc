@@ -87,6 +87,7 @@ export HISTFILE=~/.zsh_history
 export SAVEHIST=5000
 
 export TF_PLUGIN_CACHE_DIR=/home/justin/.terraform.d/plugin-cache
+export KUBECTL_EXTERNAL_DIFF="colordiff -N -u"
 
 #######################################################################
 # Unset options
@@ -416,6 +417,7 @@ function k {
 function kuse {
   CLUSTER=$1
   kubectl config use-context $CLUSTER-eks
+  kubectl config set-context --current --namespace=default
 }
 ######################################################################
 #ALIASES
@@ -447,6 +449,7 @@ alias vim='nvim'
 alias rg="rg --hidden"
 alias f="nvim"
 alias ghalint="actionlint -config-file ~/config/dotfiles/actionlint.yaml"
+alias ghastatus="gh api -H 'Accept: application/vnd.github+json' -H 'X-GitHub-Api-Version: 2022-11-28' /orgs/keplergroup/actions/runners | jq -C '.runners[] | select(.status == \"online\") | {name, busy}'"
 
 alias goans='cd ~/kepler-repos/kepler-ansible'
 alias goterr='cd ~/src/kepler-repos/kepler-terraform'
@@ -540,3 +543,18 @@ if [ -f '/home/justin/google-cloud-sdk/path.zsh.inc' ]; then . '/home/justin/goo
 # The next line enables shell command completion for gcloud.
 if [ -f '/home/justin/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/justin/google-cloud-sdk/completion.zsh.inc'; fi
 [[ /usr/bin/kubectl ]] && source <(kubectl completion zsh) # add autocomplete permanently to your zsh shell
+
+####################################3
+# Temp Utils
+# ###################################
+function nav() {
+  cd ~/src/kepler-repos/$1/.github/workflows
+  vim run_pipeline.yml
+}
+
+function dogit() {
+  td
+  git add .
+  git commit -m "Updating for personal staging"
+  ggp
+}

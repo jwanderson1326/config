@@ -2,7 +2,7 @@
       email = justinwarrenanderson@gmail.com
       name = Justin Anderson
 [core]
-      editor = vim
+      editor = nvim
       pager = delta
       autocrlf = false
       safecrlf = true

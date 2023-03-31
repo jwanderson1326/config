@@ -1,21 +1,4 @@
-" Notes:
-"   * When in normal mode, scroll over a folded section and type 'za'
-"       this toggles the folded section
-"
-" Initialization:
-"   1. At the command line, execute the following command:
-"     curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-"         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-"   2. Open vim (hint: type vim at command line and press enter :p)
-"   3. :PlugInstall
-"   4. :PlugUpdate
-"   5. You should be ready for MVP editing
-"
-" Updating:
-"   If you want to upgrade your vim plugins to latest version
-"     :PlugUpdate
-"   If you want to upgrade vim-plug itself
-"     :PlugUpgrade
+" Usage: toggle fold in Vim with 'za'. 'zR' to open all folds, 'zM' to close
 " General: Leader mappings -------------------- {{{
 
 let mapleader = ","
@@ -600,6 +583,94 @@ let g:terraform_fold_sections = 0
 let g:terraform_fmt_on_save = 1
 
 let g:terraform_remap_spacebar = 1
+
+" }}}
+" General: focus writing {{{
+
+function! s:focuswriting()
+  if exists('w:custom_focus_writing')
+    call s:focuswriting_close()
+    call s:focuswriting_clean()
+    return
+  endif
+  let current_buffer = bufnr('%')
+  if exists('g:custom_focus_writing')
+    let success = win_gotoid(g:custom_focus_writing)
+    if (success)
+      execute 'buffer ' . current_buffer
+      call s:focuswriting_settings_middle()
+      return
+    else
+      call s:focuswriting_clean()
+    endif
+  endif
+  tabe
+  try
+    file customfocuswriting
+  catch
+    edit customfocuswriting
+  endtry
+  setlocal nobuflisted
+  " Left Window
+  call s:focuswriting_settings_side()
+  vsplit
+  vsplit
+  " Right Window
+  call s:focuswriting_settings_side()
+  wincmd h
+  " Middle Window
+  vertical resize 88
+  execute 'buffer ' . current_buffer
+  let w:custom_focus_writing = 1
+  call s:focuswriting_settings_middle()
+  let g:custom_focus_writing = win_getid()
+  wincmd =
+  augroup custom_focus_writing
+    autocmd!
+    autocmd WinEnter customfocuswriting call s:focuswriting_autocmd()
+  augroup end
+endfunction
+
+function! s:focuswriting_settings_side()
+  setlocal nonumber norelativenumber nocursorline
+        \ fillchars=vert:\ ,eob:\  statusline=\  colorcolumn=0
+        \ winhighlight=Normal:NormalFloat
+endfunction
+
+function! s:focuswriting_settings_middle()
+  " Note: stlnc uses <C-k>NS to enter a space character in statusline
+  setlocal number norelativenumber wrap nocursorline winfixwidth
+        \ fillchars=vert:\ ,eob:\ ,stlnc:  statusline=\  colorcolumn=0
+        \ nofoldenable winhighlight=StatusLine:StatusLineNC
+endfunction
+
+function! s:focuswriting_clean()
+  augroup custom_focus_writing
+    autocmd!
+  augroup end
+  augroup! custom_focus_writing
+  unlet g:custom_focus_writing
+endfunction
+
+function! s:focuswriting_close()
+  if tabpagenr('$') == 1
+    wqall
+  else
+    tabclose
+  endif
+endfunction
+
+function! s:focuswriting_autocmd()
+  wincmd p
+  if bufname('%') == 'customfocuswriting'
+    call s:focuswriting_close()
+    call s:focuswriting_clean()
+  else
+    wincmd =
+  endif
+endfunction
+
+command! FocusWriting call s:focuswriting()
 
 " }}}
 " General: Key remappings {{{

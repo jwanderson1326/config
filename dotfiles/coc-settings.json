@@ -113,5 +113,6 @@
     ],
     "cSpell.userWords": [
       "kplr"
-    ]
+    ],
+    "snippets.ultisnips.pythonPrompt": false
   }
