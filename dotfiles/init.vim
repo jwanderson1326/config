@@ -188,34 +188,41 @@ packadd vim-packager
 call packager#setup(function('s:packager_init'), {
       \ 'window_cmd': 'edit',
       \ })
+" }}}
+" Package: lua extensions {{{
 
+function! s:safe_require(package)
+  try
+    execute "lua require('" . a:package . "')"
+  catch
+    echom "Error with lua require('" . a:package . "')"
+  endtry
+endfunction
 
-""" Autocomplete
-"Plug 'neoclide/coc.nvim', {'branch': 'release'}
-"for coc_plugin in [
-"      \ 'git@github.com:josa42/coc-docker.git',
-"      \ 'git@github.com:neoclide/coc-css.git',
-"      \ 'git@github.com:neoclide/coc-pairs.git',
-"      \ 'git@github.com:neoclide/coc-html.git',
-"      \ 'git@github.com:neoclide/coc-json.git',
-"      \ 'git@github.com:neoclide/coc-python.git',
-"      \ 'git@github.com:neoclide/coc-rls.git',
-"      \ 'git@github.com:neoclide/coc-snippets.git',
-"      \ 'git@github.com:neoclide/coc-tsserver.git',
-"      \ 'git@github.com:neoclide/coc-yaml.git',
-"      \ 'git@github.com:pappasam/coc-jedi.git',
-"      \ 'git@github.com:iamcco/coc-diagnostic.git',
-"      \ 'git@github.com:iamcco/coc-spell-checker.git',
-"      \ 'git@github.com:iamcco/coc-vimlsp.git',
-"      \ 'git@github.com:pantharshit00/coc-prisma.git',
-"      \ ]
-"  Plug coc_plugin, {'do': 'yarn install --frozen-lockfile && yarn build'}
-"endfor
+function! s:setup_lua_packages()
+  call s:safe_require('config.colorizer')
+  call s:safe_require('config.gitsigns')
+  call s:safe_require('config.nvim-autopairs')
+  call s:safe_require('config.nvim-tree')
+  call s:safe_require('config.nvim-treesitter')
+  call s:safe_require('config.nvim-ts-context-commentstring')
+  call s:safe_require('config.nvim-web-devicons')
+  call s:safe_require('config.spellsitter')
+  call s:safe_require('config.telescope')
+  call s:safe_require('config.treesitter-context')
+endfunction
 
-"Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install' }
+call s:setup_lua_packages()
 
-"call plug#end()
+augroup general_lua_extensions
+  autocmd!
+  autocmd FileType vim let &l:path .= ','.stdpath('config').'/lua'
+  autocmd FileType vim setlocal
+        \ includeexpr=substitute(v:fname,'\\.','/','g')
+        \ suffixesadd^=.lua
+augroup end
 
+command! GitsignsToggle Gitsigns toggle_signs
 " }}}
 " General: Filetype specification ------------ {{{
 
