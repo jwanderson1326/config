@@ -536,25 +536,25 @@ export PATH="$HOME/.asdf/installs/poetry/1.1.4/bin:$PATH"
 
 source ~/.zplug/repos/junegunn/fzf/shell/key-bindings.zsh
 source ~/.zplug/repos/junegunn/fzf/shell/completion.zsh
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/home/justin/google-cloud-sdk/path.zsh.inc' ]; then . '/home/justin/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/home/justin/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/justin/google-cloud-sdk/completion.zsh.inc'; fi
 [[ /usr/bin/kubectl ]] && source <(kubectl completion zsh) # add autocomplete permanently to your zsh shell
 
 ####################################3
 # Temp Utils
 # ###################################
 function nav() {
-  cd ~/src/kepler-repos/$1/.github/workflows
-  vim run_pipeline.yml
+  cd ~/src/kepler-repos/$1/
+  vim uwsgi.ini
 }
 
 function dogit() {
   td
   git add .
-  git commit -m "Updating for personal staging"
+  git commit -m "Removing uwsgi headers defaults"
   ggp
 }
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/home/justin/google-cloud-sdk/path.zsh.inc' ]; then . '/home/justin/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/home/justin/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/justin/google-cloud-sdk/completion.zsh.inc'; fi

@@ -52,6 +52,7 @@ set complete+=k
 set showtabline=2
 set nojoinspaces
 set autoread
+set termguicolors
 
 " Grep: program is 'rg'
 set grepprg=rg\ --vimgrep
@@ -159,9 +160,12 @@ function! s:packager_init(packager) abort
         \ ]})
 
   " Syntax Theme:
+  call a:packager.add('https://github.com/folke/tokyonight.nvim')
+  call a:packager.add('https://github.com/itchyny/lightline.vim')
+  call a:packager.add('https://github.com/rebelot/kanagawa.nvim')
+  call a:packager.add('https://github.com/EdenEast/nightfox.nvim')
   call a:packager.add('https://github.com/NLKNguyen/papercolor-theme')
   call a:packager.add('https://github.com/ryanoasis/vim-devicons')
-  call a:packager.add('https://github.com/itchyny/lightline')
 
   " Syntax Highlighting & Indentation:
   call a:packager.add('https://github.com/evanleck/vim-svelte.git', {'requires': [
@@ -210,6 +214,8 @@ function! s:setup_lua_packages()
   call s:safe_require('config.spellsitter')
   call s:safe_require('config.telescope')
   call s:safe_require('config.treesitter-context')
+  call s:safe_require('config.tokyonight')
+  call s:safe_require('config.nightfox')
 endfunction
 
 call s:setup_lua_packages()
@@ -295,21 +301,6 @@ augroup END
 " }}}
 " General: Syntax highlighting ---------------- {{{
 
-" Papercolor: options
-let g:PaperColor_Theme_Options = {
-  \   'language': {
-  \     'python': {
-  \       'highlight_builtins' : 1
-  \     }
-  \   }
-  \ }
-
-" Python: Highlight self and cls keyword in class definitions
-augroup python_syntax
-  autocmd!
-  autocmd FileType python syn keyword pythonBuiltinObj self
-  autocmd FileType python syn keyword pythonBuiltinObj cls
-augroup end
 
 " VimJavascript:
 let g:javascript_plugin_flow = 1
@@ -317,8 +308,9 @@ let g:javascript_plugin_flow = 1
 " Syntax: select global syntax scheme
 " Make sure this is at end of section
 try
-  colorscheme PaperColor
+  colorscheme nightfox
 catch
+  echo 'an error occured with colorscheme'
 endtry
 
 " }}}
@@ -329,7 +321,7 @@ let python_highlight_all = 1
 
 "Lightline
 let g:lightline = {
-      \ 'colorscheme': 'PaperColor',
+      \ 'colorscheme': 'nightfox',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'filename', 'gitbranch', 'modified' ] ],
@@ -530,27 +522,15 @@ let g:terraform_remap_spacebar = 1
 " General: focus writing {{{
 
 function! s:focuswriting()
-  if exists('w:custom_focus_writing')
-    call s:focuswriting_close()
-    call s:focuswriting_clean()
-    return
-  endif
+  augroup focuswriting
+    autocmd!
+  augroup end
   let current_buffer = bufnr('%')
-  if exists('g:custom_focus_writing')
-    let success = win_gotoid(g:custom_focus_writing)
-    if (success)
-      execute 'buffer ' . current_buffer
-      call s:focuswriting_settings_middle()
-      return
-    else
-      call s:focuswriting_clean()
-    endif
-  endif
   tabe
   try
-    file customfocuswriting
+    file focuswriting_abcdefg
   catch
-    edit customfocuswriting
+    edit focuswriting_abcdefg
   endtry
   setlocal nobuflisted
   " Left Window
@@ -563,13 +543,11 @@ function! s:focuswriting()
   " Middle Window
   vertical resize 88
   execute 'buffer ' . current_buffer
-  let w:custom_focus_writing = 1
   call s:focuswriting_settings_middle()
-  let g:custom_focus_writing = win_getid()
   wincmd =
-  augroup custom_focus_writing
+  augroup focuswriting
     autocmd!
-    autocmd WinEnter customfocuswriting call s:focuswriting_autocmd()
+    autocmd WinEnter focuswriting_abcdefg call s:focuswriting_autocmd()
   augroup end
 endfunction
 
@@ -586,29 +564,17 @@ function! s:focuswriting_settings_middle()
         \ nofoldenable winhighlight=StatusLine:StatusLineNC
 endfunction
 
-function! s:focuswriting_clean()
-  augroup custom_focus_writing
-    autocmd!
-  augroup end
-  augroup! custom_focus_writing
-  unlet g:custom_focus_writing
-endfunction
-
-function! s:focuswriting_close()
-  if tabpagenr('$') == 1
-    wqall
-  else
-    tabclose
-  endif
-endfunction
-
 function! s:focuswriting_autocmd()
-  wincmd p
-  if bufname('%') == 'customfocuswriting'
-    call s:focuswriting_close()
-    call s:focuswriting_clean()
+  for windowid in range(1, winnr('$'))
+    if bufname(winbufnr(windowid)) != 'focuswriting_abcdefg'
+      execute windowid .. 'wincmd w'
+      return
+    endif
+  endfor
+  if tabpagenr('$') > 1
+    tabclose
   else
-    wincmd =
+    wqall
   endif
 endfunction
 
@@ -637,9 +603,6 @@ function! GlobalKeyMappings()
   " Escape: also clears highlighting
   nnoremap <silent> <esc> :noh<return><esc>
 
-  " J: basically, unmap in normal mode unless range explicitly specified
-  nnoremap <silent> <expr> J v:count == 0 ? '<esc>' : 'J'
-
   " moving forward and backward with vim tabs
   nnoremap T gT
   nnoremap t gt
@@ -663,7 +626,13 @@ function! GlobalKeyMappings()
   vnoremap <leader>p "+p
   nnoremap <leader>p "+p
 
+  " Spliting
+  nnoremap <leader>v :vsplit<CR>
+  nnoremap <leader>h :split<CR>
+
   vnoremap <C-t> :'<,'>!tr -d '"{$}'<CR>
+
+  nnoremap <leader>t :NvimTreeToggle<CR>
 endfunction
 
 call GlobalKeyMappings()
