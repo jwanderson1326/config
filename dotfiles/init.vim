@@ -82,116 +82,97 @@ set noshowmode
 " General: Plugin Install --------------------- {{{
 
 " Automatically install nvim-packager
-call system([
-      \ 'git',
-      \ 'clone',
-      \ 'https://github.com/kristijanhusak/vim-packager',
-      \ $HOME . '/.config/nvim/pack/packager/opt/vim-packager'])
-
-" Available Commands:
-"   PackagerStatus, PackagerInstall, PackagerUpdate, PackagerClean
-
-function! s:packager_init(packager) abort
-  call a:packager.add('https://github.com/kristijanhusak/vim-packager', {'type': 'opt'})
+call plug#begin()
+" List your plugins here
+Plug 'kristijanhusak/vim-packager', {'type': 'opt'}
 
   " Autocompletion And IDE Features:
-  call a:packager.add('https://github.com/neoclide/coc.nvim.git', {'do': 'yarn install --frozen-lockfile'})
+Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 
   " TreeSitter:
-  call a:packager.add('https://github.com/nvim-treesitter/nvim-treesitter.git', {'do': ':TSUpdate'})
-  call a:packager.add('https://github.com/lewis6991/spellsitter.nvim.git')
-  call a:packager.add('https://github.com/nvim-treesitter/playground.git')
-  call a:packager.add('https://github.com/windwp/nvim-ts-autotag.git')
-  call a:packager.add('https://github.com/nvim-treesitter/nvim-treesitter-context')
-  call a:packager.add('https://github.com/JoosepAlviste/nvim-ts-context-commentstring.git', {'requires': [
-      \ 'https://github.com/tpope/vim-commentary',
-      \ ]})
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'lewis6991/spellsitter.nvim'
+Plug 'nvim-treesitter/playground'
+Plug 'windwp/nvim-ts-autotag'
+Plug 'nvim-treesitter/nvim-treesitter-context'
 
   " Editorconfig:
-  call a:packager.add('https://github.com/gpanders/editorconfig.nvim.git')
+Plug 'gpanders/editorconfig.nvim'
 
   " Tree:
-  call a:packager.add('https://github.com/kyazdani42/nvim-tree.lua.git', {'requires': [
-      \ 'https://github.com/kyazdani42/nvim-web-devicons.git',
-      \ ]})
+Plug 'kyazdani42/nvim-tree.lua', {'requires': [
+      \ 'kyazdani42/nvim-web-devicons',
+      \ ]}
 
   " General:
-  call a:packager.add('https://github.com/bronson/vim-visual-star-search')
-  call a:packager.add('https://github.com/fidian/hexmode')
-  call a:packager.add('https://github.com/simeji/winresizer')
-  call a:packager.add('https://github.com/sjl/strftimedammit.vim')
-  call a:packager.add('https://github.com/unblevable/quick-scope')
-  call a:packager.add('https://github.com/windwp/nvim-autopairs.git')
-  call a:packager.add('https://github.com/ntpeters/vim-better-whitespace.git')
-  call a:packager.add('https://github.com/NvChad/nvim-colorizer.lua')
-  call a:packager.add('https://github.com/tpope/vim-characterize.git')
+Plug 'bronson/vim-visual-star-search'
+Plug 'fidian/hexmode'
+Plug 'simeji/winresizer'
+Plug 'sjl/strftimedammit.vim'
+Plug 'unblevable/quick-scope'
+Plug 'windwp/nvim-autopairs'
+Plug 'ntpeters/vim-better-whitespace'
+Plug 'NvChad/nvim-colorizer.lua'
+Plug 'tpope/vim-characterize'
 
   " KeywordPrg:
-  call a:packager.add('https://github.com/pappasam/vim-keywordprg-commands.git')
+Plug 'pappasam/vim-keywordprg-commands'
 
   " Fuzzy Finder:
-  call a:packager.add('https://github.com/nvim-telescope/telescope.nvim.git', {'requires': [
-      \ 'https://github.com/nvim-lua/plenary.nvim.git',
-      \ ]})
+Plug 'nvim-telescope/telescope.nvim', {'requires': [
+      \ 'nvim-lua/plenary.nvim',
+      \ ]}
 
   " Git:
-  call a:packager.add('https://github.com/tpope/vim-fugitive')
-  call a:packager.add('https://github.com/rhysd/git-messenger.vim.git')
-  call a:packager.add('https://github.com/lewis6991/gitsigns.nvim.git')
+Plug 'lewis6991/gitsigns.nvim'
 
   " Text Objects:
-  call a:packager.add('https://github.com/machakann/vim-sandwich')
-  call a:packager.add('https://github.com/kana/vim-textobj-user')
+Plug 'machakann/vim-sandwich'
+Plug 'kana/vim-textobj-user'
 
   " Writing:
-  call a:packager.add('https://github.com/dkarter/bullets.vim')
-  call a:packager.add('https://github.com/jlesquembre/rst-tables.nvim')
-  call a:packager.add('https://github.com/moiatgit/vim-rst-sections')
+Plug 'dkarter/bullets.vim'
+Plug 'jlesquembre/rst-tables.nvim'
 
   " Previewers:
-  call a:packager.add('https://github.com/iamcco/markdown-preview.nvim', {'do': 'cd app & yarn install'})
+Plug 'iamcco/markdown-preview.nvim', {'do': 'cd app & yarn install'}
 
   " Code Formatters:
-  call a:packager.add('https://github.com/pappasam/vim-filetype-formatter')
+Plug 'pappasam/vim-filetype-formatter'
 
   " Repl Integration:
-  call a:packager.add('https://github.com/pappasam/nvim-repl.git', {'requires': [
-        \ 'https://github.com/tpope/vim-repeat',
-        \ ]})
+Plug 'pappasam/nvim-repl', {'requires': [
+        \ 'tpope/vim-repeat',
+        \ ]}
 
   " Syntax Theme:
-  call a:packager.add('https://github.com/folke/tokyonight.nvim')
-  call a:packager.add('https://github.com/itchyny/lightline.vim')
-  call a:packager.add('https://github.com/rebelot/kanagawa.nvim')
-  call a:packager.add('https://github.com/EdenEast/nightfox.nvim')
-  call a:packager.add('https://github.com/NLKNguyen/papercolor-theme')
-  call a:packager.add('https://github.com/ryanoasis/vim-devicons')
+Plug 'folke/tokyonight.nvim'
+Plug 'itchyny/lightline.vim'
+Plug 'rebelot/kanagawa.nvim'
+Plug 'EdenEast/nightfox.nvim'
+Plug 'NLKNguyen/papercolor-theme'
+Plug 'ryanoasis/vim-devicons'
 
   " Syntax Highlighting & Indentation:
-  call a:packager.add('https://github.com/evanleck/vim-svelte.git', {'requires': [
-      \ 'https://github.com/cakebaker/scss-syntax.vim.git',
-      \ 'https://github.com/groenewege/vim-less.git',
-      \ 'https://github.com/leafgarland/typescript-vim.git',
-      \ 'https://github.com/othree/html5.vim.git',
-      \ 'https://github.com/pangloss/vim-javascript.git',
-      \ ]})
-  call a:packager.add('https://github.com/Vimjas/vim-python-pep8-indent')
-  call a:packager.add('https://github.com/Yggdroot/indentLine')
-  call a:packager.add('https://github.com/aklt/plantuml-syntax.git')
-  call a:packager.add('https://github.com/chr4/nginx.vim.git')
-  call a:packager.add('https://github.com/delphinus/vim-firestore.git')
-  call a:packager.add('https://github.com/mattn/vim-xxdcursor')
-  call a:packager.add('https://github.com/neovimhaskell/haskell-vim')
-  call a:packager.add('https://github.com/raimon49/requirements.txt.vim.git')
-  call a:packager.add('https://github.com/hashivim/vim-terraform')
-  call a:packager.add('https://github.com/elzr/vim-json')
-  call a:packager.add('https://github.com/ekalinin/Dockerfile.vim')
-endfunction
-
-packadd vim-packager
-call packager#setup(function('s:packager_init'), {
-      \ 'window_cmd': 'edit',
-      \ })
+Plug 'evanleck/vim-svelte', {'requires': [
+      \ 'cakebaker/scss-syntax.vim',
+      \ 'groenewege/vim-less',
+      \ 'leafgarland/typescript-vim',
+      \ 'othree/html5.vim',
+      \ 'pangloss/vim-javascript',
+      \ ]}
+Plug 'Vimjas/vim-python-pep8-indent'
+Plug 'Yggdroot/indentLine'
+Plug 'aklt/plantuml-syntax'
+Plug 'chr4/nginx.vim'
+Plug 'delphinus/vim-firestore'
+Plug 'mattn/vim-xxdcursor'
+Plug 'neovimhaskell/haskell-vim'
+Plug 'raimon49/requirements.txt.vim'
+Plug 'hashivim/vim-terraform'
+Plug 'elzr/vim-json'
+Plug 'ekalinin/Dockerfile.vim'
+call plug#end()
 " }}}
 " Package: lua extensions {{{
 
@@ -208,17 +189,44 @@ function! s:setup_lua_packages()
   call s:safe_require('config.gitsigns')
   call s:safe_require('config.nvim-autopairs')
   call s:safe_require('config.nvim-tree')
-  call s:safe_require('config.nvim-treesitter')
   call s:safe_require('config.nvim-ts-context-commentstring')
-  call s:safe_require('config.nvim-web-devicons')
   call s:safe_require('config.spellsitter')
-  call s:safe_require('config.telescope')
   call s:safe_require('config.treesitter-context')
   call s:safe_require('config.tokyonight')
   call s:safe_require('config.nightfox')
 endfunction
 
 call s:setup_lua_packages()
+
+" Tree Sitter (highlighting) {{{
+
+function! HandleVimEnter()
+lua <<EOF
+require('nvim-treesitter.configs').setup {
+  ensure_installed = {
+    'python',
+    'terraform',
+    'javascript',
+    'typescript',
+    'tsx',
+    'html',
+    'css',
+    'json',
+    'yaml',
+    'toml',
+    'bash',
+  },
+  highlight = {
+    enable = true,
+    disable = {},
+  },
+}
+EOF
+endfunction
+augroup vimenter
+  autocmd! VimEnter * call HandleVimEnter()
+augroup END
+" }}}
 
 augroup general_lua_extensions
   autocmd!

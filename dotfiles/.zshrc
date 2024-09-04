@@ -202,6 +202,12 @@ function klone() {
     echo "Repo is already kloned!"
   fi
 }
+function gstuff() {
+  git add .
+  git commit -m "Enabling APM Profiler"
+  git push origin sc-256814/enable-profiler
+  gh pr create --title "Enabling APM Profiler" --body "This enables the profiler in APM ST we can use it"
+}
 
 function babs() {
   babel src/$1 --out-file=public/scripts/app.js --presets=env,react --watch
@@ -255,9 +261,12 @@ function switchenv() {
   # Requires environment as an argument
   # Example: switchenv master
   DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-  ENV=$(echo ${DIR} | sed "s/^.*\/kepler-terraform\///" | cut -d / -f 1)
+  ENV=$(echo ${DIR} | sed "s/^.*\/kepler-terraform\///" | cut -d / -f 3)
+  echo $ENV
   DIR_PREFIX=$(echo $DIR | awk -F "${ENV}" '{print $1}')
+  echo $DIR_PREFIX
   DIR_SUFFIX=$(echo $DIR | awk -F "${ENV}" '{print $2}')
+  echo $DIR_SUFFIX
   if [[ $ENV == 'master' ]]; then
     NEW_ENV='integration'
   elif [[ $ENV == 'integration' ]]; then
@@ -446,6 +455,7 @@ alias smux='tmuxinator start devops'
 alias dmux='tmuxinator stop devops'
 alias python='python3'
 alias vim='nvim'
+alias jvim="nvim -u ~/.config/jvim/init.vim"
 alias rg="rg --hidden"
 alias f="nvim"
 alias ghalint="actionlint -config-file ~/config/dotfiles/actionlint.yaml"
@@ -481,6 +491,7 @@ alias -g .........='../../../../../../../../'
 alias tfrm='terraform state rm '
 alias tfmv='terraform state mv '
 alias tflist='terraform state list'
+alias tup='rm -rf .terraform && echo "1.7.5" > .terraform-version'
 
 ################################################################
 #Set EDITOR
