@@ -1,4 +1,4 @@
-################################################################
+###############################################################
 #Source sensitive files
 ################################################################
 
@@ -455,7 +455,7 @@ alias smux='tmuxinator start devops'
 alias dmux='tmuxinator stop devops'
 alias python='python3'
 alias vim='nvim'
-alias jvim="nvim -u ~/.config/jvim/init.vim"
+alias jvim="NVIM_APPNAME=nvim-jvim nvim"
 alias rg="rg --hidden"
 alias f="nvim"
 alias ghalint="actionlint -config-file ~/config/dotfiles/actionlint.yaml"
@@ -463,6 +463,7 @@ alias ghastatus="gh api -H 'Accept: application/vnd.github+json' -H 'X-GitHub-Ap
 
 alias goans='cd ~/kepler-repos/kepler-ansible'
 alias goterr='cd ~/src/kepler-repos/kepler-terraform'
+alias tamer='cd ~/src/kepler-repos/kepler-terraform/aws/kepler_amer'
 alias gomod='cd ~/src/kepler-repos/kepler-terraform-modules'
 alias gopack='cd ~/src/kepler-repos/kepler-packer'
 alias officevpn="sudo netExtender -u janderson@keplergrp.com -d LocalDomain svpn.keplergrp.com:4433"
@@ -491,7 +492,7 @@ alias -g .........='../../../../../../../../'
 alias tfrm='terraform state rm '
 alias tfmv='terraform state mv '
 alias tflist='terraform state list'
-alias tup='rm -rf .terraform && echo "1.7.5" > .terraform-version'
+alias tup='rm -rf .terraform && rm .terraform.lock.hcl && echo "1.7.5" > .terraform-version'
 
 ################################################################
 #Set EDITOR

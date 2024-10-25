@@ -172,6 +172,8 @@ Plug 'raimon49/requirements.txt.vim'
 Plug 'hashivim/vim-terraform'
 Plug 'elzr/vim-json'
 Plug 'ekalinin/Dockerfile.vim'
+
+Plug 'github/copilot.vim'
 call plug#end()
 " }}}
 " Package: lua extensions {{{
