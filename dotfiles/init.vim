@@ -640,7 +640,7 @@ function! GlobalKeyMappings()
   nnoremap <leader>v :vsplit<CR>
   nnoremap <leader>h :split<CR>
 
-  vnoremap <C-t> :'<,'>!tr -d '"{$}'<CR>
+  vnoremap <C-t> :'<,'>!tr -d ''<CR>
 
   nnoremap <leader>t :NvimTreeToggle<CR>
 endfunction

@@ -454,8 +454,7 @@ alias tmux='tmux -2 -f ~/.tmux.conf'
 alias smux='tmuxinator start devops'
 alias dmux='tmuxinator stop devops'
 alias python='python3'
-alias vim='nvim'
-alias jvim="NVIM_APPNAME=nvim-jvim nvim"
+alias vim="NVIM_APPNAME=nvim-jvim nvim"
 alias rg="rg --hidden"
 alias f="nvim"
 alias ghalint="actionlint -config-file ~/config/dotfiles/actionlint.yaml"
@@ -538,13 +537,13 @@ export PYTHON_CONFIGURE_OPTS='--enable-shared'
 # uninstall by removing these lines or running `tabtab uninstall slss`
 [[ -f /home/justin/node_modules/tabtab/.completions/slss.zsh ]] && . /home/justin/node_modules/tabtab/.completions/slss.zsh
 
-. $HOME/.asdf/asdf.sh
-. $HOME/.asdf/completions/asdf.bash
+# . $HOME/.asdf/asdf.sh
+# . $HOME/.asdf/completions/asdf.bash
 
 
 eval "$(direnv hook zsh)"
 
-export PATH="$HOME/.asdf/installs/poetry/1.1.4/bin:$PATH"
+# export PATH="$HOME/.asdf/installs/poetry/1.1.4/bin:$PATH"
 
 source ~/.zplug/repos/junegunn/fzf/shell/key-bindings.zsh
 source ~/.zplug/repos/junegunn/fzf/shell/completion.zsh
@@ -570,3 +569,4 @@ if [ -f '/home/justin/google-cloud-sdk/path.zsh.inc' ]; then . '/home/justin/goo
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/home/justin/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/justin/google-cloud-sdk/completion.zsh.inc'; fi
+fpath+=${ZDOTDIR:-~}/.zsh_functions
