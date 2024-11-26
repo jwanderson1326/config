@@ -1,0 +1,75 @@
+# :schema https://raw.githubusercontent.com/distinction-dev/alacritty-schema/refs/heads/main/alacritty/reference.json
+
+[cursor.style]
+blinking = "Never"
+
+[env]
+TERM = "tmux-256color"
+WINIT_X11_SCALE_FACTOR = "1.0"
+
+[font]
+size = 12.0
+normal = {family = "Fira Mono Nerd Font Mono", style = "Medium"}
+
+[general]
+import = ["~/.config/alacritty/themes/themes/ayu_mirage.toml"]
+live_config_reload = true
+
+[window]
+opacity = 1.0
+decorations = "full"
+startup_mode = "Maximized"
+title = "Alacritty"
+dynamic_title = false
+dynamic_padding = true
+padding = {x = 2, y = 2}
+
+[[keyboard.bindings]]
+action = "Paste"
+key = "V"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+action = "Copy"
+key = "C"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+action = "ToggleFullscreen"
+key = "Return"
+mods = "Alt"
+
+[[keyboard.bindings]]
+action = "Quit"
+key = "Q"
+mods = "Command"
+
+[[keyboard.bindings]]
+action = "Quit"
+key = "W"
+mods = "Command"
+
+[[keyboard.bindings]]
+action = "ScrollPageUp"
+key = "PageUp"
+mode = "~Alt"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "ScrollPageDown"
+key = "PageDown"
+mode = "~Alt"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "ScrollToTop"
+key = "Home"
+mode = "~Alt"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "ScrollToBottom"
+key = "End"
+mode = "~Alt"
+mods = "Shift"
+

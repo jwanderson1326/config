@@ -99,6 +99,18 @@ unsetopt MENU_COMPLETE
 # do not automatically remove the slash
 unsetopt AUTO_REMOVE_SLASH
 
+######################################
+# Mise
+# ###################################
+if [[ $- == *i* ]]; then # interactive shell
+  if [ -e "$HOME/.local/bin/mise" ]; then
+    eval "$(~/.local/bin/mise activate zsh)"
+  else
+    echo 'Mise not installed, please install. See:'
+    echo 'https://mise.jdx.dev/getting-started.html'
+  fi
+fi
+
 #######################################################################
 # fzf SETTINGS
 #######################################################################
@@ -436,8 +448,8 @@ alias svpn="sudo nmcli c down aws"
 
 alias ls="lsd"
 alias sl='lsd'
-alias ll='ls -lh'
-alias la='ls -Alh'
+alias ll='lsd -lh'
+alias la='lsd -Alh'
 alias cat='bat'
 alias mkdir='mkdir -p'
 
@@ -450,11 +462,11 @@ alias kip='cd ~/src/kepler-repos'
 alias vgit='echo $VAULT_AUTH_GITHUB_TOKEN | pbcopy'
 alias ggit='echo $TF_VAR_github_token | pbcopy'
 alias eget='echo "961517735772.dkr.ecr.us-east-1.amazonaws.com" | pbcopy'
-alias tmux='tmux -2 -f ~/.tmux.conf'
+alias tmux='tmux -2 -f ~/.config/tmux/tmux.conf'
 alias smux='tmuxinator start devops'
 alias dmux='tmuxinator stop devops'
 alias python='python3'
-alias vim="NVIM_APPNAME=nvim-jvim nvim"
+alias vim="NVIM_APPNAME=nvim nvim"
 alias rg="rg --hidden"
 alias f="nvim"
 alias ghalint="actionlint -config-file ~/config/dotfiles/actionlint.yaml"
@@ -537,17 +549,15 @@ export PYTHON_CONFIGURE_OPTS='--enable-shared'
 # uninstall by removing these lines or running `tabtab uninstall slss`
 [[ -f /home/justin/node_modules/tabtab/.completions/slss.zsh ]] && . /home/justin/node_modules/tabtab/.completions/slss.zsh
 
-# . $HOME/.asdf/asdf.sh
-# . $HOME/.asdf/completions/asdf.bash
-
-
-eval "$(direnv hook zsh)"
-
-# export PATH="$HOME/.asdf/installs/poetry/1.1.4/bin:$PATH"
 
 source ~/.zplug/repos/junegunn/fzf/shell/key-bindings.zsh
 source ~/.zplug/repos/junegunn/fzf/shell/completion.zsh
-[[ /usr/bin/kubectl ]] && source <(kubectl completion zsh) # add autocomplete permanently to your zsh shell
+# [[ /usr/bin/kubectl ]] && source <(kubectl completion zsh) # add autocomplete permanently to your zsh shell
+
+if command -v mise > /dev/null; then
+  eval "$(mise completions zsh)"
+fi
+
 
 ####################################3
 # Temp Utils
@@ -570,3 +580,8 @@ if [ -f '/home/justin/google-cloud-sdk/path.zsh.inc' ]; then . '/home/justin/goo
 # The next line enables shell command completion for gcloud.
 if [ -f '/home/justin/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/justin/google-cloud-sdk/completion.zsh.inc'; fi
 fpath+=${ZDOTDIR:-~}/.zsh_functions
+
+
+
+
+[ -f "/home/justin/.ghcup/env" ] && . "/home/justin/.ghcup/env" # ghcup-env

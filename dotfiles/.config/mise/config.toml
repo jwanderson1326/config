@@ -1,0 +1,41 @@
+# :schema https://github.com/jdx/mise/blob/main/schema/mise.json
+
+[settings]
+experimental = true
+# see here: https://github.com/jdx/mise/issues/1635
+cargo_binstall = true
+
+[tools]
+act = "latest"
+awscli = "latest"
+cargo-binstall = "latest"
+direnv = "latest"
+go = "1.23.1"
+java = "latest"
+k9s = "0.26.7"
+kubectl = "latest"
+lua-language-server = "latest"
+minikube = "latest"
+node = "22.8.0"
+python = "3.12.6"
+shellcheck = "latest"
+shfmt = "latest"
+terraform = "latest"
+terraform-ls = "latest"
+tflint = "latest"
+tmux = "latest"
+vault = "latest"
+"cargo:bat" = "latest"
+"cargo:cargo-deb" = "latest"
+"cargo:cargo-edit" = "latest"
+"cargo:cargo-update" = "latest"
+"cargo:csvlens" = "latest"
+"cargo:fd-find" = "latest"
+"cargo:git-delta" = "latest"
+"cargo:leptosfmt" = "latest"
+"cargo:lsd" = "latest"
+"cargo:mdbook" = "latest"
+"cargo:ripgrep" = "latest"
+"cargo:sd" = "latest"
+"cargo:usage-cli" = "latest"
+"cargo:zoxide" = "latest"
