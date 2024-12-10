@@ -1,4 +1,5 @@
-###############################################################
+#
+##############################################################
 #Source sensitive files
 ################################################################
 
@@ -331,9 +332,6 @@ function prcreate {
 
 function update_program() {
   case $1 in
-    kitty)
-      curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
-      ;;
     zoom)
       curl -Lsf https://zoom.us/client/latest/zoom_amd64.deb -o /tmp/zoom_amd64.deb
       sudo dpkg -i /tmp/zoom_amd64.deb
@@ -350,61 +348,24 @@ function update_program() {
   esac
 }
 
-function get_ips() {
-  if [ -z "$1" ]; then
-    echo "Must Define an Instance Name! eg mgmt-ecs-asg"
-  else
-    aws ec2 describe-instances --filters "Name=tag:Name,Values=$1" "Name=instance-state-name,Values=running" --query 'Reservations[*].Instances[*].{Instance:InstanceId,PrivateIP:PrivateIpAddress}' --output table
-  fi
-}
-
-# REDSHIFT CONNECTIONS
-function rs_analytics {
-  vauth
-  echo '---'
-  local host="rs-analytics-master.keplergrp.com"
-  local analytics_pw=$(vault read -field=password secret/administration/redshift/analytics-admin)
-  PGPASSWORD=$analytics_pw FRIENDLY_HOSTNAME=$host psql -h $host -U kip -p 5439 -d kip
-}
-
-function rs_integration {
-  vauth
-  echo '---'
-  local host="rs-analytics-integration.keplergrp.com"
-  local integration_pw=$(vault read -field=password secret/administration/redshift/integration-analytics-admin)
-  PGPASSWORD=$integration_pw FRIENDLY_HOSTNAME=$host psql -h $host -U kepleradmin -p 5439 -d kip
-}
-
-function rs_chubb {
-  vauth
-  echo '---'
-  local host="rs-chubb-master.keplergrp.com"
-  local chubb_pw=$(vault read -field=password secret/administration/redshift/chubb-admin)
-  PGPASSWORD=$chubb_pw FRIENDLY_HOSTNAME=$host psql -h $host -U kepleradmin -p 5439 -d kepleradmin
-}
-
-function rs_sanofi {
-  vauth
-  echo '---'
-  local host="rs-snfi-master.keplergrp.com"
-  local snfi_pw=$(vault read -field=password secret/administration/redshift/sanofi-admin)
-  PGPASSWORD=$snfi_pw FRIENDLY_HOSTNAME=$host psql -h $host -U kip_user -p 5439 -d kip
-}
-
-function kipint_emea {
-  vauth
-  echo '---'
-  local host="integration-analytics.co66vkzinx8f.eu-west-2.redshift.amazonaws.com"
-  local password=$(vault read -field=password secret/administration/kepler_emea_apac/database/redshift/integration-analytics)
-  PGPASSWORD=$password FRIENDLY_HOSTNAME="integration-emea" psql -h $host -U kepleradmin -p 5439 -d general
-}
-
-function kip_emea {
-  vauth
-  echo '---'
-  local host="master-analytics.co66vkzinx8f.eu-west-2.redshift.amazonaws.com"
-  local password=$(vault read -field=password secret/administration/kepler_emea_apac/database/redshift/master-analytics)
-  PGPASSWORD=$password FRIENDLY_HOSTNAME="master-emea" psql -h $host -U kepleradmin -p 5439 -d general
+function upgrade() {
+  sudo apt update
+  sudo apt upgrade -y
+  sudo apt autoremove -y
+  sudo snap refresh
+  # pushd .
+  # cd ~/src/lib/alacritty || return
+  # git fetch origin
+  # if [[ $(git diff origin/master) ]]; then
+  #   git merge origin/master
+  #   alacritty-install
+  # lse
+  #   echo 'No Alacritty updates, skipping build...'
+  # # fi
+  # popd || return
+  mise self-update -y
+  mise upgrade -y
+  mise install -y
 }
 
 #SSM Session
@@ -557,31 +518,3 @@ source ~/.zplug/repos/junegunn/fzf/shell/completion.zsh
 if command -v mise > /dev/null; then
   eval "$(mise completions zsh)"
 fi
-
-
-####################################3
-# Temp Utils
-# ###################################
-function nav() {
-  cd ~/src/kepler-repos/$1/
-  vim uwsgi.ini
-}
-
-function dogit() {
-  td
-  git add .
-  git commit -m "Removing uwsgi headers defaults"
-  ggp
-}
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/home/justin/google-cloud-sdk/path.zsh.inc' ]; then . '/home/justin/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/home/justin/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/justin/google-cloud-sdk/completion.zsh.inc'; fi
-fpath+=${ZDOTDIR:-~}/.zsh_functions
-
-
-
-
-[ -f "/home/justin/.ghcup/env" ] && . "/home/justin/.ghcup/env" # ghcup-env
