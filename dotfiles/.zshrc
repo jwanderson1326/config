@@ -1,11 +1,130 @@
-#
 ##############################################################
-#Source sensitive files
+# ENV Vars
 ################################################################
+export HISTSIZE=5000
+export HISTCONTROL=ignorespace
+export HISTFILE=~/.zsh_history
+export SAVEHIST=5000
+export TF_PLUGIN_CACHE_DIR=/home/justin/.terraform.d/plugin-cache
+export KUBECTL_EXTERNAL_DIFF="colordiff -N -u"
+export EDITOR='nvim'
+export ALACRITTY_BACKGROUND_CACHE_FILE="$HOME/.cache/alacritty/background.toml"
+export TMUX_CONFIGURE_OPTIONS=--enable-sixel
+export BROWSER=/usr/bin/firefox
+export LS_COLORS='di=1;34:fi=0:ln=1;36:pi=5:so=5:bd=5:cd=5:or=31:mi=0:ex=1;92:*.rpm=90'
+export ALACRITTY_BACKGROUND_CACHE_FILE="$HOME/.cache/alacritty/background.toml"
+export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+export GOOGLE_CLOUD_KEYFILE_JSON="~/.gcp/terraform_creds.json"
+export GOOGLE_CREDENTIALS="~/.gcp/terraform_creds.json"
+export GOOGLE_REGION=us-east1
+export CARAPACE_BRIDGES=zsh,fish,bash,inshellisense
 
-if [ -f ~/.bash/sensitive ] ; then
-    source ~/.bash/sensitive
-fi
+################################################################################
+# SET OPTIONS
+################################################################################
+setopt AUTO_LIST
+setopt LIST_AMBIGUOUS
+setopt LIST_BEEP
+setopt COMPLETE_ALIASES
+setopt AUTOCD
+setopt HIST_IGNORE_SPACE
+setopt APPENDHISTORY
+setopt SHAREHISTORY
+setopt INCAPPENDHISTORY
+unsetopt MENU_COMPLETE
+unsetopt AUTO_REMOVE_SLASH
+
+##############################################################
+# Include
+################################################################
+function include() { [[ -f "$1" ]] && source "$1"; }
+include "$HOME/.bash/sensitive"
+
+#########################################################
+# PATH
+# #######################################################
+function rm_from_path() { # $1: path to remove
+  PATH=$(echo "$PATH" | tr ':' '\n' | grep -v "^${1}$" | tr '\n' ':' | sed 's/:$//')
+}
+function path_ladd() { # $1 path to add
+  rm_from_path "$1"
+  PATH="$1${PATH:+":$PATH"}"
+}
+function path_radd() { # $1 path to add
+  rm_from_path "$1"
+  PATH="${PATH:+"$PATH:"}$1"
+}
+
+path_ladd "$HOME/.cargo/bin"
+path_ladd "$HOME/.google-cloud-sdk/bin"
+path_ladd "$HOME/.local/bin"
+path_ladd "$HOME/bin"
+path_ladd "$HOME/.bin"
+path_ladd "$HOME/config/bin"
+export PATH
+
+######################################################################
+#ALIASES
+######################################################################
+alias kvpn="sudo nmcli c up aws"
+alias svpn="sudo nmcli c down aws"
+
+alias ls="lsd"
+alias sl='lsd'
+alias ll='lsd -lh'
+alias la='lsd -Alh'
+alias cat='bat'
+alias mkdir='mkdir -p'
+
+alias pbcopy='xsel --clipboard --input'
+
+alias zo='source ~/.zshrc'
+alias ve='python3 -m venv venv'
+alias va='source venv/bin/activate'
+alias kip='cd ~/src/kepler-repos'
+alias vgit='echo $VAULT_AUTH_GITHUB_TOKEN | pbcopy'
+alias ggit='echo $TF_VAR_github_token | pbcopy'
+alias eget='echo "961517735772.dkr.ecr.us-east-1.amazonaws.com" | pbcopy'
+alias tmux='tmux -2 -f ~/.config/tmux/tmux.conf'
+alias smux='tmuxinator start devops'
+alias dmux='tmuxinator stop devops'
+alias python='python3'
+alias vim="NVIM_APPNAME=nvim nvim"
+alias rgh="rg --hidden"
+alias f="nvim"
+alias ghalint="actionlint -config-file ~/config/dotfiles/actionlint.yaml"
+alias ghastatus="gh api -H 'Accept: application/vnd.github+json' -H 'X-GitHub-Api-Version: 2022-11-28' /orgs/keplergroup/actions/runners | jq -C '.runners[] | select(.status == \"online\") | {name, busy}'"
+
+alias goterr='cd ~/src/kepler-repos/kepler-terraform'
+alias tamer='cd ~/src/kepler-repos/kepler-terraform/aws/kepler_amer'
+alias temea='cd ~/src/kepler-repos/kepler-terraform/aws/kepler_emea_apac'
+alias gomod='cd ~/src/kepler-repos/kepler-terraform-modules'
+alias officevpn="sudo netExtender -u janderson@keplergrp.com -d LocalDomain svpn.keplergrp.com:4433"
+alias cookies3="cookiecutter git@github.com:keplergroup/cookiecutter-terraform-s3-bucket.git"
+alias cookieci="cookiecutter git@github.com:keplergroup/cookiecutter-gha-ci-pipeline.git"
+alias cookiepack="cookiecutter git@github.com:keplergroup/cookiecutter-gha-ci-packages.git"
+alias cookiek8s="cookiecutter git@github.com:keplergroup/cookiecutter-k8s-deployment.git"
+
+alias awho="aws sts get-caller-identity"
+
+alias ghview="gh repo view -w"
+alias prlist="gh pr list"
+alias prstatus="gh pr status"
+
+alias -g ...='../../'
+alias -g ....='../../'
+alias -g .....='../../../../'
+alias -g ......='../../../../../'
+alias -g .......='../../../../../../'
+alias -g ........='../../../../../../../'
+alias -g .........='../../../../../../../../'
+
+alias tfrm='terraform state rm '
+alias tfmv='terraform state mv '
+alias tflist='terraform state list'
+alias tup='rm -rf .terraform && rm .terraform.lock.hcl && echo "1.10.2" > .terraform-version'
+
+alias kargo="kubectl config use-context argo"
 
 ###########################################################
 # ZPLUG
@@ -38,80 +157,6 @@ else
   echo "zplug not installed"
 fi
 
-##############################################################
-#THEME CONFIG
-##############################################################
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(kubecontext virtualenv time context ssh dir vcs status)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=()
-POWERLEVEL9K_DISABLE_RPROMPT=true
-POWERLEVEL9K_SHORTEN_DIR_LENGTH=3
-POWERLEVEL9K_PROMPT_ON_NEWLINE=true
-POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
-POWERLEVEL9K_TIME_BACKGROUND='black'
-POWERLEVEL9K_TIME_FOREGROUND='white'
-POWERLEVEL9K_DIR_HOME_SUBFOLDER_BACKGROUND='123'
-POWERLEVEL9K_DIR_HOME_BACKGROUND='123'
-POWERLEVEL9K_VCS_CLEAN_BACKGROUND='048'
-POWERLEVEL9K_VCS_MODIFIED_BACKGROUND='227'
-POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND='210'
-POWERLEVEL9K_KUBECONTEXT_BACKGROUND='31'
-
-
-################################################################################
-# SET OPTIONS
-################################################################################
-setopt AUTO_LIST
-setopt LIST_AMBIGUOUS
-setopt LIST_BEEP
-
-# completions
-setopt COMPLETE_ALIASES
-
-# automatically CD without typing cd
-setopt AUTOCD
-
-# Dealing with history
-setopt HIST_IGNORE_SPACE
-setopt APPENDHISTORY
-setopt SHAREHISTORY
-setopt INCAPPENDHISTORY
-HIST_STAMPS="mm/dd/yyyy"
-
-# History: How many lines of history to keep in memory
-export HISTSIZE=5000
-
-# History: ignore leading space, where to save history to disk
-export HISTCONTROL=ignorespace
-export HISTFILE=~/.zsh_history
-
-# History: Number of history entries to save to disk
-export SAVEHIST=5000
-
-export TF_PLUGIN_CACHE_DIR=/home/justin/.terraform.d/plugin-cache
-export KUBECTL_EXTERNAL_DIFF="colordiff -N -u"
-
-#######################################################################
-# Unset options
-#######################################################################
-
-# do not automatically complete
-unsetopt MENU_COMPLETE
-
-# do not automatically remove the slash
-unsetopt AUTO_REMOVE_SLASH
-
-######################################
-# Mise
-# ###################################
-if [[ $- == *i* ]]; then # interactive shell
-  if [ -e "$HOME/.local/bin/mise" ]; then
-    eval "$(~/.local/bin/mise activate zsh)"
-  else
-    echo 'Mise not installed, please install. See:'
-    echo 'https://mise.jdx.dev/getting-started.html'
-  fi
-fi
-
 #######################################################################
 # fzf SETTINGS
 #######################################################################
@@ -135,59 +180,65 @@ export FZF_DEFAULT_OPTS="--bind=ctrl-o:toggle-preview --ansi --preview 'bat {}' 
 FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*"' \
 export FZF_DEFAULT_COMMAND
 
+##############################################################
+#THEME CONFIG
+##############################################################
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(kubecontext virtualenv time context ssh dir vcs status)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=()
+POWERLEVEL9K_DISABLE_RPROMPT=true
+POWERLEVEL9K_SHORTEN_DIR_LENGTH=3
+POWERLEVEL9K_PROMPT_ON_NEWLINE=true
+POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
+POWERLEVEL9K_TIME_BACKGROUND='black'
+POWERLEVEL9K_TIME_FOREGROUND='white'
+POWERLEVEL9K_DIR_HOME_SUBFOLDER_BACKGROUND='123'
+POWERLEVEL9K_DIR_HOME_BACKGROUND='123'
+POWERLEVEL9K_VCS_CLEAN_BACKGROUND='048'
+POWERLEVEL9K_VCS_MODIFIED_BACKGROUND='227'
+POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND='210'
+POWERLEVEL9K_KUBECONTEXT_BACKGROUND='31'
 
-################################################################################
-# LS_COLORS
-################################################################################
-LS_COLORS="di=1;34:"
-#   fi  File
-LS_COLORS+="fi=0:"
-#   #   ln  Symbolic Link
-LS_COLORS+="ln=1;36:"
-#   #   pi  Fifo file
-LS_COLORS+="pi=5:"
-#   #   so  Socket file
-LS_COLORS+="so=5:"
-#   #   bd  Block (buffered) special file
-LS_COLORS+="bd=5:"
-#   #   cd  Character (unbuffered) special file
-LS_COLORS+="cd=5:"
-#   #   or  Symbolic Link pointing to a non-existent file (orphan)
-LS_COLORS+="or=31:"
-#   #   mi  Non-existent file pointed to by a symbolic link (visible with ls -l)
-LS_COLORS+="mi=0:"
-#   #   ex  File which is executable (ie. has 'x' set in permissions).
-LS_COLORS+="ex=1;92:"
-#   # additional file types as-defined by their extension
-LS_COLORS+="*.rpm=90"
-#
-#   # Finally, export LS_COLORS
-export LS_COLORS
+######################################
+# Mise
+# ###################################
+if [[ $- == *i* ]]; then # interactive shell
+  if [ -e "$HOME/.local/bin/mise" ]; then
+    eval "$(~/.local/bin/mise activate zsh)"
+  else
+    echo 'Mise not installed, please install. See:'
+    echo 'https://mise.jdx.dev/getting-started.html'
+  fi
+fi
 
 ################################################################################
 # ZShell Auto Completion
 ################################################################################
-
+fpath=(${ASDF_DIR}/completions /usr/local/share/zsh-completions $fpath $HOME/.zfunc)
+autoload compinit
+for dump in ~/.zcompdump(N.mh+24); do
+  compinit
+done
+compinit -C
 autoload -U +X bashcompinit && bashcompinit
-zstyle ':completion:*:*:git:*' script /usr/local/etc/bash_completion.d/git-completion.bash
-
-# CURRENT STATE: does not select any sort of searching
-# searching was too annoying and I didn't really use it
-# If you want it back, use "search-backward" as an option
-zstyle ':completion:*' menu select
+zstyle ':completion:*:*:git:*' script ~/.zsh/git-completion.bash
+zstyle ':completion:*' menu select incremental
 zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
+zstyle ':completion:*' matcher-list '' 'm:{a-z\-A-Z}={A-Z\_a-z}' 'r:[^[:alpha:]]||[[:alpha:]]=** r:|=* m:{a-z\-A-Z}={A-Z\_a-z}' 'r:|?=** m:{a-z\-A-Z}={A-Z\_a-z}'
 
-# Fuzzy completion
-zstyle ':completion:*' matcher-list '' \
-  'm:{a-z\-A-Z}={A-Z\_a-z}' \
-  'r:[^[:alpha:]]||[[:alpha:]]=** r:|=* m:{a-z\-A-Z}={A-Z\_a-z}' \
-  'r:|?=** m:{a-z\-A-Z}={A-Z\_a-z}'
 fpath=(/usr/local/share/zsh-completions $fpath)
 zmodload -i zsh/complist
 
-# Manual libraries
+# Most additional completions
+if command -v carapace > /dev/null; then # https://github.com/rsteube/carapace-bin
+  source <(carapace _carapace) # https://carapace-sh.github.io/carapace-bin/completers.html
+fi
 
-# vault, by Hashicorp
+# Note in Carapace
+if command -v mise > /dev/null; then
+  eval "$(mise completions zsh)"
+fi
+
+# Vault
 _vault_complete() {
   local word completions
   word="$1"
@@ -195,14 +246,6 @@ _vault_complete() {
   reply=( "${(ps:\n:)completions}" )
 }
 compctl -f -K _vault_complete vault
-
-# stack
-# eval "$(stack --bash-completion-script stack)"
-
-# Add autocompletion path
-fpath+=~/.zfunc
-
-
 
 ######################################################################
 # FUNCTIONS
@@ -222,64 +265,14 @@ function gstuff() {
   gh pr create --title "Enabling APM Profiler" --body "This enables the profiler in APM ST we can use it"
 }
 
-function babs() {
-  babel src/$1 --out-file=public/scripts/app.js --presets=env,react --watch
-}
-
-
-
-function dato() {
-  PAYLOAD=$(jq -n \
-    --arg user "$1" \
-    --arg email "$2" \
-    '{adhoc: true, username: $user, recipient: $email}')
-  echo $PAYLOAD
-  aws lambda invoke \
-    --function-name kip-credential-rotater \
-    --log-type Tail \
-    --payload $PAYLOAD \
-    /tmp/lambda.txt
-}
-
-function drmi() {
-  for img in "$@"
-  do
-    docker image rm \
-      $(docker images --format "{{.Repository}}:{{.Tag}}" | grep $img)
-  done
-}
-
-function tf_syntax_update() {
-  # This will fix maps to use TF 12's stricter syntax
-  attribute=("tags" "vars" "default" "dimensions")
-  for type in "${attribute[@]}"; do
-    sed -i "s/${type}\ {/${type}\ =\ {/g" *.tf
-  done
-}
-
-
-function tfpull {
-  # This will pull a file down to /tmp/terraform
-  terraform state pull > /tmp/terraform/$1.tfstate
-}
-
-
-function tfpush {
-  # This will pull a file down to /tmp/terraform
-  terraform state push /tmp/terraform/$1.tfstate
-}
-
 function switchenv() {
   # Switch only the environment in the CWD
   # Requires environment as an argument
   # Example: switchenv master
   DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
   ENV=$(echo ${DIR} | sed "s/^.*\/kepler-terraform\///" | cut -d / -f 3)
-  echo $ENV
   DIR_PREFIX=$(echo $DIR | awk -F "${ENV}" '{print $1}')
-  echo $DIR_PREFIX
   DIR_SUFFIX=$(echo $DIR | awk -F "${ENV}" '{print $2}')
-  echo $DIR_SUFFIX
   if [[ $ENV == 'master' ]]; then
     NEW_ENV='integration'
   elif [[ $ENV == 'integration' ]]; then
@@ -353,168 +346,13 @@ function upgrade() {
   sudo apt upgrade -y
   sudo apt autoremove -y
   sudo snap refresh
-  # pushd .
-  # cd ~/src/lib/alacritty || return
-  # git fetch origin
-  # if [[ $(git diff origin/master) ]]; then
-  #   git merge origin/master
-  #   alacritty-install
-  # lse
-  #   echo 'No Alacritty updates, skipping build...'
-  # # fi
-  # popd || return
   mise self-update -y
   mise upgrade -y
   mise install -y
 }
 
-#SSM Session
-
-function ssm {
-  if [ -z "$1" ]; then
-    echo "Must Define a cluster! eg mgmt-ecs"
-    return 1
-  fi
-
-  if [ -z "$2" ]; then
-    local INSTANCE_INDEX=0
-  else
-    local INSTANCE_INDEX=$2
-  fi
-
-  local ARN=$(aws ecs list-container-instances --cluster $1 --status ACTIVE | jq ".containerInstanceArns [$INSTANCE_INDEX]" | tr -d '"')
-  local ID=$(aws ecs describe-container-instances --cluster $1 --container-instances $ARN | jq '.containerInstances [0].ec2InstanceId' | tr -d '"')
-  aws ssm start-session --target $ID
-}
-
 # Kubernetes Functions
+function k { kubectl $* }
+function kuse { kubectl config use-context $1 }
 
-function k {
-  DIR=kepler-kubernetes-config
-  ENV=$(pwd | sed "s/^.*\/${DIR}\///" | cut -d / -f 1)
-
-  kubectl $*
-}
-
-function kuse {
-  CLUSTER=$1
-  kubectl config use-context $CLUSTER-eks
-  kubectl config set-context --current --namespace=default
-}
-######################################################################
-#ALIASES
-######################################################################
-alias kvpn="sudo nmcli c up aws"
-alias svpn="sudo nmcli c down aws"
-
-alias ls="lsd"
-alias sl='lsd'
-alias ll='lsd -lh'
-alias la='lsd -Alh'
-alias cat='bat'
-alias mkdir='mkdir -p'
-
-alias pbcopy='xsel --clipboard --input'
-
-alias zo='source ~/.zshrc'
-alias ve='python3 -m venv venv'
-alias va='source venv/bin/activate'
-alias kip='cd ~/src/kepler-repos'
-alias vgit='echo $VAULT_AUTH_GITHUB_TOKEN | pbcopy'
-alias ggit='echo $TF_VAR_github_token | pbcopy'
-alias eget='echo "961517735772.dkr.ecr.us-east-1.amazonaws.com" | pbcopy'
-alias tmux='tmux -2 -f ~/.config/tmux/tmux.conf'
-alias smux='tmuxinator start devops'
-alias dmux='tmuxinator stop devops'
-alias python='python3'
-alias vim="NVIM_APPNAME=nvim nvim"
-alias rg="rg --hidden"
-alias f="nvim"
-alias ghalint="actionlint -config-file ~/config/dotfiles/actionlint.yaml"
-alias ghastatus="gh api -H 'Accept: application/vnd.github+json' -H 'X-GitHub-Api-Version: 2022-11-28' /orgs/keplergroup/actions/runners | jq -C '.runners[] | select(.status == \"online\") | {name, busy}'"
-
-alias goans='cd ~/kepler-repos/kepler-ansible'
-alias goterr='cd ~/src/kepler-repos/kepler-terraform'
-alias tamer='cd ~/src/kepler-repos/kepler-terraform/aws/kepler_amer'
-alias gomod='cd ~/src/kepler-repos/kepler-terraform-modules'
-alias gopack='cd ~/src/kepler-repos/kepler-packer'
-alias officevpn="sudo netExtender -u janderson@keplergrp.com -d LocalDomain svpn.keplergrp.com:4433"
-alias homevpn="sudo openvpn --config ~/openvpn/janderson.ovpn"
-alias cookies3="cookiecutter git@github.com:keplergroup/cookiecutter-terraform-s3-bucket.git"
-alias cookieci="cookiecutter git@github.com:keplergroup/cookiecutter-gha-ci-pipeline.git"
-alias cookiepack="cookiecutter git@github.com:keplergroup/cookiecutter-gha-ci-packages.git"
-alias cookiek8s="cookiecutter git@github.com:keplergroup/cookiecutter-k8s-deployment.git"
-
-alias indbabel='babel src/app.js --out-file=public/scripts/app.js --presets=env,react --watch'
-
-alias awho="aws sts get-caller-identity"
-
-alias ghview="gh repo view -w"
-alias prlist="gh pr list"
-alias prstatus="gh pr status"
-
-alias -g ...='../../'
-alias -g ....='../../'
-alias -g .....='../../../../'
-alias -g ......='../../../../../'
-alias -g .......='../../../../../../'
-alias -g ........='../../../../../../../'
-alias -g .........='../../../../../../../../'
-
-alias tfrm='terraform state rm '
-alias tfmv='terraform state mv '
-alias tflist='terraform state list'
-alias tup='rm -rf .terraform && rm .terraform.lock.hcl && echo "1.7.5" > .terraform-version'
-
-################################################################
-#Set EDITOR
-################################################################
-export EDITOR='nvim'
-
-###############################################################
-# Set Google Cloud Creds Location
-###############################################################
-GOOGLE_CLOUD_KEYFILE_JSON="~/.gcp/terraform_creds.json"
-GOOGLE_CREDENTIALS="~/.gcp/terraform_creds.json"
-GOOGLE_REGION=us-east1
-
-###############################################################
-#Set PATH
-###############################################################
-POETRY_ROOT="$HOME/.poetry/bin"
-RUST_ROOT="$HOME/.cargo/bin"
-NODE_MODULE_ROOT="$HOME/node_modules/bin"
-GCLOUD_ROOT="$HOME/.google-cloud-sdk/bin"
-GO_ROOT="$HOME/.local/go/bin"
-LOCAL_BIN_ROOT="$HOME/.local/bin"
-HOME_BIN_ROOT="$HOME/bin"
-KREW_ROOT="$HOME/.krew/bin"
-
-PATH=$PATH::$POETRY_ROOT:$RUST_ROOT:$NODE_MODULE_ROOTE:$GCLOUD_ROOT:$LOCAL_BIN_ROOT:$HOME_BIN_ROOT:$GO_ROOT:$KREW_ROOT
-
-fpath+=~/.zfunc
-
-export PATH
-
-typeset -aU path
-
-
-export R_EXTRA_CONFIGURE_OPTIONS='--enable-R-shlib --with-cairo'
-export PYTHON_CONFIGURE_OPTS='--enable-shared'
-
-
-[[ -f /home/justin/.nodenv/versions/10.11.0/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh ]] && . /home/justin/.nodenv/versions/10.11.0/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.zsh
-[[ -f /home/justin/.nodenv/versions/10.11.0/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh ]] && . /home/justin/.nodenv/versions/10.11.0/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh
-
-# tabtab source for slss package
-# uninstall by removing these lines or running `tabtab uninstall slss`
-[[ -f /home/justin/node_modules/tabtab/.completions/slss.zsh ]] && . /home/justin/node_modules/tabtab/.completions/slss.zsh
-
-
-source ~/.zplug/repos/junegunn/fzf/shell/key-bindings.zsh
-source ~/.zplug/repos/junegunn/fzf/shell/completion.zsh
-# [[ /usr/bin/kubectl ]] && source <(kubectl completion zsh) # add autocomplete permanently to your zsh shell
-
-if command -v mise > /dev/null; then
-  eval "$(mise completions zsh)"
-fi
+function c() { cd "$HOME/config/$1" || return; }

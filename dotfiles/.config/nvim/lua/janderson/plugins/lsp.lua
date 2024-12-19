@@ -22,6 +22,7 @@ return {
         },
         config = function()
             local lsp = require("lsp-zero").preset({})
+            lsp.skip_server_setup({ "ruff_lsp" })
 
             local navic = require("nvim-navic")
 
@@ -46,8 +47,7 @@ return {
                     "bashls",
                     "docker_compose_language_service",
                     "jsonls",
-                    "jedi_language_server",
-                    "ruff_lsp",
+                    "ruff",
                     "rust_analyzer",
                     "yamlls",
                 },

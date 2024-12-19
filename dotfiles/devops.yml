@@ -11,9 +11,9 @@ root: ~
 
 # Project hooks
 # Runs on project start, always
-# on_project_start: command
+on_project_start: aws sso login
 # Run on project start, the first time
-# on_project_first_start: command
+# on_project_first_start: aws sso login
 # Run on project start, after the first time
 # on_project_restart: command
 # Run on project exit ( detaching from tmux session )
@@ -55,7 +55,4 @@ windows:
     - clear
   - TERRAFORM:
     - cd ~/src/kepler-repos/kepler-terraform
-    - clear
-  - MODULES:
-    - cd ~/src/kepler-repos/kepler-terraform-modules
     - clear
