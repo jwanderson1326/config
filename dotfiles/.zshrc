@@ -61,6 +61,7 @@ path_ladd "$HOME/.local/bin"
 path_ladd "$HOME/bin"
 path_ladd "$HOME/.bin"
 path_ladd "$HOME/config/bin"
+path_ladd "$HOME/go/bin"
 export PATH
 
 ######################################################################
