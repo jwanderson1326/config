@@ -261,11 +261,20 @@ function klone() {
     echo "Repo is already kloned!"
   fi
 }
+
+function rev() { git co master -- $1 }
+
 function gstuff() {
   git add .
-  git commit -m "Enabling APM Profiler"
-  git push origin sc-256814/enable-profiler
-  gh pr create --title "Enabling APM Profiler" --body "This enables the profiler in APM ST we can use it"
+  git commit -m "Updating CI/CD for Argo"
+  git push origin sc-267409/migrate-to-argocd
+  gh pr create --title "Updating CI/CD for ArgoCD" --body """ \
+  This does the following:
+  
+  1. Swaps out 'make deploy' for a kubernetes manifest update (using kustomize), this will trigger an ArgoCD sync.
+  2. Points personal staging at our 'kepler-k8s-application-config' repo instead of 'kip-rocket' as kubernetes manifests will be centralized here going forwards
+  3. Performs some light cleanup of our CI/CD of legacy processes.
+  """
 }
 
 function switchenv() {
