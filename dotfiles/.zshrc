@@ -1,4 +1,6 @@
-##############################################################
+# Amazon Q pre block. Keep at the top of this file.
+# [[ -f "${HOME}/.local/share/amazon-q/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/.local/share/amazon-q/shell/zshrc.pre.zsh"
+# ##############################################################
 # ENV Vars
 ################################################################
 export HISTSIZE=5000
@@ -264,17 +266,17 @@ function klone() {
 
 function rev() { git co master -- $1 }
 
+function gstart() {
+  git checkout master
+  git pull origin master
+  git checkout -b sc-272252/defend-against-ratelimits
+}
+
 function gstuff() {
   git add .
-  git commit -m "Updating CI/CD for Argo"
-  git push origin sc-267409/migrate-to-argocd
-  gh pr create --title "Updating CI/CD for ArgoCD" --body """ \
-  This does the following:
-  
-  1. Swaps out 'make deploy' for a kubernetes manifest update (using kustomize), this will trigger an ArgoCD sync.
-  2. Points personal staging at our 'kepler-k8s-application-config' repo instead of 'kip-rocket' as kubernetes manifests will be centralized here going forwards
-  3. Performs some light cleanup of our CI/CD of legacy processes.
-  """
+  git commit -m "defending against dockerhub rate limits"
+  git push origin sc-272252/defend-against-ratelimits
+  gh pr create --title "Defend against Dockerhub Rate Limits" --body "This updates our Dockerfiles to pull from amazon instead of dockerhub."
 }
 
 function switchenv() {
@@ -368,3 +370,8 @@ function k { kubectl $* }
 function kuse { kubectl config use-context $1 }
 
 function c() { cd "$HOME/config/$1" || return; }
+
+eval "$(direnv hook zsh)"
+
+# # Amazon Q post block. Keep at the bottom of this file.
+# [[ -f "${HOME}/.local/share/amazon-q/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/.local/share/amazon-q/shell/zshrc.post.zsh"
