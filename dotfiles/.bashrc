@@ -175,8 +175,6 @@ if [ -d "$NODENV_ROOT" ]; then
 fi
 export PATH=$PATH:$TF_ROOT
 
-. $HOME/.asdf/asdf.sh
-. $HOME/.asdf/completions/asdf.bash
 . "$HOME/.cargo/env"
 
 # Amazon Q post block. Keep at the bottom of this file.
