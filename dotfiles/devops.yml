@@ -50,8 +50,14 @@ windows:
   - KIP:
     - cd ~/src/kepler-repos
     - clear
-  - Kubernetes:
-    - cd ~/src/kepler-repos/kepler-kubernetes-config
+  - K8s Apps:
+    - cd ~/src/kepler-repos/kepler-k8s-application-config
+    - clear
+  - K8s System:
+    - cd ~/src/kepler-repos/kepler-k8s-system-config
+    - clear
+  - ArgoCD:
+    - cd ~/src/kepler-repos/kepler-argocd
     - clear
   - TERRAFORM:
     - cd ~/src/kepler-repos/kepler-terraform

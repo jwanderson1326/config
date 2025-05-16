@@ -4,6 +4,7 @@
 experimental = true
 # see here: https://github.com/jdx/mise/issues/1635
 cargo_binstall = true
+idiomatic_version_file_enable_tools = ["terraform"]
 
 [tools]
 act = "latest"
@@ -14,6 +15,7 @@ cargo-binstall = "latest"
 direnv = "latest"
 docker-compose = "latest"
 go = "1.23.1"
+gcloud = "latest"
 helm = "latest"
 java = "latest"
 k9s = "latest"
@@ -30,7 +32,7 @@ terraform = "1.10.4"
 terraform-ls = "latest"
 terragrunt = "latest"
 tflint = "latest"
-tmux = "latest"
+tmux = "3.2"
 vault = "latest"
 yq = "latest"
 "cargo:bat" = "latest"
@@ -47,3 +49,23 @@ yq = "latest"
 "cargo:sd" = "latest"
 "cargo:usage-cli" = "latest"
 "cargo:zoxide" = "latest"
+"npm:gh-actions-language-server" = "latest"
+"npm:bash-language-server" = "latest"
+"npm:dockerfile-language-server-nodejs" = "latest"
+"npm:graphql-language-service-cli" = "latest"
+"npm:nginx-linter" = "latest"
+"npm:nginxbeautifier" = "latest"
+"npm:prettier" = "latest"
+"pipx:aider-chat" = { version = "latest", uvx_args = "--python 3.12 --with boto3" }
+"pipx:autotools-language-server" = "latest"
+"pipx:basedpyright" = "latest"
+"pipx:cookiecutter" = "latest"
+"pipx:nginxfmt" = "latest"
+"pipx:pgcli" = "latest"
+"pipx:poetry" = { version = "latest", uvx_args = "--with poetry-plugin-export" }
+"pipx:pre-commit" = "latest"
+"pipx:pyright" = "latest"
+"pipx:restview" = "latest"
+"pipx:toml-sort" = "latest"
+
+

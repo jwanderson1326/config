@@ -38,6 +38,7 @@ return {
                 "julia",
                 "kotlin",
                 "ledger",
+                "lua",
                 "make",
                 "markdown",
                 "markdown_inline",
