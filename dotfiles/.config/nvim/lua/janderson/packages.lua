@@ -12,9 +12,26 @@ require ("paq") ({
     build = "cargo build --release",
   },
   "https://github.com/folke/lazydev.nvim",
+  -- Git
+  "https://github.com/junegunn/gv.vim",
+  "https://github.com/lewis6991/gitsigns.nvim",
+  "https://github.com/tpope/vim-fugitive",
+  "https://github.com/sindrets/diffview.nvim",
   -- Tree Sitter
   "https://github.com/nvim-treesitter/nvim-treesitter",
   "https://github.com/tronikelis/ts-autotag.nvim",
+  -- Other
+  "https://github.com/kylechui/nvim-surround",
+  "https://github.com/j-hui/fidget.nvim",
+  "https://github.com/chrishrb/gx.nvim",
+  "https://github.com/echasnovski/mini.pairs",
+  "https://github.com/catgoose/nvim-colorizer.lua",
+  "https://github.com/sotte/presenting.nvim",
+  "https://github.com/nvim-tree/nvim-web-devicons",
+  {
+    "https://github.com/iamcco/markdown-preview.nvim",
+    build = vim.fn["mkdp#util#install"],
+  }
 })
 
 --------------------------------
@@ -202,3 +219,213 @@ require("nvim-treesitter.configs").setup({
 vim.treesitter.language.register("terraform", "terraform-vars")
 vim.treesitter.language.register("bash", "zsh")
 vim.treesitter.language.register("bash", "shell")
+
+require("aerial").setup({})
+
+---------------------------------------
+---- Completion
+-----------------------------------------
+---@diagnostic disable-next-line: missing-fields
+require("lazydev").setup({
+  library = {
+    -- Load luvit types when the `vim.uv` word is found
+    { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+  },
+})
+require("blink-cmp").setup({
+  sources = {
+    default = { "lazydev", "lsp", "path", "snippets", "buffer" },
+    providers = {
+      lazydev = {
+        name = "LazyDev",
+        module = "lazydev.integrations.blink",
+        -- make lazydev completions top priority (see `:h blink.cmp`)
+        score_offset = 100,
+      },
+    },
+  },
+  completion = {
+    keyword = {
+      range = "full",
+    },
+    documentation = {
+      auto_show = true,
+      auto_show_delay_ms = 500,
+    },
+    menu = {
+      draw = {
+        columns = {
+          { "label", "label_description", gap = 1 },
+          { "kind_icon" },
+          { "source_id" },
+        },
+      },
+    },
+  },
+  cmdline = {
+    enabled = false,
+  },
+})
+---------------------------------------
+---- Colorizer
+---------------------------------------
+require("colorizer").setup({
+  filetypes = {
+    "css",
+    "kitty",
+    "markdown",
+    "typescriptreact",
+    "vim",
+    "yaml",
+  },
+})
+
+-----------------------------------
+---Pairs, Tags, Icons
+----------------------------------
+require("mini.pairs").setup({
+  modes = { insert = true, command = true, terminal = false },
+})
+require("ts-autotag").setup({})
+require("nvim-web-devicons").setup({
+  default = true,
+})
+
+-----------------------------------
+--- Tools
+----------------------------------
+require("fidget").setup({
+  progress = {
+    suppress_on_insert = true
+  }
+})
+
+require("gx").setup({
+  open_browser_app = "firefox",
+  handlers = {
+    pypi = {
+      name = "pypi",
+      filename = "pyproject.toml",
+      handle = function(mode, line, _)
+        -- Match poetry dependencies (name = "version")
+        local pkg = require("gx.helper").find(line, mode, "([^=%s]+)%s-=%s")
+        if pkg then
+          return "https://pypi.org/project/" .. pkg
+        end
+        -- Match builtin dependencies list format ("name>=version" or "name")
+        local dep_pkg =
+          require("gx.helper").find(line, mode, '"([^>=%s"]+)[^"]*"')
+        if dep_pkg then
+          return "https://pypi.org/project/" .. dep_pkg
+        end
+      end,
+    },
+    ruff = {
+      name = "ruff",
+      filetypes = { "python" },
+      handle = function(mode, line, _)
+        local rule =
+          require("gx.helper").find(line, mode, "# noqa: ([A-Z][0-9]+)")
+        if rule then
+          return "https://docs.astral.sh/ruff/rules/" .. rule
+        end
+      end,
+    },
+    npmjs = {
+      name = "npmjs",
+      filename = "package.json",
+      handle = function(mode, line, _)
+        local pkg = require("gx.helper").find(line, mode, '"([^"]+)":')
+        if pkg then
+          return "https://www.npmjs.com/package/" .. pkg
+        end
+      end,
+    },
+  },
+})
+
+require("presenting").setup({
+  options = {
+    width = 60,
+  },
+  separator = {
+    markdown = "^##? ", -- # or ##, but not ###+
+  },
+  configure_slide_buffer = function(_)
+    vim.cmd([[
+      Fidget suppress
+      setlocal buftype=nofile filetype=markdown bufhidden=wipe nomodifiable wrap conceallevel=3 concealcursor=nc
+      nnoremap <buffer> q <Cmd>Presenting<CR>
+      nnoremap <buffer> <C-w> <NOP>
+      cnoreabbrev <buffer> q Presenting
+      echo
+    ]])
+  end,
+})
+
+----------------------------
+----GIT
+---------------------------
+require("gitsigns").setup({
+    on_attach = function(bufnr)
+        local gs = package.loaded.gitsigns
+        local function map(mode, l, r, opts)
+            opts = opts or {}
+            opts.buffer = bufnr
+            vim.keymap.set(mode, l, r, opts)
+        end
+        -- Navigation
+        map("n", "]c", function()
+            if vim.wo.diff then
+                return "]c"
+            end
+            vim.schedule(function()
+                gs.next_hunk()
+            end)
+            return "<Ignore>"
+        end, { expr = true })
+        map("n", "[c", function()
+            if vim.wo.diff then
+                return "[c"
+            end
+            vim.schedule(function()
+                gs.prev_hunk()
+            end)
+            return "<Ignore>"
+        end, { expr = true })
+        -- Actions
+        map({ "n", "v" }, "<leader>hs", "<Cmd>Gitsigns stage_hunk<CR>")
+        map({ "n", "v" }, "<leader>hr", "<Cmd>Gitsigns reset_hunk<CR>")
+        map("n", "<leader>hS", gs.stage_buffer)
+        map("n", "<leader>hu", gs.undo_stage_hunk)
+        map("n", "<leader>hR", gs.reset_buffer)
+        map("n", "<leader>hp", gs.preview_hunk)
+        map("n", "<leader>hb", function()
+            gs.blame_line({ full = true })
+        end)
+        map("n", "<leader>tb", gs.toggle_current_line_blame)
+        map("n", "<leader>hd", gs.diffthis)
+        map("n", "<leader>hD", function()
+            gs.diffthis("~")
+        end)
+        map("n", "<leader>td", gs.toggle_deleted)
+        -- Text object
+        map({ "o", "x" }, "ih", "<Cmd>Gitsigns select_hunk<CR>")
+    end,
+})
+require("diffview").setup({
+  enhanced_diff_hl = true,
+  show_help_hints = false,
+  file_panel = {
+    listing_style = "tree",
+    win_config = {
+      width = 30,
+    },
+  },
+  hooks = {
+    diff_buf_read = function(_)
+      vim.opt_local.wrap = false
+    end,
+  },
+})
+

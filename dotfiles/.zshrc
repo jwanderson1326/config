@@ -16,8 +16,7 @@ export BROWSER=/usr/bin/firefox
 export LS_COLORS='di=1;34:fi=0:ln=1;36:pi=5:so=5:bd=5:cd=5:or=31:mi=0:ex=1;92:*.rpm=90'
 export ALACRITTY_BACKGROUND_CACHE_FILE="$HOME/.cache/alacritty/background.toml"
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
-export GOOGLE_CLOUD_KEYFILE_JSON="~/.gcp/terraform_creds.json"
-export GOOGLE_CREDENTIALS="~/.gcp/terraform_creds.json"
+export GOOGLE_APPLICATION_CREDENTIALS="$HOME/.config/gcloud/application_default_credentials.json"
 export GOOGLE_REGION=us-east1
 export CARAPACE_BRIDGES=zsh,fish,bash,inshellisense
 

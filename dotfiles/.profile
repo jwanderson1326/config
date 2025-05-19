@@ -10,6 +10,8 @@
 # for ssh logins, install and configure the libpam-umask package.
 #umask 022
 
+export TERM=xterm-256color
+
 # if running bash
 if [ -n "$BASH_VERSION" ]; then
     # include .bashrc if it exists
@@ -30,17 +32,6 @@ fi
 
 
 export PATH="$HOME/.poetry/bin:$PATH"
-
-
-export PATH="$HOME/.asdf/installs/poetry/1.0.5/bin:$PATH"
-
-export PATH="$HOME/.asdf/installs/poetry/1.1.4/bin:$PATH"
-
-export PATH="$HOME/.asdf/installs/poetry/1.0.0/bin:$PATH"
-
-export PATH="$HOME/.asdf/installs/poetry/1.1.5/bin:$PATH"
-. "$HOME/.cargo/env"
-
 
 
 [ -f "/home/justin/.ghcup/env" ] && . "/home/justin/.ghcup/env" # ghcup-env
