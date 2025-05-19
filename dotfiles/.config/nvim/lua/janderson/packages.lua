@@ -1,5 +1,5 @@
-require ("paq") ({
-    -- self
+require("paq")({
+  -- self
   "https://github.com/savq/paq-nvim",
   -- Colorscheme
   "https://github.com/EdenEast/nightfox.nvim",
@@ -17,6 +17,11 @@ require ("paq") ({
   "https://github.com/lewis6991/gitsigns.nvim",
   "https://github.com/tpope/vim-fugitive",
   "https://github.com/sindrets/diffview.nvim",
+  -- Linters and Formatters
+  "https://github.com/stevearc/conform.nvim",
+  "https://github.com/mfussenegger/nvim-lint",
+  -- Tree
+  "https://github.com/nvim-tree/nvim-tree.lua.git",
   -- Tree Sitter
   "https://github.com/nvim-treesitter/nvim-treesitter",
   "https://github.com/tronikelis/ts-autotag.nvim",
@@ -38,13 +43,13 @@ require ("paq") ({
 --- Colors
 -------------------------------
 require("nightfox").setup({
-    palettes = {
-        all = {
-            magenta = "#f681ba",
-            green = "#52f0a0",
-            red = "#ed7575",
-        }
-    },
+  palettes = {
+    all = {
+      magenta = "#f681ba",
+      green = "#52f0a0",
+      red = "#ed7575",
+    }
+  },
 })
 
 vim.cmd([[colorscheme nightfox]])
@@ -117,7 +122,7 @@ vim.lsp.config("gh_actions_ls", {
   filetypes = { "yaml.github" },
   init_options = {
     -- Requires the `repo` and `workflow` scopes
-    sessionToken = os.getenv("GITHUB_ACTIONS_LS_TOKEN"),
+    sessionToken = os.getenv("GITHUB_TOKEN"),
   },
 })
 vim.lsp.config("harper_ls", {
@@ -167,7 +172,8 @@ vim.lsp.config("yamlls", {
     yaml = {
       schemas = {
         kubernetes = "", -- disable built-in kubernetes support because we use specific version below
-        ["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.28.0-standalone/all.json"] = "*.k8s.yaml",
+        ["https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.28.0-standalone/all.json"] =
+        "*.k8s.yaml",
         ["https://raw.githubusercontent.com/compose-spec/compose-spec/refs/heads/main/schema/compose-spec.json"] = {
           "compose.yml",
           "compose.yaml",
@@ -255,7 +261,7 @@ require("blink-cmp").setup({
     menu = {
       draw = {
         columns = {
-          { "label", "label_description", gap = 1 },
+          { "label",    "label_description", gap = 1 },
           { "kind_icon" },
           { "source_id" },
         },
@@ -314,7 +320,7 @@ require("gx").setup({
         end
         -- Match builtin dependencies list format ("name>=version" or "name")
         local dep_pkg =
-          require("gx.helper").find(line, mode, '"([^>=%s"]+)[^"]*"')
+            require("gx.helper").find(line, mode, '"([^>=%s"]+)[^"]*"')
         if dep_pkg then
           return "https://pypi.org/project/" .. dep_pkg
         end
@@ -325,7 +331,7 @@ require("gx").setup({
       filetypes = { "python" },
       handle = function(mode, line, _)
         local rule =
-          require("gx.helper").find(line, mode, "# noqa: ([A-Z][0-9]+)")
+            require("gx.helper").find(line, mode, "# noqa: ([A-Z][0-9]+)")
         if rule then
           return "https://docs.astral.sh/ruff/rules/" .. rule
         end
@@ -367,51 +373,51 @@ require("presenting").setup({
 ----GIT
 ---------------------------
 require("gitsigns").setup({
-    on_attach = function(bufnr)
-        local gs = package.loaded.gitsigns
-        local function map(mode, l, r, opts)
-            opts = opts or {}
-            opts.buffer = bufnr
-            vim.keymap.set(mode, l, r, opts)
-        end
-        -- Navigation
-        map("n", "]c", function()
-            if vim.wo.diff then
-                return "]c"
-            end
-            vim.schedule(function()
-                gs.next_hunk()
-            end)
-            return "<Ignore>"
-        end, { expr = true })
-        map("n", "[c", function()
-            if vim.wo.diff then
-                return "[c"
-            end
-            vim.schedule(function()
-                gs.prev_hunk()
-            end)
-            return "<Ignore>"
-        end, { expr = true })
-        -- Actions
-        map({ "n", "v" }, "<leader>hs", "<Cmd>Gitsigns stage_hunk<CR>")
-        map({ "n", "v" }, "<leader>hr", "<Cmd>Gitsigns reset_hunk<CR>")
-        map("n", "<leader>hS", gs.stage_buffer)
-        map("n", "<leader>hu", gs.undo_stage_hunk)
-        map("n", "<leader>hR", gs.reset_buffer)
-        map("n", "<leader>hp", gs.preview_hunk)
-        map("n", "<leader>hb", function()
-            gs.blame_line({ full = true })
-        end)
-        map("n", "<leader>tb", gs.toggle_current_line_blame)
-        map("n", "<leader>hd", gs.diffthis)
-        map("n", "<leader>hD", function()
-            gs.diffthis("~")
-        end)
-        map("n", "<leader>td", gs.toggle_deleted)
-        -- Text object
-        map({ "o", "x" }, "ih", "<Cmd>Gitsigns select_hunk<CR>")
-    end,
+  on_attach = function(bufnr)
+    local gs = package.loaded.gitsigns
+    local function map(mode, l, r, opts)
+      opts = opts or {}
+      opts.buffer = bufnr
+      vim.keymap.set(mode, l, r, opts)
+    end
+    -- Navigation
+    map("n", "]c", function()
+      if vim.wo.diff then
+        return "]c"
+      end
+      vim.schedule(function()
+        gs.next_hunk()
+      end)
+      return "<Ignore>"
+    end, { expr = true })
+    map("n", "[c", function()
+      if vim.wo.diff then
+        return "[c"
+      end
+      vim.schedule(function()
+        gs.prev_hunk()
+      end)
+      return "<Ignore>"
+    end, { expr = true })
+    -- Actions
+    map({ "n", "v" }, "<leader>hs", "<Cmd>Gitsigns stage_hunk<CR>")
+    map({ "n", "v" }, "<leader>hr", "<Cmd>Gitsigns reset_hunk<CR>")
+    map("n", "<leader>hS", gs.stage_buffer)
+    map("n", "<leader>hu", gs.undo_stage_hunk)
+    map("n", "<leader>hR", gs.reset_buffer)
+    map("n", "<leader>hp", gs.preview_hunk)
+    map("n", "<leader>hb", function()
+      gs.blame_line({ full = true })
+    end)
+    map("n", "<leader>tb", gs.toggle_current_line_blame)
+    map("n", "<leader>hd", gs.diffthis)
+    map("n", "<leader>hD", function()
+      gs.diffthis("~")
+    end)
+    map("n", "<leader>td", gs.toggle_deleted)
+    -- Text object
+    map({ "o", "x" }, "ih", "<Cmd>Gitsigns select_hunk<CR>")
+  end,
 })
 require("diffview").setup({
   enhanced_diff_hl = true,
@@ -429,3 +435,76 @@ require("diffview").setup({
   },
 })
 
+----------------------------------------------------------------------
+--- Tree
+-----------------------------------------------------------------
+require("nvim-tree").setup({
+  renderer = {
+    full_name = true,
+    highlight_git = true,
+    icons = {
+      show = {
+        git = true
+      }
+    }
+  },
+  actions = {
+    change_dir = {
+      global = true
+    }
+  },
+  git = {
+    enable = true
+  },
+  filters = {
+    dotfiles = false,
+  },
+})
+
+
+--------------------------
+----Linterrs and Formatters
+-----------------------------
+require("conform").setup({
+  formatters_by_ft = {
+    javascript = { "prettier" },
+    typescript = { "prettier" },
+    javascriptreact = { "prettier" },
+    typescriptreact = { "prettier" },
+    svelte = { "prettier" },
+    css = { "prettier" },
+    html = { "prettier" },
+    json = { "prettier" },
+    yaml = { "prettier" },
+    markdown = { "prettier" },
+    graphql = { "prettier" },
+    lua = { "stylua" },
+    python = { "isort", "black" },
+    terraform = { "terraform_fmt" },
+  },
+  format_on_save = {
+    lsp_fallback = true,
+    async = false,
+    timeout_ms = 1000,
+  },
+})
+
+
+lint = require("lint")
+lint.linters_by_ft = {
+  javascript = { "eslint_d" },
+  typescript = { "eslint_d" },
+  javascriptreact = { "eslint_d" },
+  typescriptreact = { "eslint_d" },
+  svelte = { "eslint_d" },
+  python = { "pylint" },
+  terraform = { "tflint" },
+}
+
+local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
+vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+  group = lint_augroup,
+  callback = function()
+    lint.try_lint()
+  end,
+})
