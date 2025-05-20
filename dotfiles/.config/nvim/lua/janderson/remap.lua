@@ -52,3 +52,27 @@ vim.keymap.set("n", "<leader>h", ":hsplit<CR>")
 
 -- Tree
 vim.keymap.set("n", "<leader>t", ":NvimTreeToggle<CR>")
+vim.keymap.set("n", "<leader>u", ":UndotreeToggle<CR>")
+
+-- Aerial
+vim.keymap.set("n", "<leader>a", ":AerialToggle!<CR>")
+
+-- Diagnostics
+local map = vim.keymap.set
+local opts = { noremap = true, silent = true }
+map("n", "<leader>e", vim.diagnostic.open_float, opts)
+map("n", "[d", vim.diagnostic.goto_prev, opts)
+map("n", "]d", vim.diagnostic.goto_next, opts)
+map("n", "<leader>q", vim.diagnostic.setloclist, opts)
+
+--- Nav
+vim.keymap.set("n", "<leader>R", ":ReplToggle<CR>")
+vim.keymap.set("n", "<leader>r", "<Plug>(ReplSendLine)")
+vim.keymap.set("x", "<leader>r", "<Plug>(ReplSendVisual)")
+vim.keymap.set("n", "<leader>c", "<Plug>(ReplSendCell)")
+
+-- Aider integration
+vim.keymap.set("n", "<leader>ao", "<cmd>ReplAider<CR>", { silent = true })
+vim.keymap.set("n", "<leader>aa", "<cmd>ReplAiderBufCur /add<CR>", { silent = true })
+vim.keymap.set("n", "<leader>ad", "<cmd>ReplAiderBufCur /drop<CR>", { silent = true })
+vim.keymap.set("n", "<leader>as", "<cmd>ReplSend<CR>", { silent = true })

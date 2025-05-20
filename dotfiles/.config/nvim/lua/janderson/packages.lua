@@ -3,6 +3,8 @@ require("paq")({
   "https://github.com/savq/paq-nvim",
   -- Colorscheme
   "https://github.com/EdenEast/nightfox.nvim",
+  -- LuaLine
+  "https://github.com/nvim-lualine/lualine.nvim",
   -- Language Server (LSP)
   "https://github.com/neovim/nvim-lspconfig",
   "https://github.com/stevearc/aerial.nvim",
@@ -20,13 +22,21 @@ require("paq")({
   -- Linters and Formatters
   "https://github.com/stevearc/conform.nvim",
   "https://github.com/mfussenegger/nvim-lint",
+  "https://github.com/lukas-reineke/indent-blankline.nvim",
   -- Tree
   "https://github.com/nvim-tree/nvim-tree.lua.git",
   -- Tree Sitter
   "https://github.com/nvim-treesitter/nvim-treesitter",
   "https://github.com/tronikelis/ts-autotag.nvim",
+  --- REPL
+  -- Copilot
+  "https://github.com/pappasam/nvim-repl",
+  "https://github.com/zbirenbaum/copilot.lua",
+  "https://github.com/fang2hou/blink-copilot",
   -- Other
   "https://github.com/kylechui/nvim-surround",
+  "https://github.com/christoomey/vim-tmux-navigator",
+  "https://github.com/mbbill/undotree",
   "https://github.com/j-hui/fidget.nvim",
   "https://github.com/chrishrb/gx.nvim",
   "https://github.com/echasnovski/mini.pairs",
@@ -202,6 +212,7 @@ vim.lsp.config("yamlls", {
 -----------------------------------
 ----------------Treesitter
 ----------------------------------
+---@diagnostic disable-next-line: missing-fields
 require("nvim-treesitter.configs").setup({
   highlight = {
     enable = true,
@@ -240,13 +251,19 @@ require("lazydev").setup({
 })
 require("blink-cmp").setup({
   sources = {
-    default = { "lazydev", "lsp", "path", "snippets", "buffer" },
+    default = { "copilot", "lazydev", "lsp", "path", "snippets", "buffer" },
     providers = {
       lazydev = {
         name = "LazyDev",
         module = "lazydev.integrations.blink",
         -- make lazydev completions top priority (see `:h blink.cmp`)
         score_offset = 100,
+      },
+      copilot = {
+        name = "copilot",
+        module = "blink-copilot",
+        score_offset = 100,
+        async = true,
       },
     },
   },
@@ -306,8 +323,8 @@ require("fidget").setup({
   }
 })
 
+---@diagnostic disable-next-line: missing-fields
 require("gx").setup({
-  open_browser_app = "firefox",
   handlers = {
     pypi = {
       name = "pypi",
@@ -465,6 +482,10 @@ require("nvim-tree").setup({
 --------------------------
 ----Linterrs and Formatters
 -----------------------------
+require("ibl").setup({
+  indent = { highlight = "IblIndent" },
+})
+
 require("conform").setup({
   formatters_by_ft = {
     javascript = { "prettier" },
@@ -490,7 +511,7 @@ require("conform").setup({
 })
 
 
-lint = require("lint")
+local lint = require("lint")
 lint.linters_by_ft = {
   javascript = { "eslint_d" },
   typescript = { "eslint_d" },
@@ -507,4 +528,58 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
   callback = function()
     lint.try_lint()
   end,
+})
+
+
+------------------------------------------------
+---Lua Line
+------------------------------------------a
+require("lualine").setup({
+  options = {
+    icons_enabled = true,
+    theme = 'auto',
+    component_separators = { left = '', right = '' },
+    section_separators = { left = '', right = '' },
+    disabled_filetypes = {
+      statusline = {},
+      winbar = {},
+    },
+    ignore_focus = {},
+    always_divide_middle = true,
+    always_show_tabline = true,
+    globalstatus = false,
+    refresh = {
+      statusline = 100,
+      tabline = 100,
+      winbar = 100,
+    }
+  },
+  sections = {
+    lualine_a = { 'mode' },
+    lualine_b = { 'branch', 'diff', 'diagnostics' },
+    lualine_c = { 'filename' },
+    lualine_x = { 'encoding', 'fileformat', 'filetype' },
+    lualine_y = { 'progress' },
+    lualine_z = { 'location' }
+  },
+  inactive_sections = {
+    lualine_a = {},
+    lualine_b = {},
+    lualine_c = { 'filename' },
+    lualine_x = { 'location' },
+    lualine_y = {},
+    lualine_z = {}
+  },
+  tabline = {},
+  winbar = {},
+  inactive_winbar = {},
+  extensions = {}
+})
+
+--------------------------------------------------
+--Copilot
+-------------------------------------
+require("copilot").setup({
+  panel = { enabled = false },
+  suggestion = { enabled = false },
 })

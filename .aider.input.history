@@ -1,0 +1,20 @@
+
+# 2025-05-20 11:06:00.302343
++N
+
+# 2025-05-20 13:16:28.423840
++def hello():
++    print("hello")
+
+# 2025-05-20 13:20:56.372030
++can you change these lines to lua?
++
++nnoremap <Leader>ao <Cmd>ReplAider<CR>
++nnoremap <Leader>aa <Cmd>ReplAiderBufCur /add<CR>
++nnoremap <Leader>ad <Cmd>ReplAiderBufCur /drop<CR>
++nnoremap <Leader>as <Cmd>ReplSend<CR>
++
++
+
+# 2025-05-20 13:24:44.330852
++Can you look at this file and tel me what it does?

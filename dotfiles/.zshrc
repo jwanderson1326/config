@@ -19,6 +19,7 @@ export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quo
 export GOOGLE_APPLICATION_CREDENTIALS="$HOME/.config/gcloud/application_default_credentials.json"
 export GOOGLE_REGION=us-east1
 export CARAPACE_BRIDGES=zsh,fish,bash,inshellisense
+export AIDER_MODEL=kip
 
 ################################################################################
 # SET OPTIONS

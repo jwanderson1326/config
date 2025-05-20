@@ -70,9 +70,8 @@ yq = "latest"
 "pipx:pgcli" = "latest"
 "pipx:poetry" = { version = "latest", uvx_args = "--with poetry-plugin-export" }
 "pipx:pre-commit" = "latest"
+"pipx:pylint" = "latest"
 "pipx:pyright" = "latest"
 "pipx:restview" = "latest"
 "pipx:ruff" = "latest"
 "pipx:toml-sort" = "latest"
-
-
