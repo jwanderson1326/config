@@ -3,6 +3,7 @@ require("paq")({
   "https://github.com/savq/paq-nvim",
   -- Colorscheme
   "https://github.com/EdenEast/nightfox.nvim",
+  "https://github.com/rose-pine/neovim",
   -- LuaLine
   "https://github.com/nvim-lualine/lualine.nvim",
   -- Language Server (LSP)
@@ -52,17 +53,18 @@ require("paq")({
 --------------------------------
 --- Colors
 -------------------------------
-require("nightfox").setup({
-  palettes = {
-    all = {
-      magenta = "#f681ba",
-      green = "#52f0a0",
-      red = "#ed7575",
-    }
-  },
-})
+-- require("nightfox").setup({
+--   palettes = {
+--     all = {
+--       magenta = "#f681ba",
+--       green = "#52f0a0",
+--       red = "#ed7575",
+--     }
+--   },
+-- })
+require("rose-pine").setup({})
 
-vim.cmd([[colorscheme nightfox]])
+vim.cmd([[colorscheme rose-pine]])
 
 -----------------------------------
 ----------------LSP CONFIG
