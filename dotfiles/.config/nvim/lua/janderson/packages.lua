@@ -15,6 +15,7 @@ require("paq")({
     build = "cargo build --release",
   },
   "https://github.com/folke/lazydev.nvim",
+
   -- Git
   "https://github.com/junegunn/gv.vim",
   "https://github.com/lewis6991/gitsigns.nvim",
