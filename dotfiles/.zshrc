@@ -90,7 +90,9 @@ alias ggit='echo $TF_VAR_github_token | pbcopy'
 alias eget='echo "961517735772.dkr.ecr.us-east-1.amazonaws.com" | pbcopy'
 alias tmux='tmux -2 -f ~/.config/tmux/tmux.conf'
 alias smux='tmuxinator start devops'
+alias kmux='tmuxinator start kyu'
 alias dmux='tmuxinator stop devops'
+alias bmux='tmuxinator stop kyu'
 alias python='python3'
 alias vim="NVIM_APPNAME=nvim nvim"
 alias rgh="rg --hidden"
@@ -109,6 +111,8 @@ alias cookiepack="cookiecutter git@github.com:keplergroup/cookiecutter-gha-ci-pa
 alias cookiek8s="cookiecutter git@github.com:keplergroup/cookiecutter-k8s-deployment.git"
 
 alias awho="aws sts get-caller-identity"
+alias argolog="argocd login argocd.keplergrp.com --sso"
+alias awslog="aws sso login"
 
 alias ghview="gh repo view -w"
 alias prlist="gh pr list"

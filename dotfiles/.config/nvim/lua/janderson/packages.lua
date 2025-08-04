@@ -31,10 +31,10 @@ require("paq")({
   "https://github.com/nvim-treesitter/nvim-treesitter",
   "https://github.com/tronikelis/ts-autotag.nvim",
   --- REPL
-  -- Copilot
   "https://github.com/pappasam/nvim-repl",
-  "https://github.com/zbirenbaum/copilot.lua",
-  "https://github.com/fang2hou/blink-copilot",
+  -- Copilot
+  -- "https://github.com/zbirenbaum/copilot.lua",
+  -- "https://github.com/fang2hou/blink-copilot",
   -- Other
   "https://github.com/kylechui/nvim-surround",
   "https://github.com/christoomey/vim-tmux-navigator",
@@ -54,18 +54,17 @@ require("paq")({
 --------------------------------
 --- Colors
 -------------------------------
--- require("nightfox").setup({
---   palettes = {
---     all = {
---       magenta = "#f681ba",
---       green = "#52f0a0",
---       red = "#ed7575",
---     }
---   },
--- })
-require("rose-pine").setup({})
+require("nightfox").setup({
+  palettes = {
+    all = {
+      magenta = "#f681ba",
+      green = "#52f0a0",
+      red = "#ed7575",
+    }
+  },
+})
 
-vim.cmd([[colorscheme rose-pine]])
+vim.cmd([[colorscheme nightfox]])
 
 -----------------------------------
 ----------------LSP CONFIG
@@ -254,19 +253,13 @@ require("lazydev").setup({
 })
 require("blink-cmp").setup({
   sources = {
-    default = { "copilot", "lazydev", "lsp", "path", "snippets", "buffer" },
+    default = { "lazydev", "lsp", "path", "snippets", "buffer" },
     providers = {
       lazydev = {
         name = "LazyDev",
         module = "lazydev.integrations.blink",
         -- make lazydev completions top priority (see `:h blink.cmp`)
         score_offset = 100,
-      },
-      copilot = {
-        name = "copilot",
-        module = "blink-copilot",
-        score_offset = 100,
-        async = true,
       },
     },
   },
@@ -577,12 +570,4 @@ require("lualine").setup({
   winbar = {},
   inactive_winbar = {},
   extensions = {}
-})
-
---------------------------------------------------
---Copilot
--------------------------------------
-require("copilot").setup({
-  panel = { enabled = false },
-  suggestion = { enabled = false },
 })

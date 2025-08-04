@@ -62,6 +62,3 @@ windows:
   - TERRAFORM:
       - cd ~/src/kepler-repos/kepler-terraform
       - clear
-  - Kyu Terr:
-      - cd ~/src/kyu/kyu-terraform
-      - clear
