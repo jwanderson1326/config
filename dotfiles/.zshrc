@@ -20,6 +20,11 @@ export GOOGLE_APPLICATION_CREDENTIALS="$HOME/.config/gcloud/application_default_
 export GOOGLE_REGION=us-east1
 export CARAPACE_BRIDGES=zsh,fish,bash,inshellisense
 export AIDER_MODEL=kip
+export CLAUDE_CODE_USE_BEDROCK=1
+export CLAUDE_CODE_MAX_OUTPUT_TOKENS=4096
+export MAX_THINKING_TOKENS=1024
+export ANTHROPIC_MODEL=us.anthropic.claude-sonnet-4-20250514-v1:0
+export AWS_REGION=us-east-1  # or your preferred region
 
 ################################################################################
 # SET OPTIONS
