@@ -232,6 +232,7 @@ require("nvim-treesitter.configs").setup({
     end,
   },
   ensure_installed = "all",
+  ignore_install = { "ipkg" },
 })
 
 vim.treesitter.language.register("terraform", "terraform-vars")
@@ -250,7 +251,7 @@ require("lazydev").setup({
     { path = "${3rd}/luv/library", words = { "vim%.uv" } },
   },
 })
-require("blink-cmp").setup({
+require("blink.cmp").setup({
   sources = {
     default = { "lazydev", "lsp", "path", "snippets", "buffer" },
     providers = {
@@ -578,7 +579,7 @@ require("claude-code").setup({
   -- Terminal window settings
   window = {
     split_ratio = 0.3,      -- Percentage of screen for the terminal window (height for horizontal, width for vertical splits)
-    position = "float",     -- Position of the window: "botright", "topleft", "vertical", "float", etc.
+    position = "botright",  -- Position of the window: "botright", "topleft", "vertical", "float", etc.
     enter_insert = true,    -- Whether to enter insert mode when opening Claude Code
     hide_numbers = true,    -- Hide line numbers in the terminal window
     hide_signcolumn = true, -- Hide the sign column in the terminal window

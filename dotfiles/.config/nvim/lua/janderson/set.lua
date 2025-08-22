@@ -15,9 +15,9 @@ vim.opt.spelllang = "en_us"
 vim.opt.dictionary = "$HOME/.american-english-with-propcase.txt"
 vim.opt.complete = vim.opt.complete + "k"
 
--- vim.opt.tabstop = 8
--- vim.opt.softtabstop = 2
--- vim.opt.shiftwidth = 4
+vim.opt.tabstop = 8
+vim.opt.softtabstop = 0  -- Disable softtabstop to prevent multi-space deletion
+vim.opt.shiftwidth = 4
 vim.opt.numberwidth = 4
 -- vim.opt.expandtab = true
 
