@@ -77,10 +77,28 @@ export PATH
 alias kvpn="sudo nmcli c up aws"
 alias svpn="sudo nmcli c down aws"
 
-alias ls="lsd"
-alias sl='lsd'
-alias ll='lsd -lh'
-alias la='lsd -Alh'
+# ~/.zshrc
+
+if command -v lsd &>/dev/null; then
+  # If it exists, use it for 'ls'
+  alias ls="lsd"
+  alias sl='lsd'
+  alias ll='lsd -lh'
+  alias la='lsd -Alh'
+else
+  alias sl="ls --color=auto"
+  alias ll='ls -lh --color=auto'
+  alias la='ls -Alh --color=auto'
+fi
+
+if command -v bat &>/dev/null; then
+  alias cat="bat"
+fi
+
+if command -v zoxide &>/dev/null; then
+  alias cd="z"
+fi
+
 alias cat='bat'
 alias mkdir='mkdir -p'
 
@@ -382,6 +400,7 @@ function kuse { kubectl config use-context $1 }
 function c() { cd "$HOME/config/$1" || return; }
 
 eval "$(direnv hook zsh)"
+eval "$(zoxide init zsh)"
 
 # # Amazon Q post block. Keep at the bottom of this file.
 # [[ -f "${HOME}/.local/share/amazon-q/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/.local/share/amazon-q/shell/zshrc.post.zsh"

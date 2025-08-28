@@ -50,7 +50,7 @@ yq = "latest"
 "cargo:sd" = "latest"
 "cargo:taplo-cli" = { version = "latest", features = "lsp", locked = true }
 "cargo:usage-cli" = "latest"
-"cargo:zoxide" = "latest"
+"cargo:zoxide" = { version = "latest", locked = true }
 "npm:gh-actions-language-server" = "latest"
 "npm:bash-language-server" = "latest"
 "npm:css-language-server" = "latest"
