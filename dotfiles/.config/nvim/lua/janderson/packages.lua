@@ -499,11 +499,17 @@ require("conform").setup({
     python = { "isort", "black" },
     terraform = { "terraform_fmt" },
   },
-  format_on_save = {
-    lsp_fallback = true,
-    async = false,
-    timeout_ms = 1000,
-  },
+  format_on_save = function(bufnr)
+    -- Only format terraform files on save
+    local filetype = vim.bo[bufnr].filetype
+    if filetype == "terraform" then
+      return {
+        lsp_fallback = true,
+        async = false,
+        timeout_ms = 1000,
+      }
+    end
+  end,
 })
 
 
