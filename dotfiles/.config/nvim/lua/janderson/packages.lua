@@ -12,7 +12,7 @@ require("paq")({
   -- Autocompletion
   {
     "https://github.com/Saghen/blink.cmp",
-    build = "cargo build --release",
+    version = '1.*'
   },
   "https://github.com/folke/lazydev.nvim",
 
@@ -252,6 +252,9 @@ require("lazydev").setup({
   },
 })
 require("blink.cmp").setup({
+  fuzzy = {
+    implementation = "lua",
+  },
   sources = {
     default = { "lazydev", "lsp", "path", "snippets", "buffer" },
     providers = {

@@ -77,19 +77,10 @@ export PATH
 alias kvpn="sudo nmcli c up aws"
 alias svpn="sudo nmcli c down aws"
 
-# ~/.zshrc
-
-if command -v lsd &>/dev/null; then
-  # If it exists, use it for 'ls'
-  alias ls="lsd"
-  alias sl='lsd'
-  alias ll='lsd -lh'
-  alias la='lsd -Alh'
-else
-  alias sl="ls --color=auto"
-  alias ll='ls -lh --color=auto'
-  alias la='ls -Alh --color=auto'
-fi
+alias ls="lsd"
+alias sl='lsd'
+alias ll='lsd -lh'
+alias la='lsd -Alh'
 
 if command -v bat &>/dev/null; then
   alias cat="bat"
@@ -107,7 +98,7 @@ alias pbcopy='xsel --clipboard --input'
 alias zo='source ~/.zshrc'
 alias ve='python3 -m venv venv'
 alias va='source venv/bin/activate'
-alias kip='cd ~/src/kepler-repos'
+alias kip='cd ~/src/keplergroup'
 alias kyu='cd ~/src/kyu'
 alias vgit='echo $VAULT_AUTH_GITHUB_TOKEN | pbcopy'
 alias ggit='echo $TF_VAR_github_token | pbcopy'
@@ -124,10 +115,10 @@ alias f="nvim"
 alias ghalint="actionlint -config-file ~/config/dotfiles/actionlint.yaml"
 alias ghastatus="gh api -H 'Accept: application/vnd.github+json' -H 'X-GitHub-Api-Version: 2022-11-28' /orgs/keplergroup/actions/runners | jq -C '.runners[] | select(.status == \"online\") | {name, busy}'"
 
-alias goterr='cd ~/src/kepler-repos/kepler-terraform'
-alias tamer='cd ~/src/kepler-repos/kepler-terraform/aws/kepler_amer'
-alias temea='cd ~/src/kepler-repos/kepler-terraform/aws/kepler_emea_apac'
-alias gomod='cd ~/src/kepler-repos/kepler-terraform-modules'
+alias goterr='cd ~/src/keplergroup/kepler-terraform'
+alias tamer='cd ~/src/keplergroup/kepler-terraform/aws/kepler_amer'
+alias temea='cd ~/src/keplergroup/kepler-terraform/aws/kepler_emea_apac'
+alias gomod='cd ~/src/keplergroup/kepler-terraform-modules'
 alias officevpn="sudo netExtender -u janderson@keplergrp.com -d LocalDomain svpn.keplergrp.com:4433"
 alias cookies3="cookiecutter git@github.com:keplergroup/cookiecutter-terraform-s3-bucket.git"
 alias cookieci="cookiecutter git@github.com:keplergroup/cookiecutter-gha-ci-pipeline.git"
@@ -285,8 +276,8 @@ compctl -f -K _vault_complete vault
 ######################################################################
 
 function klone() {
-  if [[ ! -d ~/kepler-repos/$1 ]]; then
-    git clone git@github.com:KeplerGroup/$1.git ~/src/kepler-repos/$1
+  if [[ ! -d ~/src/$1 ]]; then
+    git clone git@github.com:$1.git ~/src/$1
   else
     echo "Repo is already kloned!"
   fi

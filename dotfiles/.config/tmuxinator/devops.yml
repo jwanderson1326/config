@@ -1,7 +1,6 @@
 # /home/justin/.config/tmuxinator/devops.yml
 
 name: devops
-root: ~
 
 # Optional tmux socket
 # socket_name: foo
@@ -44,21 +43,22 @@ startup_window: TERRAFORM
 
 windows:
   - Home:
-      - cd ~
-      - clear
-      - ls
+      root: ~
+      panes:
+        - clear && ls
   - KIP:
-      - cd ~/src/kepler-repos
-      - clear
+      root: ~/src/kepler-repos
+      panes:
+        - clear
   - K8s Apps:
-      - cd ~/src/kepler-repos/kepler-k8s-application-config
-      - clear
+      root: ~/src/keplergroup/kepler-k8s-application-config
+      panes:
+        - clear
   - K8s System:
-      - cd ~/src/kepler-repos/kepler-k8s-system-config
-      - clear
-  - ArgoCD:
-      - cd ~/src/kepler-repos/kepler-argocd
-      - clear
+      root: ~/src/keplergroup/kepler-k8s-system-config
+      panes:
+        - clear
   - TERRAFORM:
-      - cd ~/src/kepler-repos/kepler-terraform
-      - clear
+      root: ~/src/keplergroup/kepler-terraform
+      panes:
+        - clear

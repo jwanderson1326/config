@@ -1,4 +1,7 @@
 # :schema https://raw.githubusercontent.com/distinction-dev/alacritty-schema/refs/heads/main/alacritty/reference.json
+[terminal.shell]
+program = "/usr/bin/tmux"
+args = ["-2", "-f", "/home/justin/.config/tmux/tmux.conf"]
 
 [cursor.style]
 blinking = "Never"
@@ -12,14 +15,14 @@ size = 12.0
 normal = {family = "JetBrains Mono NL Nerd Font", style = "Complete"}
 
 [general]
-import = ["~/.config/alacritty/themes/themes/ayu_mirage.toml"]
+import = ["~/.config/alacritty/themes/ayu_mirage.toml"]
 live_config_reload = true
 
 [window]
 opacity = 1.0
 decorations = "full"
 startup_mode = "Maximized"
-title = "Alacritty"
+title = "Justin"
 dynamic_title = false
 dynamic_padding = true
 padding = {x = 2, y = 2}
