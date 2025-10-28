@@ -8,7 +8,7 @@
 # for ssh logins, install and configure the libpam-umask package.
 #umask 022
 
-export TERM=xterm-256color
+# export TERM=xterm-256color
 
 # if running bash
 if [ -n "$BASH_VERSION" ]; then
@@ -31,5 +31,3 @@ fi
 
 export PATH="$HOME/.poetry/bin:$PATH"
 
-
-[ -f "/home/justin/.ghcup/env" ] && . "/home/justin/.ghcup/env" # ghcup-env
