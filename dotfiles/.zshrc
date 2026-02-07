@@ -23,7 +23,7 @@ export AIDER_MODEL=kip
 export CLAUDE_CODE_USE_BEDROCK=1
 export CLAUDE_CODE_MAX_OUTPUT_TOKENS=4096
 export MAX_THINKING_TOKENS=1024
-export ANTHROPIC_MODEL=us.anthropic.claude-sonnet-4-5-20250929-v1:0
+export ANTHROPIC_MODEL=global.anthropic.claude-opus-4-6-v1
 export AWS_REGION=us-east-1  # or your preferred region
 
 ################################################################################
@@ -86,9 +86,9 @@ if command -v bat &>/dev/null; then
   alias cat="bat"
 fi
 
-if command -v zoxide &>/dev/null; then
-  alias cd="z"
-fi
+# if command -v zoxide &>/dev/null; then
+#   alias cd="z"
+# fi
 
 alias cat='bat'
 alias mkdir='mkdir -p'
@@ -99,7 +99,7 @@ alias zo='source ~/.zshrc'
 alias ve='python3 -m venv venv'
 alias va='source venv/bin/activate'
 alias kip='cd ~/src/keplergroup'
-alias kyu='cd ~/src/kyu'
+alias kyu='cd ~/src/kyucollective'
 alias vgit='echo $VAULT_AUTH_GITHUB_TOKEN | pbcopy'
 alias ggit='echo $TF_VAR_github_token | pbcopy'
 alias eget='echo "961517735772.dkr.ecr.us-east-1.amazonaws.com" | pbcopy'
@@ -372,6 +372,10 @@ function update_program() {
       fi
       ;;
   esac
+}
+
+function aw() {
+  assume -c -s $2 $1
 }
 
 function upgrade() {
