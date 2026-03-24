@@ -23,7 +23,12 @@ export AIDER_MODEL=kip
 export CLAUDE_CODE_USE_BEDROCK=1
 export CLAUDE_CODE_MAX_OUTPUT_TOKENS=4096
 export MAX_THINKING_TOKENS=1024
-export ANTHROPIC_MODEL=global.anthropic.claude-opus-4-6-v1
+export ANTHROPIC_MODEL=arn:aws:bedrock:us-east-1:961517735772:application-inference-profile/u4rz17tc0f9o
+export ANTHROPIC_DEFAULT_OPUS_MODEL=arn:aws:bedrock:us-east-1:961517735772:application-inference-profile/u4rz17tc0f9o
+export ANTHROPIC_DEFAULT_SONNET_MODEL=arn:aws:bedrock:us-east-1:961517735772:application-inference-profile/72u7r1j3vqhh
+export ANTHROPIC_DEFAULT_HAIKU_MODEL=arn:aws:bedrock:us-east-1:961517735772:application-inference-profile/pv9xb2ssxwl3
+export CLAUDE_CODE_SUBAGENT_MODEL=arn:aws:bedrock:us-east-1:961517735772:application-inference-profile/pv9xb2ssxwl3
+# export CLAUDE_CODE_SUBAGENT_MODEL=global.anthropic.claude-opus-4-6-v1
 export AWS_REGION=us-east-1  # or your preferred region
 
 ################################################################################
