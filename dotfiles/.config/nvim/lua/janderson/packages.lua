@@ -87,6 +87,11 @@ vim.lsp.enable("marksman")
 vim.lsp.enable("ruff")
 vim.lsp.enable("taplo")
 vim.lsp.enable("terraformls")
+vim.lsp.config("terraformls", {
+  on_attach = function(client)
+    client.server_capabilities.semanticTokensProvider = nil
+  end,
+})
 vim.lsp.enable("tflint")
 vim.lsp.enable("ts_ls")
 vim.lsp.enable("vimls")
