@@ -125,9 +125,9 @@ alias kyu='cd ~/src/kyucollective'
 
 # Tmux
 alias tmux='tmux -2 -f ~/.config/tmux/tmux.conf'
-alias smux='tmuxinator start devops'
+alias smux='tmuxinator start kepler'
 alias kmux='tmuxinator start kyu'
-alias dmux='tmuxinator stop devops'
+alias dmux='tmuxinator stop kepler'
 alias bmux='tmuxinator stop kyu'
 
 # Editor
