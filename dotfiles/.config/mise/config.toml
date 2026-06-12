@@ -5,6 +5,7 @@ experimental = true
 # see here: https://github.com/jdx/mise/issues/1635
 # cargo_binstall = true
 idiomatic_version_file_enable_tools = ["terraform"]
+minimum_release_age = "7d"
 
 [tools]
 act = "latest"

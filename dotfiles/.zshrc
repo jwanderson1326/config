@@ -1,5 +1,12 @@
 # ~/.zshrc — zsh-specific config
 # Shared env, PATH, aliases, and functions live in .bashrc
+
+# Mise must activate before .bashrc so tools it manages (lsd, bat, etc.)
+# are in PATH when .bashrc sets up aliases.
+if [[ $- == *i* ]] && [[ -e "$HOME/.local/bin/mise" ]]; then
+  eval "$(~/.local/bin/mise activate zsh)"
+fi
+
 source "$HOME/.bashrc"
 
 ################################################################################
@@ -91,15 +98,11 @@ POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND='210'
 POWERLEVEL9K_KUBECONTEXT_BACKGROUND='31'
 
 ################################################################################
-# Mise
+# Mise (activated early, before .bashrc — see top of file)
 ################################################################################
-if [[ $- == *i* ]]; then
-  if [[ -e "$HOME/.local/bin/mise" ]]; then
-    eval "$(~/.local/bin/mise activate zsh)"
-  else
-    echo 'Mise not installed, please install. See:'
-    echo 'https://mise.jdx.dev/getting-started.html'
-  fi
+if ! command -v mise > /dev/null; then
+  echo 'Mise not installed, please install. See:'
+  echo 'https://mise.jdx.dev/getting-started.html'
 fi
 
 ################################################################################

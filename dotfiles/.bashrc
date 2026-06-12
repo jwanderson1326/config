@@ -26,8 +26,8 @@ export AWS_REGION=us-east-1
 function claude-work() {
   export CLAUDE_CODE_USE_BEDROCK=1
   export CLAUDE_CODE_MAX_OUTPUT_TOKENS=8192
-  export ANTHROPIC_MODEL=arn:aws:bedrock:us-east-1:961517735772:application-inference-profile/u4rz17tc0f9o
-  export ANTHROPIC_DEFAULT_OPUS_MODEL=arn:aws:bedrock:us-east-1:961517735772:application-inference-profile/u4rz17tc0f9o
+  export ANTHROPIC_MODEL=arn:aws:bedrock:us-east-1:961517735772:application-inference-profile/s579g2wiitpl
+  export ANTHROPIC_DEFAULT_OPUS_MODEL=arn:aws:bedrock:us-east-1:961517735772:application-inference-profile/s579g2wiitpl
   export ANTHROPIC_DEFAULT_SONNET_MODEL=arn:aws:bedrock:us-east-1:961517735772:application-inference-profile/72u7r1j3vqhh
   export ANTHROPIC_DEFAULT_HAIKU_MODEL=arn:aws:bedrock:us-east-1:961517735772:application-inference-profile/pv9xb2ssxwl3
 }
