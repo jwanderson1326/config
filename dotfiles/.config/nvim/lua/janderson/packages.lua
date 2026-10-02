@@ -1,54 +1,4 @@
-require("paq")({
-  -- self
-  "https://github.com/savq/paq-nvim",
-  -- Colorscheme
-  "https://github.com/EdenEast/nightfox.nvim",
-  "https://github.com/rose-pine/neovim",
-  -- LuaLine
-  "https://github.com/nvim-lualine/lualine.nvim",
-  -- Language Server (LSP)
-  "https://github.com/neovim/nvim-lspconfig",
-  "https://github.com/stevearc/aerial.nvim",
-  -- Autocompletion
-  {
-    "https://github.com/Saghen/blink.cmp",
-    version = '1.*'
-  },
-  "https://github.com/folke/lazydev.nvim",
-
-  -- Git
-  "https://github.com/junegunn/gv.vim",
-  "https://github.com/lewis6991/gitsigns.nvim",
-  "https://github.com/tpope/vim-fugitive",
-  "https://github.com/sindrets/diffview.nvim",
-  -- Linters and Formatters
-  "https://github.com/stevearc/conform.nvim",
-  "https://github.com/mfussenegger/nvim-lint",
-  "https://github.com/lukas-reineke/indent-blankline.nvim",
-  -- Tree
-  "https://github.com/nvim-tree/nvim-tree.lua.git",
-  -- Tree Sitter
-  "https://github.com/nvim-treesitter/nvim-treesitter",
-  "https://github.com/tronikelis/ts-autotag.nvim",
-  --- REPL
-  "https://github.com/pappasam/nvim-repl",
-  -- ClaudeCode
-  "https://github.com/greggh/claude-code.nvim",
-  -- Other
-  "https://github.com/kylechui/nvim-surround",
-  "https://github.com/christoomey/vim-tmux-navigator",
-  "https://github.com/mbbill/undotree",
-  "https://github.com/j-hui/fidget.nvim",
-  "https://github.com/chrishrb/gx.nvim",
-  "https://github.com/echasnovski/mini.pairs",
-  "https://github.com/catgoose/nvim-colorizer.lua",
-  "https://github.com/sotte/presenting.nvim",
-  "https://github.com/nvim-tree/nvim-web-devicons",
-  {
-    "https://github.com/iamcco/markdown-preview.nvim",
-    build = vim.fn["mkdp#util#install"],
-  }
-})
+require("paq")(require("janderson.plugins"))
 
 --------------------------------
 --- Colors
@@ -68,7 +18,19 @@ vim.cmd([[colorscheme nightfox]])
 -----------------------------------
 ----------------LSP CONFIG
 ----------------------------------
-vim.lsp.handlers["window/showMessage"] = vim.lsp.handlers.notify
+-- Let servers learn about files changed on disk by other tools (AI agents,
+-- git checkout, codegen) even when those files are not open in a buffer.
+-- Without inotifywait Neovim falls back to a slow per-directory watcher, so
+-- only enable it when inotify-tools is installed.
+vim.lsp.config("*", {
+  capabilities = {
+    workspace = {
+      didChangeWatchedFiles = {
+        dynamicRegistration = vim.fn.executable("inotifywait") == 1,
+      },
+    },
+  },
+})
 
 vim.lsp.enable("autotools_ls")
 vim.lsp.enable("basedpyright")
@@ -88,6 +50,7 @@ vim.lsp.enable("ruff")
 vim.lsp.enable("taplo")
 vim.lsp.enable("terraformls")
 vim.lsp.config("terraformls", {
+  cmd = { "terraform-ls", "serve", "-log-file=/tmp/terraform-ls-{{pid}}.log" },
   on_attach = function(client)
     client.server_capabilities.semanticTokensProvider = nil
   end,
@@ -97,15 +60,6 @@ vim.lsp.enable("ts_ls")
 vim.lsp.enable("vimls")
 vim.lsp.enable("yamlls")
 
-vim.lsp.config("*", {
-  capabilities = {
-    workspace = {
-      didChangeWatchedFiles = {
-        dynamicRegistration = false, -- https://github.com/neovim/neovim/issues/23291
-      },
-    },
-  },
-})
 vim.lsp.config("basedpyright", {
   settings = {
     basedpyright = {
@@ -162,18 +116,9 @@ vim.lsp.config("lua_ls", {
         -- (most likely LuaJIT in the case of Neovim)
         version = "LuaJIT",
       },
-      diagnostics = {
-        -- Get the language server to recognize the `vim` global
-        globals = {
-          "vim",
-          "require",
-        },
-      },
+      -- `vim` globals and the runtime library come from lazydev.nvim
       workspace = {
         checkThirdParty = false,
-        library = {
-          vim.env.VIMRUNTIME,
-        },
       },
       -- Do not send telemetry data containing a randomized but unique identifier
       telemetry = {
@@ -218,26 +163,35 @@ vim.lsp.config("yamlls", {
 -----------------------------------
 ----------------Treesitter
 ----------------------------------
----@diagnostic disable-next-line: missing-fields
-require("nvim-treesitter.configs").setup({
-  highlight = {
-    enable = true,
-    disable = function(lang, bufnr)
-      if lang == "javascript" then
-        return vim.api.nvim_buf_line_count(bufnr) > 10000
-      end
-      return vim.api.nvim_buf_line_count(bufnr) > 50000
-    end,
-  },
-  indent = {
-    enable = true,
-    ---@diagnostic disable-next-line: unused-local
-    disable = function(lang, bufnr)
-      return vim.api.nvim_buf_line_count(bufnr) > 10000
-    end,
-  },
-  ensure_installed = "all",
-  ignore_install = { "ipkg" },
+-- nvim-treesitter `main` only installs parsers/queries; highlighting and
+-- indentation are enabled per buffer below. `install` is a no-op for parsers
+-- that are already present. Add languages here (`:TSInstall x` is temporary).
+require("nvim-treesitter").install({
+  "bash", "c", "css", "diff", "dockerfile", "git_config", "git_rebase",
+  "gitattributes", "gitcommit", "gitignore", "go", "gomod", "graphql", "hcl",
+  "helm", "html", "javascript", "jsdoc", "json", "lua", "luadoc", "make",
+  "markdown", "markdown_inline", "python", "query", "regex", "rust", "sql",
+  "terraform", "toml", "tsx", "typescript", "vim", "vimdoc", "yaml",
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("treesitter_start", { clear = true }),
+  callback = function(args)
+    local lang = vim.treesitter.language.get_lang(args.match)
+    if not lang then
+      return
+    end
+    local lines = vim.api.nvim_buf_line_count(args.buf)
+    if lines > (lang == "javascript" and 10000 or 50000) then
+      return
+    end
+    if not pcall(vim.treesitter.start, args.buf, lang) then
+      return -- no parser installed for this language
+    end
+    if lines <= 10000 and vim.treesitter.query.get(lang, "indents") then
+      vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+    end
+  end,
 })
 
 vim.treesitter.language.register("terraform", "terraform-vars")
@@ -257,9 +211,6 @@ require("lazydev").setup({
   },
 })
 require("blink.cmp").setup({
-  fuzzy = {
-    implementation = "lua",
-  },
   sources = {
     default = { "lazydev", "lsp", "path", "snippets", "buffer" },
     providers = {
@@ -321,6 +272,30 @@ require("nvim-web-devicons").setup({
 -----------------------------------
 --- Tools
 ----------------------------------
+require("fzf-lua").setup({
+  actions = {
+    files = {
+      true, -- keep the default file actions
+      -- alt-a: add the selected file(s) to Claude's context as @mentions
+      ["alt-a"] = function(selected, opts)
+        for _, entry in ipairs(selected) do
+          local file = require("fzf-lua.path").entry_to_file(entry, opts)
+          require("claudecode").send_at_mention(file.path)
+        end
+      end,
+    },
+  },
+})
+require("fzf-lua").register_ui_select()
+
+require("which-key").setup({})
+require("which-key").add({
+  { "<leader>a", group = "AI / Claude" },
+  { "<leader>f", group = "find" },
+  { "<leader>g", group = "git" },
+  { "<leader>h", group = "hunks" },
+})
+
 require("fidget").setup({
   progress = {
     suppress_on_insert = true
@@ -404,40 +379,38 @@ require("gitsigns").setup({
     -- Navigation
     map("n", "]c", function()
       if vim.wo.diff then
-        return "]c"
+        vim.cmd.normal({ "]c", bang = true })
+      else
+        gs.nav_hunk("next")
       end
-      vim.schedule(function()
-        gs.next_hunk()
-      end)
-      return "<Ignore>"
-    end, { expr = true })
+    end, { desc = "Next hunk" })
     map("n", "[c", function()
       if vim.wo.diff then
-        return "[c"
+        vim.cmd.normal({ "[c", bang = true })
+      else
+        gs.nav_hunk("prev")
       end
-      vim.schedule(function()
-        gs.prev_hunk()
-      end)
-      return "<Ignore>"
-    end, { expr = true })
-    -- Actions
-    map({ "n", "v" }, "<leader>hs", "<Cmd>Gitsigns stage_hunk<CR>")
-    map({ "n", "v" }, "<leader>hr", "<Cmd>Gitsigns reset_hunk<CR>")
-    map("n", "<leader>hS", gs.stage_buffer)
-    map("n", "<leader>hu", gs.undo_stage_hunk)
-    map("n", "<leader>hR", gs.reset_buffer)
-    map("n", "<leader>hp", gs.preview_hunk)
+    end, { desc = "Previous hunk" })
+    -- Actions (stage_hunk on an already staged hunk unstages it)
+    map({ "n", "v" }, "<leader>hs", "<Cmd>Gitsigns stage_hunk<CR>", { desc = "Stage/unstage hunk" })
+    map({ "n", "v" }, "<leader>hr", "<Cmd>Gitsigns reset_hunk<CR>", { desc = "Reset hunk" })
+    map("n", "<leader>hS", gs.stage_buffer, { desc = "Stage buffer" })
+    map("n", "<leader>hR", gs.reset_buffer, { desc = "Reset buffer" })
+    map("n", "<leader>hp", gs.preview_hunk, { desc = "Preview hunk" })
+    map("n", "<leader>hi", gs.preview_hunk_inline, { desc = "Preview hunk inline" })
     map("n", "<leader>hb", function()
       gs.blame_line({ full = true })
-    end)
-    map("n", "<leader>tb", gs.toggle_current_line_blame)
-    map("n", "<leader>hd", gs.diffthis)
+    end, { desc = "Blame line" })
+    map("n", "<leader>ht", gs.toggle_current_line_blame, { desc = "Toggle line blame" })
+    map("n", "<leader>hd", gs.diffthis, { desc = "Diff against index" })
     map("n", "<leader>hD", function()
       gs.diffthis("~")
-    end)
-    map("n", "<leader>td", gs.toggle_deleted)
+    end, { desc = "Diff against HEAD~" })
+    map("n", "<leader>hq", function()
+      gs.setqflist("all")
+    end, { desc = "All hunks to quickfix" })
     -- Text object
-    map({ "o", "x" }, "ih", "<Cmd>Gitsigns select_hunk<CR>")
+    map({ "o", "x" }, "ih", "<Cmd>Gitsigns select_hunk<CR>", { desc = "Hunk" })
   end,
 })
 require("diffview").setup({
@@ -480,11 +453,16 @@ require("nvim-tree").setup({
   filters = {
     dotfiles = false,
   },
+  on_attach = function(bufnr)
+    require("nvim-tree.api").config.mappings.default_on_attach(bufnr)
+    vim.keymap.set("n", "<leader>as", "<Cmd>ClaudeCodeTreeAdd<CR>",
+      { buffer = bufnr, desc = "Add file to Claude" })
+  end,
 })
 
 
 --------------------------
-----Linterrs and Formatters
+----Linters and Formatters
 -----------------------------
 require("ibl").setup({
   indent = { highlight = "IblIndent" },
@@ -504,7 +482,7 @@ require("conform").setup({
     markdown = { "prettier" },
     graphql = { "prettier" },
     lua = { "stylua" },
-    python = { "isort", "black" },
+    python = { "ruff_organize_imports", "ruff_format" },
     terraform = { "terraform_fmt" },
   },
   format_on_save = function(bufnr)
@@ -512,7 +490,7 @@ require("conform").setup({
     local filetype = vim.bo[bufnr].filetype
     if filetype == "terraform" then
       return {
-        lsp_fallback = true,
+        lsp_format = "fallback",
         async = false,
         timeout_ms = 1000,
       }
@@ -528,15 +506,15 @@ lint.linters_by_ft = {
   javascriptreact = { "eslint_d" },
   typescriptreact = { "eslint_d" },
   svelte = { "eslint_d" },
-  python = { "pylint" },
   terraform = { "tflint" },
 }
 
 local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
-vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost", "InsertLeave" }, {
   group = lint_augroup,
   callback = function()
-    lint.try_lint()
+    -- ignore_errors: don't warn on every buffer when e.g. eslint_d is missing
+    lint.try_lint(nil, { ignore_errors = true })
   end,
 })
 
@@ -546,107 +524,20 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
 ------------------------------------------a
 require("lualine").setup({
   options = {
-    icons_enabled = true,
-    theme = 'auto',
-    component_separators = { left = '', right = '' },
-    section_separators = { left = '', right = '' },
-    disabled_filetypes = {
-      statusline = {},
-      winbar = {},
-    },
-    ignore_focus = {},
-    always_divide_middle = true,
-    always_show_tabline = true,
-    globalstatus = false,
-    refresh = {
-      statusline = 100,
-      tabline = 100,
-      winbar = 100,
-    }
+    component_separators = { left = '', right = '' },
+    section_separators = { left = '', right = '' },
   },
   sections = {
-    lualine_a = { 'mode' },
-    lualine_b = { 'branch', 'diff', 'diagnostics' },
-    lualine_c = { 'filename' },
-    lualine_x = { 'encoding', 'fileformat', 'filetype' },
-    lualine_y = { 'progress' },
-    lualine_z = { 'location' }
-  },
-  inactive_sections = {
-    lualine_a = {},
-    lualine_b = {},
-    lualine_c = { 'filename' },
-    lualine_x = { 'location' },
-    lualine_y = {},
-    lualine_z = {}
-  },
-  tabline = {},
-  winbar = {},
-  inactive_winbar = {},
-  extensions = {}
-})
-
-------------------------------------------------
----Claude Code
-------------------------------------------a
-require("claude-code").setup({
-  -- Terminal window settings
-  window = {
-    split_ratio = 0.3,      -- Percentage of screen for the terminal window (height for horizontal, width for vertical splits)
-    position = "botright",  -- Position of the window: "botright", "topleft", "vertical", "float", etc.
-    enter_insert = true,    -- Whether to enter insert mode when opening Claude Code
-    hide_numbers = true,    -- Hide line numbers in the terminal window
-    hide_signcolumn = true, -- Hide the sign column in the terminal window
-
-    -- Floating window configuration (only applies when position = "float")
-    float = {
-      width = "80%",       -- Width: number of columns or percentage string
-      height = "80%",      -- Height: number of rows or percentage string
-      row = "center",      -- Row position: number, "center", or percentage string
-      col = "center",      -- Column position: number, "center", or percentage string
-      relative = "editor", -- Relative to: "editor" or "cursor"
-      border = "rounded",  -- Border style: "none", "single", "double", "rounded", "solid", "shadow"
-    },
-  },
-  -- File refresh settings
-  refresh = {
-    enable = true,             -- Enable file change detection
-    updatetime = 100,          -- updatetime when Claude Code is active (milliseconds)
-    timer_interval = 1000,     -- How often to check for file changes (milliseconds)
-    show_notifications = true, -- Show notification when files are reloaded
-  },
-  -- Git project settings
-  git = {
-    use_git_root = true, -- Set CWD to git root when opening Claude Code (if in git project)
-  },
-  -- Shell-specific settings
-  shell = {
-    separator = '&&',    -- Command separator used in shell commands
-    pushd_cmd = 'pushd', -- Command to push directory onto stack (e.g., 'pushd' for bash/zsh, 'enter' for nushell)
-    popd_cmd = 'popd',   -- Command to pop directory from stack (e.g., 'popd' for bash/zsh, 'exit' for nushell)
-  },
-  -- Command settings
-  command = "claude", -- Command used to launch Claude Code
-  -- Command variants
-  command_variants = {
-    -- Conversation management
-    continue = "--continue", -- Resume the most recent conversation
-    resume = "--resume",     -- Display an interactive conversation picker
-
-    -- Output options
-    verbose = "--verbose", -- Enable verbose logging with full turn-by-turn output
-  },
-  -- Keymaps
-  keymaps = {
-    toggle = {
-      normal = "<leader>cc",     -- Normal mode keymap for toggling Claude Code, false to disable
-      terminal = "<C-,>",        -- Terminal mode keymap for toggling Claude Code, false to disable
-      variants = {
-        continue = "<leader>cC", -- Normal mode keymap for Claude Code with continue flag
-        verbose = "<leader>cV",  -- Normal mode keymap for Claude Code with verbose flag
+    lualine_x = {
+      {
+        function() return "󰚩 Claude" end,
+        cond = function()
+          local ok, claudecode = pcall(require, "claudecode")
+          return ok and claudecode.is_claude_connected()
+        end,
       },
+      'encoding', 'fileformat', 'filetype',
     },
-    window_navigation = true, -- Enable window navigation keymaps (<C-h/j/k/l>)
-    scrolling = true,         -- Enable scrolling keymaps (<C-f/b>) for page up/down
-  }
+  },
+  extensions = { "aerial", "fugitive", "nvim-tree", "quickfix" },
 })

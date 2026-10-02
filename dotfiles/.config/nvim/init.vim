@@ -9,9 +9,7 @@ augroup end
 
 augroup filetype_custom
   autocmd!
-  " indentation
-  autocmd Filetype c,nginx,haskell,rust,kv,asm,nasm,gdscript3 setlocal shiftwidth=4 softtabstop=4
-  autocmd Filetype go,gomod,make,tsv,votl setlocal tabstop=4 softtabstop=0 shiftwidth=0 noexpandtab
+  " indentation: see lua/janderson/indent.lua
   " comments
   autocmd FileType dosini setlocal commentstring=#\ %s comments=:#,:;
   autocmd FileType mermaid setlocal commentstring=\%\%\ %s comments=:\%\%
@@ -25,21 +23,15 @@ augroup filetype_custom
   autocmd FileType scss setlocal iskeyword+=@-@
   " keywordprg
   autocmd FileType vim,lua setlocal keywordprg=:help
-  autocmd FileType bib,gitcommit,markdown,org,plaintex,rst,rnoweb,tex,pandoc,quarto,rmd,context,html,htmldjango,xhtml,mail,text setlocal keywordprg=:DefEng
-  autocmd FileType python setlocal keywordprg=:Pydoc
   autocmd FileType sh,zsh,bash setlocal keywordprg=:Man
   " nofoldenable nolist
   autocmd FileType gitcommit,checkhealth,text,GV setlocal nofoldenable nolist
   " window opening
   autocmd FileType gitcommit if winnr("$") > 1 | wincmd T | endif
-  " quickfix-only
-  autocmd FileType qf call s:set_quickfix_mappings()
 augroup end
 
-lua vim.loader.enable(true) -- speed up lua load times (experimental)
+lua vim.loader.enable() -- cache compiled lua modules
 lua require("janderson")
-
-
 
 command! F call s:focuswriting()
 function! s:focuswriting()
@@ -69,41 +61,27 @@ function! s:focuswriting()
   endtry
 endfunction
 
-command! CleanUnicode call s:clean_unicode()
-function! s:clean_unicode()
-  set lazyredraw
-  try
-    let save = winsaveview()
-    silent! %substitute/”/"/g
-    silent! %substitute/“/"/g
-    silent! %substitute/’/'/g
-    silent! %substitute/‘/'/g
-    silent! %substitute/—/-/g
-    silent! %substitute/…/.../g
-    silent! %substitute/​//g
-    silent! %substitute/–/-/g
-    silent! %substitute/‐/-/g
-    silent! %substitute/ / /g
-    silent! %substitute/　/ /g
-    silent! %substitute/′/'/g
-    silent! %substitute/″/"/g
-    silent! %substitute/•/*/g
-    silent! %substitute/·/*/g
-    silent! %substitute/°/^/g
-    silent! %substitute/™/(tm)/g
-    silent! %substitute/©/(c)/g
-    silent! %substitute/®/(r)/g
-    silent! %substitute/×/x/g
-    silent! %substitute/÷/\//g
-    silent! %substitute/±/+\/-/g
-    silent! %substitute/½/1\/2/g
-    silent! %substitute/¼/1\/4/g
-    silent! %substitute/¾/3\/4/g
-    silent! %substitute/‽/?!/g
-    silent! %substitute/¿/?/g
-    silent! %substitute/¡/!/g
-    call winrestview(save)
-  finally
-    set nolazyredraw
-  endtry
+" Normalize typographic unicode (common in LLM and web output) to ASCII.
+" Whole buffer by default, or a range: :'<,'>CleanUnicode
+command! -range=% CleanUnicode call s:clean_unicode(<line1>, <line2>)
+function! s:clean_unicode(line1, line2) abort
+  let l:replacements = [
+        \ ['\%u201c', '"'], ['\%u201d', '"'], ['\%u2033', '"'],
+        \ ['\%u2018', "'"], ['\%u2019', "'"], ['\%u2032', "'"],
+        \ ['\%u2014', '-'], ['\%u2013', '-'], ['\%u2010', '-'], ['\%u2011', '-'], ['\%u2212', '-'],
+        \ ['\%u2026', '...'],
+        \ ['\%u200b', ''], ['\%ufeff', ''],
+        \ ['\%u00a0', ' '], ['\%u202f', ' '], ['\%u3000', ' '],
+        \ ['\%u2022', '*'], ['\%u00b7', '*'],
+        \ ['\%u00b0', '^'],
+        \ ['\%u2122', '(tm)'], ['\%u00a9', '(c)'], ['\%u00ae', '(r)'],
+        \ ['\%u00d7', 'x'], ['\%u00f7', '/'], ['\%u00b1', '+/-'],
+        \ ['\%u00bd', '1/2'], ['\%u00bc', '1/4'], ['\%u00be', '3/4'],
+        \ ['\%u203d', '?!'], ['\%u00bf', '?'], ['\%u00a1', '!'],
+        \ ]
+  let l:save = winsaveview()
+  for [l:from, l:to] in l:replacements
+    execute 'keeppatterns silent' a:line1 .. ',' .. a:line2 .. 'substitute/' .. l:from .. '/' .. escape(l:to, '/\&~') .. '/ge'
+  endfor
+  call winrestview(l:save)
 endfunction
